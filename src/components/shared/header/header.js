@@ -1,15 +1,38 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Button, Toolbar, Link, Typography } from '@material-ui/core/';
+import AppBar from '@material-ui/core/AppBar';
+
+const useStyles = makeStyles((theme) => ({
+  title: {
+    flexGrow: 1,
+  },
+  navElement: {
+    marginRight: theme.spacing(3),
+  }
+}));
 
 const Header = () => {
+    const classes = useStyles();
+
     return (
-      <header className="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-        <h5 className="my-0 me-md-auto font-weight-normal">Company name</h5>
-        <nav className="my-2 my-md-0 me-md-3">
-          <a className="p-2 text-dark" href="#">El1</a>
-          <a className="p-2 text-dark" href="#">El2</a>
-          <a className="p-2 text-dark" href="#">El3</a>
-        </nav>
-        <a className="btn btn-outline-primary" href="#">Sign in</a>
+      <header>
+        <AppBar position="static" color="default">
+          <Toolbar>
+            <Typography variant="h5" className={classes.title}>
+                Company name
+              </Typography>
+              <Link href="#" className={classes.navElement}>
+                Link№1
+              </Link>
+              <Link href="№" className={classes.navElement}>
+                Link№2
+              </Link>
+            <Button href="/SignIn" variant="contained" color="primary">
+              Sign in
+            </Button>
+          </Toolbar>
+        </AppBar>
       </header>
     );
   };

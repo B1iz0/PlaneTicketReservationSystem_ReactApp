@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
+import API from '../../../api';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -24,18 +26,77 @@ const useStyles = makeStyles((theme) => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    errorSignIn: {
+        color: '#ff0000',
+    }
   }));
 
 const SignIn = () => {
+    let history = useHistory();
     const classes = useStyles();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
-    const [ isEmailNotValid, setEmailValid ] = useState(false);
-    const [ isPasswordNotValid, setPasswordValid ] = useState(false);
+    const [ isEmailNotValid, setEmailNotValid ] = useState(false);
+    const [ isPasswordNotValid, setPasswordNotValid ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState('');
+    const [ emailErrorMessage, setEmailErrorMessage ] = useState('Email is required.');
+    const [ passwordErrorMessage, setPasswordErrorMessage ] = useState('Password is required.');
 
-    useEffect(() => {
-        
-    });
+    const checkEmail = () => {
+        if (email === '') {
+            setEmailNotValid(true);
+            setEmailErrorMessage('Email is required.');
+            return false;
+        }
+        if (email === 'admin') {
+            setEmailNotValid(false);
+            return true;
+        }
+        if (/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(email)) {
+            setEmailNotValid(false);
+            return true;
+        }
+        setEmailNotValid(true);
+        setEmailErrorMessage('Incorrect entry.');
+        return false;
+    }
+
+    const checkPassword = () => {
+        if (password === ''){
+            setPasswordNotValid(true);
+            setPasswordErrorMessage('Password is required.');
+            return false;
+        }
+        if (/(?=.*[0-9])(?=.*[a-zA-Z]){6,}/.test(password)) {
+            setPasswordNotValid(false);
+            return true;
+        } else {
+            setPasswordNotValid(true);
+            setPasswordErrorMessage('At least 6 characters (both Latin letter and digit).');
+            return false;
+        }
+    }
+
+    function formSubmitButtonClickHandler(e) {
+        e.preventDefault();
+        if (!checkEmail()) return;
+        if (!checkPassword()) return;
+        API.post('/users/authenticate', {
+            email: email,
+            password: password
+        })
+        .then(response => {  
+            history.push('/Main');
+            console.log(response);
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response.data);
+                setErrorMessage(error.response.data.message);
+            }
+            console.log(error)
+        });
+    }
 
     return (
         <>
@@ -44,7 +105,7 @@ const SignIn = () => {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography> 
-                    <form>
+                    <form className={classes.form}>
                         <TextField
                             error = {isEmailNotValid}
                             variant="outlined"
@@ -55,8 +116,9 @@ const SignIn = () => {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={e => setEmail(e.target.value)}
                             autoFocus
+                            helperText={isEmailNotValid ? emailErrorMessage : ""}
                         />
                         <TextField
                             error = {isPasswordNotValid}
@@ -70,18 +132,23 @@ const SignIn = () => {
                             id="password"
                             autoComplete="current-password"
                             onChange={(e) => setPassword(e.target.value)}
+                            helperText={isPasswordNotValid ? passwordErrorMessage : ""}
                         />
+                        <label className={classes.errorSignIn}>
+                            {errorMessage}
+                        </label>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className={classes.submit}>
+                            className={classes.submit}
+                            onClick={formSubmitButtonClickHandler}>
                             Sign In
                         </Button>
                         <Grid container>
                             <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href="/SignUp" variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                             </Grid>

@@ -77,24 +77,30 @@ const SignIn = () => {
         }
     }
 
-    function formSubmitButtonClickHandler(e) {
+    async function formSubmitButtonClickHandler(e) {
         e.preventDefault();
-        if (!checkEmail()) return;
-        if (!checkPassword()) return;
-        API.post('/users/authenticate', {
+
+        let isEmailValid = await checkEmail();
+        let isPasswordValid = await checkPassword();
+
+        if (!(isEmailValid && isPasswordValid)) return;
+
+        let token;
+        await API.post('/users/authenticate', {
             email: email,
             password: password
         })
         .then(response => {  
-            history.push('/Main');
+            token = response.data.jwtToken;
             console.log(response);
+            localStorage.setItem('jwtToken', token);
+            history.push('/');
         })
         .catch(error => {
             if (error.response) {
                 console.log(error.response.data);
                 setErrorMessage(error.response.data.message);
             }
-            console.log(error)
         });
     }
 

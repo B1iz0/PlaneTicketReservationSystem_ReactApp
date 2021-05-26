@@ -98,7 +98,7 @@ const SignUp = () => {
 
     const checkFirstName = () => {
         if (firstName === ''){
-            setFirstName(true);
+            setFirstNameNotValid(true);
             setFirstNameErrorMessage('First name is required.');
             return false;
         }
@@ -116,13 +116,17 @@ const SignUp = () => {
         return true;
     }
 
-    function formSubmitButtonClickHandler(e) {
+    async function formSubmitButtonClickHandler(e) {
         e.preventDefault();
-        if (!checkEmail()) return;
-        if (!checkPassword()) return;
-        if (!checkRepeatedPassword()) return;
-        if (!checkFirstName()) return;
-        if (!checkLastName()) return;
+
+        let isEmailValid = await checkEmail();
+        let isPasswordValid = await checkPassword();
+        let isRepeatedPasswordValid = await checkRepeatedPassword();
+        let isFirstNameValid = await checkFirstName();
+        let isLastNameValid = await checkLastName();
+
+        if (!(isEmailValid && isPasswordValid && isRepeatedPasswordValid && isFirstNameValid && isLastNameValid)) return;
+        
         API.post('/users/registration', {
             email: email,
             password: password,
@@ -130,7 +134,7 @@ const SignUp = () => {
             lastName: lastName
         })
         .then(response => {
-            history.push('/Main');
+            history.push('/Flights');
             console.log(response);
         })
         .catch(error => {

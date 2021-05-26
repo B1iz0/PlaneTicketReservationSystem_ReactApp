@@ -4,6 +4,7 @@ import Header from '../shared/header';
 import Footer from '../shared/footer';
 import SignIn from '../authorization/sign-in';
 import SignUp from '../authorization/sign-up';
+import FlightsPage from '../flights/flights-page';
 
 import './app.css'
 
@@ -20,8 +21,8 @@ function App() {
                         <Route path="/SignUp">
                             <SignUp />
                         </Route>
-                        <Route path="/Main">
-                            
+                        <Route path="/">
+                            <FlightsPage />
                         </Route>
                     </Switch>
                 </Router>

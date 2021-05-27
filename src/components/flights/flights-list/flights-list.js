@@ -13,8 +13,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const FlightsList = ({ flights }) => {
+const FlightsList = ({ flights, flightsAmount }) => {
     const classes = useStyles();
+    const flightOnPage = 4;
     const [ page, setPage ] = useState(1);
 
     const handlePageChange = (event, value) => {
@@ -33,7 +34,7 @@ const FlightsList = ({ flights }) => {
                     })
                 }
                 <Grid item container>
-                    <Pagination count={10} shape="rounded" className={classes.pagination} page={page} onChange={handlePageChange}/>
+                    <Pagination count={Math.trunc(flightsAmount / flightOnPage) + 1} shape="rounded" className={classes.pagination} page={page} onChange={handlePageChange}/>
                 </Grid>
             </Grid>
         </div>

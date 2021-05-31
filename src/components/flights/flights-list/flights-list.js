@@ -14,17 +14,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const FlightsList = () => {
+const FlightsList = ({ departureCity, arrivalCity }) => {
     const classes = useStyles();
     const flightOnPage = 4;
     let offset = 0;
+    const [ amountOfPages, setPagesAmount ] = useState(1);
     const [ page, setPage ] = useState(1);
     const [ flights, setFlights ] = useState([]);
     const [ flightsAmount, setFlightsAmount ] = useState(0);
 
     useEffect(() => {
         const loadData = async () => {
-            await API.get(`/flights?offset=${offset}&limit=${flightOnPage}`)
+            await API.get(`/flights?offset=${offset}&limit=${flightOnPage}&departureCity=${departureCity}&arrivalCity=${arrivalCity}`)
             .then(response => response.data)
             .then(data => setFlights(data))
             .catch(error => {
@@ -36,7 +37,10 @@ const FlightsList = () => {
         const getFlightsAmount = async () => {
             await API.get('/flights/count')
             .then(response => response.data)
-            .then(data => setFlightsAmount(data))
+            .then(data => {
+                setFlightsAmount(data);
+                setPagesAmount(Math.ceil(data / flightOnPage));
+            })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response.data);
@@ -46,7 +50,7 @@ const FlightsList = () => {
 
         getFlightsAmount();
         loadData();
-    }, []);
+    }, [departureCity, arrivalCity]);
 
     const handlePageChange = (event, value) => {
         offset = (value - 1) * flightOnPage;
@@ -64,7 +68,7 @@ const FlightsList = () => {
                     })
                 }
                 <Grid item container>
-                    <Pagination count={Math.trunc(flightsAmount / flightOnPage) + 1} shape="rounded" className={classes.pagination} page={page} onChange={handlePageChange}/>
+                    <Pagination count={amountOfPages} shape="rounded" className={classes.pagination} page={page} onChange={handlePageChange}/>
                 </Grid>
             </Grid>
         </div>

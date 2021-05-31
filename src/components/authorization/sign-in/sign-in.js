@@ -8,6 +8,7 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import API from '../../../api';
 import { useHistory } from "react-router-dom";
+import TokenService from '../../../services/token-service';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -31,9 +32,10 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const SignIn = () => {
+const SignIn = ({ signInHandler }) => {
     let history = useHistory();
     const classes = useStyles();
+    const tokenService = new TokenService();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ isEmailNotValid, setEmailNotValid ] = useState(false);
@@ -85,15 +87,13 @@ const SignIn = () => {
 
         if (!(isEmailValid && isPasswordValid)) return;
 
-        let token;
         await API.post('/users/authenticate', {
             email: email,
             password: password
         })
         .then(response => {  
-            token = response.data.jwtToken;
-            console.log(response);
-            localStorage.setItem('jwtToken', token);
+            localStorage.setItem('jwtToken', response.data.jwtToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
             history.push('/');
         })
         .catch(error => {

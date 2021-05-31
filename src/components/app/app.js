@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Header from '../shared/header';
 import Footer from '../shared/footer';
@@ -11,7 +11,7 @@ import './app.css'
 function App() {
     return (
         <>
-            <Header/>
+            <Header />
             <main>
                 <Router>
                     <Switch>

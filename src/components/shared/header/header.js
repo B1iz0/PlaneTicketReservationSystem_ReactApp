@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Button, Toolbar, Typography } from '@material-ui/core/';
 import AppBar from '@material-ui/core/AppBar';
 import TokenService from '../../../services/token-service';
-
+import ProfileDropdownMenu from '../profile-dropdowm-menu';
 import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
@@ -21,9 +21,7 @@ const Header = () => {
 
     const profile = () => {
         return userEmail ? (
-        <Typography variant="h5">
-          {userEmail}
-        </Typography>
+        <ProfileDropdownMenu userEmail={userEmail}/>
         ) : (
         <Button href="/SignIn" variant="contained" color="primary">
           Sign in

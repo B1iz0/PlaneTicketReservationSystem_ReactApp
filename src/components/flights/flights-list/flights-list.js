@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
 
 const FlightsList = ({ departureCity, arrivalCity }) => {
     const classes = useStyles();
-    const flightOnPage = 4;
-    let offset = 0;
+    const flightOnPage = 3;
+    const [ offset, setOffset ] = useState(0);
     const [ amountOfPages, setPagesAmount ] = useState(1);
     const [ page, setPage ] = useState(1);
     const [ flights, setFlights ] = useState([]);
@@ -50,10 +50,10 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
 
         getFlightsAmount();
         loadData();
-    }, [departureCity, arrivalCity]);
+    }, [departureCity, arrivalCity, page]);
 
     const handlePageChange = (event, value) => {
-        offset = (value - 1) * flightOnPage;
+        setOffset((value - 1) * flightOnPage);
         setPage(value);
     }
 

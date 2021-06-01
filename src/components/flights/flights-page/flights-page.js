@@ -15,9 +15,7 @@ const FlightsPage = () => {
             .then(response => response.data)
             .then(data => setCities(data))
             .catch(error => {
-                if (error.response) {
-                    console.log(error.response.data);
-                }
+                console.log(error);
             });
         }
 

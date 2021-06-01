@@ -8,7 +8,9 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import API from '../../../api';
 import { useHistory } from "react-router-dom";
-import TokenService from '../../../services/token-service';
+
+import { useDispatch } from 'react-redux'
+import { setJwtToken } from '../../../redux/jwtTokenSlice';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -32,10 +34,11 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const SignIn = ({ signInHandler }) => {
+const SignIn = () => {
+    const dispatch = useDispatch()
+
     let history = useHistory();
     const classes = useStyles();
-    const tokenService = new TokenService();
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ isEmailNotValid, setEmailNotValid ] = useState(false);
@@ -94,6 +97,7 @@ const SignIn = ({ signInHandler }) => {
         .then(response => {  
             localStorage.setItem('jwtToken', response.data.jwtToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
+            dispatch(setJwtToken(response.data.jwtToken));
             history.push('/');
         })
         .catch(error => {

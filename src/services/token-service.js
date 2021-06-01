@@ -1,7 +1,7 @@
 export default class TokenService {
-    getEmail = () => {
+    getEmail = (token) => {
         try {
-            return JSON.parse(atob(localStorage.getItem('jwtToken').split('.')[1])).email;
+            return JSON.parse(atob(token.split('.')[1])).email;
         }
         catch {
             return null;

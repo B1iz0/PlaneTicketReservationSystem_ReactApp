@@ -4,23 +4,36 @@ import { Button, Toolbar, Typography } from '@material-ui/core/';
 import AppBar from '@material-ui/core/AppBar';
 import TokenService from '../../../services/token-service';
 
+import { useSelector } from 'react-redux'
+
 const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   }
 }));
 
-const Header = ({ email }) => {
+const Header = () => {
+    const jwtToken = useSelector((state) => state.jwtToken.value)
+
     const classes = useStyles();
     let tokenService = new TokenService();
-    const [ isLoggined, setIsLoggined ] = useState(false);
+    const [ userEmail, setUserEmail ] = useState('');
 
-    const profile = email ? <Typography variant="h5">
-                                {email}
-                            </Typography>
-                          : <Button href="/SignIn" variant="contained" color="primary">
-                              Sign in
-                            </Button>;
+    const profile = () => {
+        return userEmail ? (
+        <Typography variant="h5">
+          {userEmail}
+        </Typography>
+        ) : (
+        <Button href="/SignIn" variant="contained" color="primary">
+          Sign in
+        </Button>
+        );
+    } 
+
+    useEffect(() => {
+      setUserEmail(tokenService.getEmail(jwtToken));
+    }, [jwtToken]);
 
     return (
       <header>
@@ -29,7 +42,7 @@ const Header = ({ email }) => {
             <Typography variant="h5" className={classes.title}>
                 Company name
             </Typography>
-            { profile }
+            { profile() }
           </Toolbar>
         </AppBar>
       </header>

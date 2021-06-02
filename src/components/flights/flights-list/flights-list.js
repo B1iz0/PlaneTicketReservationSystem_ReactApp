@@ -35,7 +35,7 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
             });
         }
         const getFlightsAmount = async () => {
-            await API.get('/flights/count')
+            await API.get(`/flights/count?departureCity=${departureCity}&arrivalCity=${arrivalCity}`)
             .then(response => response.data)
             .then(data => {
                 setFlightsAmount(data);
@@ -53,6 +53,7 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
     }, [departureCity, arrivalCity, page]);
 
     const handlePageChange = (event, value) => {
+        console.log(value);
         setOffset((value - 1) * flightOnPage);
         setPage(value);
     }

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Toolbar, Typography } from "@material-ui/core/";
 import AppBar from "@material-ui/core/AppBar";
+import { useSelector } from "react-redux";
+
 import { getEmail } from "../../../services/token-service";
 import Profile from "../Profile/Profile";
-import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   title: {

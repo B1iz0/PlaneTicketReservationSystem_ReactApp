@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import FlightsItem from "../FlightsItem";
 import Grid from "@material-ui/core/Grid";
 import Pagination from "@material-ui/lab/Pagination";
 import { makeStyles } from "@material-ui/core/styles";
+
+import FlightsItem from "../FlightsItem";
 import { flightsOnPage } from "../../../constants";
 import API from "../../../api";
 import {

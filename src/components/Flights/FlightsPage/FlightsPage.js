@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 import FlightsList from "../FlightsList";
 import Filter from "../../Filter";
 import API from "../../../api";
 import { refreshCurrentToken } from "../../../services/token-service";
-import { useSelector } from "react-redux";
 import { allCtitesEndPoint } from "../../../constants";
 
 const FlightsPage = () => {

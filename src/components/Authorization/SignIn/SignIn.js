@@ -6,8 +6,9 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import API from "../../../api";
 import { useHistory } from "react-router-dom";
+
+import API from "../../../api";
 import { allUsersEndPoint } from "../../../constants";
 import { setToken } from "../../../services/token-service";
 import {

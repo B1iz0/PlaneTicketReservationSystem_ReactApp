@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import Header from "../shared/Header";
 import Footer from "../shared/Footer";
 import SignIn from "../Authorization/SignIn";

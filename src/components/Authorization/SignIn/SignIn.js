@@ -8,8 +8,9 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import API from '../../../api';
 import { useHistory } from "react-router-dom";
-import { useDispatch } from 'react-redux'
-import { setJwtToken } from '../../../redux/jwtTokenSlice';
+import { allUsersEndPoint } from '../../../constants';
+import { setToken } from '../../../services/token-service';
+import { checkEmail, checkPassword } from '../../../services/authorizationValidation';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -34,8 +35,6 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const SignIn = () => {
-    const dispatch = useDispatch()
-
     let history = useHistory();
     const classes = useStyles();
     const [ email, setEmail ] = useState('');
@@ -46,57 +45,25 @@ const SignIn = () => {
     const [ emailErrorMessage, setEmailErrorMessage ] = useState('Email is required.');
     const [ passwordErrorMessage, setPasswordErrorMessage ] = useState('Password is required.');
 
-    const checkEmail = () => {
-        if (email === '') {
-            setEmailNotValid(true);
-            setEmailErrorMessage('Email is required.');
-            return false;
-        }
-        if (email === 'admin') {
-            setEmailNotValid(false);
-            return true;
-        }
-        if (/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(email)) {
-            setEmailNotValid(false);
-            return true;
-        }
-        setEmailNotValid(true);
-        setEmailErrorMessage('Incorrect entry.');
-        return false;
-    }
-
-    const checkPassword = () => {
-        if (password === ''){
-            setPasswordNotValid(true);
-            setPasswordErrorMessage('Password is required.');
-            return false;
-        }
-        if (/(?=.*[0-9])(?=.*[a-zA-Z]){6,}/.test(password)) {
-            setPasswordNotValid(false);
-            return true;
-        } else {
-            setPasswordNotValid(true);
-            setPasswordErrorMessage('At least 6 characters (both Latin letter and digit).');
-            return false;
-        }
-    }
-
     async function formSubmitButtonClickHandler(e) {
         e.preventDefault();
 
-        let isEmailValid = await checkEmail();
-        let isPasswordValid = await checkPassword();
+        let emailValidationResult = await checkEmail(email);
+        setEmailNotValid(emailValidationResult.isNotValid);
+        setEmailErrorMessage(emailValidationResult.errorMessage);
 
-        if (!(isEmailValid && isPasswordValid)) return;
+        let passwordValidationResult = await checkPassword(password);
+        setPasswordNotValid(passwordValidationResult.isNotValid);
+        setPasswordErrorMessage(passwordValidationResult.errorMessage);
 
-        await API.post('/users/authenticate', {
+        if (emailValidationResult.isNotValid || passwordValidationResult.isNotValid) return;
+
+        await API.post(`${allUsersEndPoint}/authenticate`, {
             email: email,
             password: password
         })
         .then(response => {  
-            localStorage.setItem('jwtToken', response.data.jwtToken);
-            localStorage.setItem('refreshToken', response.data.refreshToken);
-            dispatch(setJwtToken(response.data.jwtToken));
+            setToken(response.data);
             history.push('/');
         })
         .catch(error => {

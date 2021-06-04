@@ -30,11 +30,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const FlightsItem = (props) => {
+const FlightsItem = ({ flight: { airplane, from, to, arrivalDate, departureDate }}) => {
     const classes = useStyles();
-    const { flight } = props;
-    const { airplane, from, to, arrivalDate, departureDate } = flight;
-    const { company } = airplane;
 
     return (
         <Grid item container>
@@ -44,7 +41,7 @@ const FlightsItem = (props) => {
                     <Grid item container spacing={3}>
                         <Grid item className={classes.companyName}>
                             <Typography variant='h3' align='center'>
-                                {company.name}
+                                {airplane.company.name}
                             </Typography>
                         </Grid>
                         <Grid item className={classes.airplaneInfo}>

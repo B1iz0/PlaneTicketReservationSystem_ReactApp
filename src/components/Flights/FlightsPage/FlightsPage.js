@@ -1,37 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import FlightsList from '../flights-list';
-import Filter from '../../filter-panel';
+import FlightsList from '../FlightsList';
+import Filter from '../../Filter';
 import API from '../../../api';
-import TokenService from '../../../services/token-service';
+import { refreshCurrentToken } from '../../../services/token-service';
 import { useSelector } from 'react-redux'
+import { allCtitesEndPoint } from '../../../constants';
 
 const FlightsPage = () => {
-    const jwtToken = useSelector((state) => state.jwtToken.value)
-    const refreshToken = useSelector((state) => state.refreshToken.value)
-    let tokenService = new TokenService();
-
+    const token = useSelector((state) => state.token);
     const [ cities, setCities ] = useState([]);
-    const [ selectedValues, setSelectedValues ] = useState([]);
     const [ departureCity, setDepartureCity ] = useState('');
     const [ arrivalCity, setArrivalCity ] = useState('');
 
     useEffect(() => {
         const loadCities = async () => {
-            await API.get(`/cities`, { headers: {"Authorization" : `Bearer ${jwtToken}`} })
+            await API.get(`${allCtitesEndPoint}`)
             .then(response => response.data)
             .then(data => setCities(data))
             .catch(error => {
                 console.log(error);
-                if (refreshToken) tokenService.refreshCurrentToken(refreshToken);
+                if (token.refreshToken) {
+                    refreshCurrentToken(token.refreshToken);
+                };
             });
         }
 
         loadCities();
         
-    }, []); 
+    }, [token]); 
 
     const onFilterConfirmed = (values) => {
-        setSelectedValues(values)
         setDepartureCity(values[0]);
         setArrivalCity(values[1]);
     }

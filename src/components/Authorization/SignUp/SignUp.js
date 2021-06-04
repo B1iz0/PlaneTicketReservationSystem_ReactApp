@@ -8,6 +8,9 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import API from '../../../api';
 import { useHistory } from "react-router-dom";
+import { allUsersEndPoint } from '../../../constants';
+import { setToken } from '../../../services/token-service';
+import { checkEmail, checkPassword, checkRepeatedPassword, checkFirstName, checkLastName } from '../../../services/authorizationValidation';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -51,91 +54,47 @@ const SignUp = () => {
     const [ firstNameErrorMessage, setFirstNameErrorMessage ] = useState('First name is required.');
     const [ lastNameErrorMessage, setLastNameErrorMessage ] = useState('Last name is required.');
 
-    const checkEmail = () => {
-        if (email === '') {
-            setEmailNotValid(true);
-            setEmailErrorMessage('Email is required.');
-            return false;
-        }
-        if (email === 'admin') {
-            setEmailNotValid(false);
-            return true;
-        }
-        if (/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(email)) {
-            setEmailNotValid(false);
-            return true;
-        }
-        setEmailNotValid(true);
-        setEmailErrorMessage('Incorrect entry.');
-        return false;
-    }
-
-    const checkPassword = () => {
-        if (password === ''){
-            setPasswordNotValid(true);
-            setPasswordErrorMessage('Password is required.');
-            return false;
-        }
-        if (/(?=.*[0-9])(?=.*[a-zA-Z]){6,}/.test(password)) {
-            setPasswordNotValid(false);
-            return true;
-        } else {
-            setPasswordNotValid(true);
-            setPasswordErrorMessage('At least 6 characters (both Latin letter and digit).');
-            return false;
-        }
-    }
-
-    const checkRepeatedPassword = () => {
-        if (repeatedPassword !== password){
-            setRepeatedPasswordNotValid(true);
-            setRepeatedPasswordErrorMessage('Password do not match.')
-            return false;
-        }
-        setRepeatedPasswordNotValid(false);
-        return true;
-    }
-
-    const checkFirstName = () => {
-        if (firstName === ''){
-            setFirstNameNotValid(true);
-            setFirstNameErrorMessage('First name is required.');
-            return false;
-        }
-        setFirstNameNotValid(false);
-        return true;
-    }
-
-    const checkLastName = () => {
-        if (lastName === ''){
-            setLastNameNotValid(true);
-            setLastNameErrorMessage('Last name is required.');
-            return false;
-        }
-        setLastNameNotValid(false);
-        return true;
-    }
-
     async function formSubmitButtonClickHandler(e) {
         e.preventDefault();
 
-        let isEmailValid = await checkEmail();
-        let isPasswordValid = await checkPassword();
-        let isRepeatedPasswordValid = await checkRepeatedPassword();
-        let isFirstNameValid = await checkFirstName();
-        let isLastNameValid = await checkLastName();
+        let emailValidationResult = await checkEmail(email);
+        setEmailNotValid(emailValidationResult.isNotValid);
+        setEmailErrorMessage(emailValidationResult.errorMessage);
 
-        if (!(isEmailValid && isPasswordValid && isRepeatedPasswordValid && isFirstNameValid && isLastNameValid)) return;
+        let passwordValidationResult = await checkPassword(password);
+        setPasswordNotValid(passwordValidationResult.isNotValid);
+        setPasswordErrorMessage(passwordValidationResult.errorMessage);
+
+        let repeatedPasswordValidationResult = await checkRepeatedPassword(repeatedPassword, password);
+        setRepeatedPasswordNotValid(repeatedPasswordValidationResult.isNotValid);
+        setRepeatedPasswordErrorMessage(repeatedPasswordValidationResult.errorMessage);
+
+        let firstNameValidationResult = await checkFirstName(firstName);
+        setFirstNameNotValid(firstNameValidationResult.isNotValid);
+        setFirstNameErrorMessage(firstNameValidationResult.errorMessage);
+
+        let lastNameValidationResult = await checkLastName(lastName);
+        setLastNameNotValid(lastNameValidationResult.isNotValid);
+        setLastNameErrorMessage(lastNameValidationResult.errorMessage);
+
+        if (emailValidationResult.isNotValid
+            || passwordValidationResult.isNotValid
+            || repeatedPasswordValidationResult.isNotValid
+            || firstNameValidationResult.isNotValid
+            || lastNameValidationResult.isNotValid) 
+        {
+            return;
+        }
         
-        API.post('/users/registration', {
+        API.post(`${allUsersEndPoint}/registration`, {
             email: email,
             password: password,
             firstName: firstName,
             lastName: lastName
         })
         .then(response => {
+            setToken(response.data);
             history.push('/Flights');
-            console.log(response);
         })
         .catch(error => {
             if (error.response) {

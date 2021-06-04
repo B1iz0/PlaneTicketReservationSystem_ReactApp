@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import jwtTokenReducer from './jwtTokenSlice';
-import refreshTokenReducer from './refreshTokenSlice';
+import tokenReducer from './tokenSlice';
 
 export default configureStore({
     reducer: {
-        jwtToken: jwtTokenReducer,
-        refreshToken: refreshTokenReducer,
+        token: tokenReducer,
     },
 });

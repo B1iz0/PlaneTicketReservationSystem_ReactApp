@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import FlightsItem from '../flights-list-item';
+import FlightsItem from '../FlightsItem';
 import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination';
 import { makeStyles } from '@material-ui/core/styles';
+import { flightsOnPage } from '../../../constants';
 import API from '../../../api';
+import { allFlightsEndPoint, allFlightsCountEndPoint } from '../../../constants';
 
 const useStyles = makeStyles((theme) => ({
     flightList: {
@@ -16,16 +18,22 @@ const useStyles = makeStyles((theme) => ({
 
 const FlightsList = ({ departureCity, arrivalCity }) => {
     const classes = useStyles();
-    const flightOnPage = 3;
     const [ offset, setOffset ] = useState(0);
     const [ amountOfPages, setPagesAmount ] = useState(1);
     const [ page, setPage ] = useState(1);
     const [ flights, setFlights ] = useState([]);
-    const [ flightsAmount, setFlightsAmount ] = useState(0);
 
     useEffect(() => {
         const loadData = async () => {
-            await API.get(`/flights?offset=${offset}&limit=${flightOnPage}&departureCity=${departureCity}&arrivalCity=${arrivalCity}`)
+            await API.get(`${allFlightsEndPoint}`,
+            {
+                params: {
+                    offset: offset,
+                    limit: flightsOnPage,
+                    departureCity: departureCity,
+                    arrivalCity: arrivalCity,
+                }
+            })
             .then(response => response.data)
             .then(data => setFlights(data))
             .catch(error => {
@@ -35,11 +43,16 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
             });
         }
         const getFlightsAmount = async () => {
-            await API.get(`/flights/count?departureCity=${departureCity}&arrivalCity=${arrivalCity}`)
+            await API.get(`${allFlightsCountEndPoint}`,
+            {
+                params: {
+                    departureCity: departureCity,
+                    arrivalCity: arrivalCity,
+                }
+            })
             .then(response => response.data)
             .then(data => {
-                setFlightsAmount(data);
-                setPagesAmount(Math.ceil(data / flightOnPage));
+                setPagesAmount(Math.ceil(data / flightsOnPage));
             })
             .catch(error => {
                 if (error.response) {
@@ -50,11 +63,11 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
 
         getFlightsAmount();
         loadData();
-    }, [departureCity, arrivalCity, page]);
+    }, [departureCity, arrivalCity, page, offset]);
 
     const handlePageChange = (event, value) => {
         console.log(value);
-        setOffset((value - 1) * flightOnPage);
+        setOffset((value - 1) * flightsOnPage);
         setPage(value);
     }
 

@@ -9,8 +9,7 @@ import MenuList from '@material-ui/core/MenuList';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux'
-import { removeJwtToken } from '../../../redux/jwtTokenSlice';
-import { removeRefreshToken } from '../../../redux/refreshTokenSlice';
+import { removeJwtToken, removeRefreshToken } from '../../../redux/tokenSlice';
 
 const useStyles = makeStyles((theme) => ({
   root: {

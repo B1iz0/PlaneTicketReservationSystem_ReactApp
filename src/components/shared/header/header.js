@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Toolbar, Typography } from '@material-ui/core/';
+import { Toolbar, Typography } from '@material-ui/core/';
 import AppBar from '@material-ui/core/AppBar';
-import TokenService from '../../../services/token-service';
-import ProfileDropdownMenu from '../profile-dropdowm-menu';
+import { getEmail } from '../../../services/token-service';
+import Profile from '../Profile/Profile';
 import { useSelector } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
@@ -13,25 +13,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
-    const jwtToken = useSelector((state) => state.jwtToken.value)
+    const token = useSelector((state) => state.token)
 
     const classes = useStyles();
-    let tokenService = new TokenService();
-    const [ userEmail, setUserEmail ] = useState('');
-
-    const profile = () => {
-        return userEmail ? (
-        <ProfileDropdownMenu userEmail={userEmail}/>
-        ) : (
-        <Button href="/SignIn" variant="contained" color="primary">
-          Sign in
-        </Button>
-        );
-    } 
+    const [ userEmail, setUserEmail ] = useState(''); 
 
     useEffect(() => {
-      setUserEmail(tokenService.getEmail(jwtToken));
-    }, [jwtToken]);
+      setUserEmail(getEmail(token.jwtToken));
+    }, [token.jwtToken]);
 
     return (
       <header>
@@ -40,7 +29,7 @@ const Header = () => {
             <Typography variant="h5" className={classes.title}>
                 Company name
             </Typography>
-            { profile() }
+            <Profile userEmail={userEmail}/>
           </Toolbar>
         </AppBar>
       </header>

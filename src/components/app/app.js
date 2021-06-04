@@ -1,12 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Header from '../shared/header';
-import Footer from '../shared/footer';
-import SignIn from '../authorization/sign-in';
-import SignUp from '../authorization/sign-up';
-import FlightsPage from '../flights/flights-page';
-
-import './app.css'
+import Header from '../shared/Header';
+import Footer from '../shared/Footer';
+import SignIn from '../Authorization/SignIn';
+import SignUp from '../Authorization/SignUp';
+import FlightsPage from '../Flights/FlightsPage';
 
 function App() {
     return (

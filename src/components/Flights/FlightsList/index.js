@@ -1,2 +1,2 @@
-import FlightsList from './FlightsList';
+import FlightsList from "./FlightsList";
 export default FlightsList;

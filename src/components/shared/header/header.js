@@ -4,7 +4,8 @@ import { Toolbar, Typography } from "@material-ui/core/";
 import AppBar from "@material-ui/core/AppBar";
 import { useSelector } from "react-redux";
 
-import { getEmail } from "../../../services/token-service";
+import { getEmail } from "@services/token-service";
+
 import Profile from "../Profile/Profile";
 
 const useStyles = makeStyles((theme) => ({

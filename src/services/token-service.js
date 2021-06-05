@@ -1,12 +1,12 @@
-import API from "../api";
+import API from "@api";
 import {
   setJwtToken,
   removeJwtToken,
   setRefreshToken,
   removeRefreshToken,
-} from "../redux/tokenSlice";
-import store from "../redux/store";
-import { allUsersEndPoint } from "../constants";
+} from "@redux/tokenSlice";
+import store from "@redux/store";
+import { allUsersEndPoint } from "@constants";
 
 const getEmail = (token) => {
   try {

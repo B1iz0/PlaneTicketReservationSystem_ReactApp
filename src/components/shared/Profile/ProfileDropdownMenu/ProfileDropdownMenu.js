@@ -10,11 +10,12 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 
-import { removeJwtToken, removeRefreshToken } from "@redux/tokenSlice";
+import { removeJwtToken, removeRefreshToken } from "reduxStore/tokenSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    zIndex: 5,
   },
   paper: {
     marginRight: theme.spacing(2),
@@ -98,6 +99,7 @@ const ProfileDropdownMenu = ({ userEmail }) => {
                   autoFocusItem={open}
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
+                  zIndex={5}
                 >
                   <MenuItem onClick={handleClose}>Profile</MenuItem>
                   <MenuItem onClick={handleClose}>My account</MenuItem>

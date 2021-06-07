@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import Filter from "@components/Filter";
-import API from "@api";
-import { refreshCurrentToken } from "@services/token-service";
-import { allCtitesEndPoint } from "@constants";
+import Filter from "components/Filter";
+import API from "api";
+import { refreshCurrentToken } from "services/token-service";
+import { allCtitesEndPoint } from "constants";
 
 import FlightsList from "../FlightsList";
 

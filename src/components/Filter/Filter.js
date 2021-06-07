@@ -14,9 +14,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Filter = ({ fields, fieldsOptions, onFilterConfirmed }) => {
+const Filter = ({ fields, fieldsOptions, onFilterConfirmed, disableOptions = false }) => {
   const classes = useStyles();
-  const [selectedValues, setSelectedValues] = useState(["", ""]);
+  const [selectedValues, setSelectedValues] = useState(fields.map(() => ""));
 
   const searchClickHandle = () => {
     onFilterConfirmed(selectedValues);
@@ -28,7 +28,15 @@ const Filter = ({ fields, fieldsOptions, onFilterConfirmed }) => {
         {fields.map((field, key) => {
           return (
             <Grid item key={key}>
-              <Autocomplete
+              { disableOptions ? 
+                <TextField label={field} variant="outlined" onChange={(event) => {
+                  setSelectedValues([
+                    ...selectedValues.slice(0, key),
+                    event.target.value,
+                    ...selectedValues.slice(key + 1),
+                  ]);
+                }}/> :
+                <Autocomplete
                 id={`filter${key}`}
                 options={fieldsOptions[key]}
                 getOptionLabel={(option) => option.name}
@@ -44,7 +52,8 @@ const Filter = ({ fields, fieldsOptions, onFilterConfirmed }) => {
                 renderInput={(params) => (
                   <TextField {...params} label={field} variant="outlined" />
                 )}
-              />
+                />
+              }
             </Grid>
           );
         })}

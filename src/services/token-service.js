@@ -1,12 +1,12 @@
-import API from "@api";
+import API from "api";
 import {
   setJwtToken,
   removeJwtToken,
   setRefreshToken,
   removeRefreshToken,
-} from "@redux/tokenSlice";
-import store from "@redux/store";
-import { allUsersEndPoint } from "@constants";
+} from "reduxStore/tokenSlice";
+import store from "reduxStore/store";
+import { allUsersEndPoint } from "constants";
 
 const getEmail = (token) => {
   try {
@@ -35,7 +35,7 @@ const refreshCurrentToken = async (refreshToken) => {
       store.dispatch(setRefreshToken(data.refreshToken));
     })
     .catch((error) => {
-      console.log(error.response.data);
+      console.log(error);
       localStorage.removeItem("jwtToken");
       localStorage.removeItem("refreshToken");
       store.dispatch(removeJwtToken());

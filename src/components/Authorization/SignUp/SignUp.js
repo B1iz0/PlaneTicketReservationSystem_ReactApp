@@ -8,16 +8,16 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import { useHistory } from "react-router-dom";
 
-import API from "@api";
-import { allUsersEndPoint } from "@constants";
-import { setToken } from "@services/token-service";
+import API from "api";
+import { allUsersEndPoint } from "constants";
+import { setToken } from "services/token-service";
 import {
   checkEmail,
   checkPassword,
   checkRepeatedPassword,
   checkFirstName,
   checkLastName,
-} from "@services/authorizationValidation";
+} from "services/authorizationValidation";
 
 const useStyles = makeStyles((theme) => ({
   paper: {

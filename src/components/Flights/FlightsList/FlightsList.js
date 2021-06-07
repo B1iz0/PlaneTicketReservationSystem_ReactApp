@@ -3,12 +3,12 @@ import Grid from "@material-ui/core/Grid";
 import Pagination from "@material-ui/lab/Pagination";
 import { makeStyles } from "@material-ui/core/styles";
 
-import API from "@api";
+import API from "api";
 import {
   flightsOnPage,
   allFlightsEndPoint,
   allFlightsCountEndPoint,
-} from "@constants";
+} from "constants";
 
 import FlightsItem from "../FlightsItem";
 

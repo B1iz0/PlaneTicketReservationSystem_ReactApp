@@ -10,7 +10,7 @@ import API from "api";
 import {
     allUsersEndPoint,
     allUsersCountEndPoint,
-    usersOnAdminTable
+    elementsOnAdminTable
 } from "constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +32,7 @@ const AdminUsersPage = () => {
   const [ totalUsersNumber, setTotalUsersNumber ] = useState(0);
 
   const [ offset, setOffset ] = useState(0);
-  const [ limit, setLimit ] = useState(usersOnAdminTable);
+  const [ limit, setLimit ] = useState(elementsOnAdminTable);
   const [ emailFilter, setEmailFilter ] = useState('');
   const [ firstNameFilter, setFirstNameFilter ] = useState('');
   const [ lastNameFilter, setLastNameFilter ] = useState('');
@@ -92,12 +92,13 @@ const AdminUsersPage = () => {
 
       getUsers();
       getUsersCount();
-  }, [offset]);
+  }, [offset, limit, emailFilter, firstNameFilter, lastNameFilter]);
 
   const onFilterConfirmed = (values) => {
     setEmailFilter(values[0]);
     setFirstNameFilter(values[1]);
     setLastNameFilter(values[2]);
+    setOffset(0);
   }
 
   const onPageChange = (page) => {

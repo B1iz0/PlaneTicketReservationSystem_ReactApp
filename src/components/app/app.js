@@ -10,6 +10,8 @@ import SignIn from "components/Authorization/SignIn";
 import SignUp from "components/Authorization/SignUp";
 import FlightsPage from "components/Flights/FlightsPage";
 import AdminUsersPage from "components/Admin/AdminPages/AdminUsersPage";
+import AdminCompaniesPage from "components/Admin/AdminPages/AdminCompaniesPage";
+import AdminFlightsPage from "components/Admin/AdminPages/AdminFlightsPage";
 import { getEmail } from "services/token-service";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +50,12 @@ function App() {
               </Route>
               <Route path="/admin/users">
                 <AdminUsersPage />
+              </Route>
+              <Route path="/admin/companies">
+                <AdminCompaniesPage />
+              </Route>
+              <Route path="/admin/flights">
+                <AdminFlightsPage />
               </Route>
               <Route path="/">
                 <FlightsPage />

@@ -14,28 +14,22 @@ function PaperComponent(props) {
     );
   }
 
-const EditDialog = ({ isOpened, closeEditDialog, EditDialogContent, elementUrl }) => {
+const CustomDialog = ({ isOpened, closeDialog, DialogContent }) => {
     return(
         <Dialog
         open={isOpened}
-        onClose={() => closeEditDialog()}
+        onClose={() => closeDialog()}
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
         >
-            <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-            Subscribe
-            </DialogTitle>
-            <EditDialogContent elementUrl={elementUrl}/>
-            <DialogActions>
-                <Button autoFocus onClick={() => closeEditDialog()} color="primary">
-                    Cancel
-                </Button>
-                <Button onClick={() => closeEditDialog()} color="primary">
-                    Subscribe
-                </Button>
-            </DialogActions>
+          {DialogContent}
+          <DialogActions>
+              <Button autoFocus onClick={() => closeDialog()} color="primary">
+                  Cancel
+              </Button>
+          </DialogActions>
       </Dialog>
     );
 };
 
-export default EditDialog;
+export default CustomDialog;

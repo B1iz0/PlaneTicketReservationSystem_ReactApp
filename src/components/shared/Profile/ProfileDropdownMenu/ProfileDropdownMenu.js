@@ -99,7 +99,7 @@ const ProfileDropdownMenu = ({ userEmail }) => {
                   autoFocusItem={open}
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
-                  zIndex={5}
+                  zIndex="tooltip"
                 >
                   <MenuItem onClick={handleClose}>Profile</MenuItem>
                   <MenuItem onClick={handleClose}>My account</MenuItem>

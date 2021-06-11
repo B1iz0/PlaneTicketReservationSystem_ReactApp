@@ -27,6 +27,7 @@ const AdminPanel = () => {
                 <Typography align='center'>Admin</Typography>
                 <Button href='/admin/users'>Users</Button>
                 <Button href='/admin/companies'>Companies</Button>
+                <Button href='/admin/airplanes'>Airplanes</Button>
                 <Button href='/admin/flights'>Flights</Button>
             </Grid>
         </Toolbar>

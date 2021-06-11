@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
 import { DataGrid } from '@material-ui/data-grid';
 import Typography from '@material-ui/core/Typography';
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import EditIcon from '@material-ui/icons/Edit';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { IconButton } from '@material-ui/core';
 
 import CustomDialog from "components/shared/CustomDialog";
 import Filter from "components/Filter";
@@ -19,7 +19,6 @@ import {
 
 import FlightInfoDialogContent from './FlightInfoDialogContent';
 import FlightEditDialogContent from './FlightEditDialogContent';
-import { IconButton } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     flightsGrid: {
@@ -143,7 +142,7 @@ const AdminFlightsPage = () => {
   
         getFlights();
         getFlightsCount();
-    }, [offset, limit, departureCityFilter, arrivalCityFilter]);
+    }, [offset, limit, departureCityFilter, arrivalCityFilter, isEditDialogOpened]);
 
     const onFilterConfirmed = (values) => {
       setDepartureCityFilter(values[0]);
@@ -175,8 +174,8 @@ const AdminFlightsPage = () => {
     
     return(
         <div>
-            <CustomDialog isOpened={isMoreInfoDialogOpened} DialogContent={<FlightInfoDialogContent elementUrl={`${allFlightsEndPoint}/${flightIdEdit}`}/>} closeDialog={closeMoreInfoDialog}/>
-            <CustomDialog isOpened={isEditDialogOpened} DialogContent={<FlightEditDialogContent flightForEditing={flightForEditing}/>} closeDialog={closeEditInfoDialog}/>
+            <CustomDialog title='More info' isOpened={isMoreInfoDialogOpened} DialogContent={<FlightInfoDialogContent elementUrl={`${allFlightsEndPoint}/${flightIdEdit}`}/>} closeDialog={closeMoreInfoDialog}/>
+            <CustomDialog title='Edit' isOpened={isEditDialogOpened} DialogContent={<FlightEditDialogContent flightForEditing={flightForEditing}/>} closeDialog={closeEditInfoDialog}/>
             <div className={classes.tableHeader}>
                 <Typography variant="h3">Flights</Typography>
                 <Filter 

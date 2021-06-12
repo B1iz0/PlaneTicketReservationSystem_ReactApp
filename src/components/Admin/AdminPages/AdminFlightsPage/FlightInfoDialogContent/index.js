@@ -1,2 +1,2 @@
-import FlightInfoDialogContent from './FlightInfoDialogContent';
-export default FlightInfoDialogContent;
+import FlightInfoDialogContent from './FlightInfoDialogContent'
+export default FlightInfoDialogContent

@@ -1,7 +1,7 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
+import React from 'react'
+import Button from '@material-ui/core/Button'
 
-import ProfileDropdownMenu from "./ProfileDropdownMenu/";
+import ProfileDropdownMenu from './ProfileDropdownMenu/'
 
 const Profile = ({ userEmail }) => {
   return userEmail ? (
@@ -10,7 +10,7 @@ const Profile = ({ userEmail }) => {
     <Button href="/SignIn" variant="contained" color="primary">
       Sign in
     </Button>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

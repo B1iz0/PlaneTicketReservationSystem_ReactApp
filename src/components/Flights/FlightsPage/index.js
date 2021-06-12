@@ -1,2 +1,2 @@
-import FlightsPage from "./FlightsPage";
-export default FlightsPage;
+import FlightsPage from './FlightsPage'
+export default FlightsPage

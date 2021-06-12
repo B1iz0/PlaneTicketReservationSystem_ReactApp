@@ -1,27 +1,24 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import { useHistory } from "react-router-dom";
+import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Container from '@material-ui/core/Container'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import { useHistory } from 'react-router-dom'
 
-import API from "api";
-import { allUsersEndPoint } from "constants";
-import { setToken } from "services/token-service";
-import {
-  checkEmail,
-  checkPassword,
-} from "services/authorizationValidation";
+import API from 'api'
+import { allUsersEndPoint } from 'constants'
+import { setToken } from 'services/token-service'
+import { checkEmail, checkPassword } from 'services/authorizationValidation'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
@@ -34,52 +31,52 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   errorSignIn: {
-    color: "#ff0000",
+    color: '#ff0000',
   },
-}));
+}))
 
 const SignIn = () => {
-  let history = useHistory();
-  const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isEmailNotValid, setEmailNotValid] = useState(false);
-  const [isPasswordNotValid, setPasswordNotValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  let history = useHistory()
+  const classes = useStyles()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isEmailNotValid, setEmailNotValid] = useState(false)
+  const [isPasswordNotValid, setPasswordNotValid] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [emailErrorMessage, setEmailErrorMessage] =
-    useState("Email is required.");
+    useState('Email is required.')
   const [passwordErrorMessage, setPasswordErrorMessage] = useState(
-    "Password is required."
-  );
+    'Password is required.'
+  )
 
   async function formSubmitButtonClickHandler(e) {
-    e.preventDefault();
+    e.preventDefault()
 
-    let emailValidationResult = await checkEmail(email);
-    setEmailNotValid(emailValidationResult.isNotValid);
-    setEmailErrorMessage(emailValidationResult.errorMessage);
+    let emailValidationResult = await checkEmail(email)
+    setEmailNotValid(emailValidationResult.isNotValid)
+    setEmailErrorMessage(emailValidationResult.errorMessage)
 
-    let passwordValidationResult = await checkPassword(password);
-    setPasswordNotValid(passwordValidationResult.isNotValid);
-    setPasswordErrorMessage(passwordValidationResult.errorMessage);
+    let passwordValidationResult = await checkPassword(password)
+    setPasswordNotValid(passwordValidationResult.isNotValid)
+    setPasswordErrorMessage(passwordValidationResult.errorMessage)
 
     if (emailValidationResult.isNotValid || passwordValidationResult.isNotValid)
-      return;
+      return
 
     await API.post(`${allUsersEndPoint}/authenticate`, {
       email: email,
       password: password,
     })
       .then((response) => {
-        setToken(response.data);
-        history.push("/");
+        setToken(response.data)
+        history.push('/')
       })
       .catch((error) => {
         if (error.response) {
-          console.log(error.response.data);
-          setErrorMessage(error.response.data.message);
+          console.log(error.response.data)
+          setErrorMessage(error.response.data.message)
         }
-      });
+      })
   }
 
   return (
@@ -102,7 +99,7 @@ const SignIn = () => {
               autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
               autoFocus
-              helperText={isEmailNotValid ? emailErrorMessage : ""}
+              helperText={isEmailNotValid ? emailErrorMessage : ''}
             />
             <TextField
               error={isPasswordNotValid}
@@ -116,7 +113,7 @@ const SignIn = () => {
               id="password"
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
-              helperText={isPasswordNotValid ? passwordErrorMessage : ""}
+              helperText={isPasswordNotValid ? passwordErrorMessage : ''}
             />
             <label className={classes.errorSignIn}>{errorMessage}</label>
             <Button
@@ -140,7 +137,7 @@ const SignIn = () => {
         </div>
       </Container>
     </>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn

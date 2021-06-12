@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
+import { useSelector } from 'react-redux'
 
-import AdminPanel from 'components/Admin/AdminPanel';
-import Header from "components/shared/Header";
-import Footer from "components/shared/Footer";
-import SignIn from "components/Authorization/SignIn";
-import SignUp from "components/Authorization/SignUp";
-import FlightsPage from "components/Flights/FlightsPage";
-import AdminUsersPage from "components/Admin/AdminPages/AdminUsersPage";
-import AdminCompaniesPage from "components/Admin/AdminPages/AdminCompaniesPage";
-import AdminFlightsPage from "components/Admin/AdminPages/AdminFlightsPage";
-import { getEmail } from "services/token-service";
-import AdminAirplanesPage from "../Admin/AdminPages/AdminAirplanesPage/AdminAirplanesPage";
+import AdminPanel from 'components/Admin/AdminPanel'
+import Header from 'components/shared/Header'
+import Footer from 'components/shared/Footer'
+import SignIn from 'components/Authorization/SignIn'
+import SignUp from 'components/Authorization/SignUp'
+import FlightsPage from 'components/Flights/FlightsPage'
+import AdminUsersPage from 'components/Admin/AdminPages/AdminUsersPage'
+import AdminCompaniesPage from 'components/Admin/AdminPages/AdminCompaniesPage'
+import AdminFlightsPage from 'components/Admin/AdminPages/AdminFlightsPage'
+import { getEmail } from 'services/token-service'
+import AdminAirplanesPage from '../Admin/AdminPages/AdminAirplanesPage/AdminAirplanesPage'
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -22,24 +22,24 @@ const useStyles = makeStyles((theme) => ({
   mainPage: {
     width: '100%',
     padding: '25px',
-  }
-}));
+  },
+}))
 
 function App() {
-  const token = useSelector((state) => state.token);
-  const classes = useStyles();
+  const token = useSelector((state) => state.token)
+  const classes = useStyles()
 
-  const [userEmail, setUserEmail] = useState('');
+  const [userEmail, setUserEmail] = useState('')
 
   useEffect(() => {
-    setUserEmail(getEmail(token.jwtToken));
-  }, [token.jwtToken]);
+    setUserEmail(getEmail(token.jwtToken))
+  }, [token.jwtToken])
 
   return (
     <>
       <Header />
       <main className={classes.main}>
-        { userEmail ? <AdminPanel /> : <></>}
+        {userEmail ? <AdminPanel /> : <></>}
         <div className={classes.mainPage}>
           <Router>
             <Switch>
@@ -70,7 +70,7 @@ function App() {
       </main>
       <Footer />
     </>
-  );
+  )
 }
 
-export default App;
+export default App

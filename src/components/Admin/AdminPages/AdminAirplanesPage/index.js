@@ -1,2 +1,2 @@
-import AdminAirplanesPage from './AdminAirplanesPage';
-export default AdminAirplanesPage;
+import AdminAirplanesPage from './AdminAirplanesPage'
+export default AdminAirplanesPage

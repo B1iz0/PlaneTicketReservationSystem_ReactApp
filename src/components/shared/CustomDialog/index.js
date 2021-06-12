@@ -1,2 +1,2 @@
-import CustomDialog from './CustomDialog';
-export default CustomDialog;
+import CustomDialog from './CustomDialog'
+export default CustomDialog

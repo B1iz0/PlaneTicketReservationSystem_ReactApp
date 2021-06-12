@@ -1,2 +1,2 @@
-import FlightEditDialogContent from './FlightEditDialogContent';
-export default FlightEditDialogContent;
+import FlightEditDialogContent from './FlightEditDialogContent'
+export default FlightEditDialogContent

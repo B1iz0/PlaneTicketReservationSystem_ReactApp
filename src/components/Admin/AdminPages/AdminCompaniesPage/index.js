@@ -1,2 +1,2 @@
-import AdminCompaniesPage from './AdminCompaniesPage';
-export default AdminCompaniesPage;
+import AdminCompaniesPage from './AdminCompaniesPage'
+export default AdminCompaniesPage

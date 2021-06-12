@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import { useHistory } from "react-router-dom";
+import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Container from '@material-ui/core/Container'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import { useHistory } from 'react-router-dom'
 
-import API from "api";
-import { allUsersEndPoint } from "constants";
-import { setToken } from "services/token-service";
+import API from 'api'
+import { allUsersEndPoint } from 'constants'
+import { setToken } from 'services/token-service'
 import {
   checkEmail,
   checkPassword,
   checkRepeatedPassword,
   checkFirstName,
   checkLastName,
-} from "services/authorizationValidation";
+} from 'services/authorizationValidation'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
@@ -36,67 +36,67 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+}))
 
 const SignUp = () => {
-  let history = useHistory();
-  const classes = useStyles();
+  let history = useHistory()
+  const classes = useStyles()
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatedPassword, setRepeatedPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [repeatedPassword, setRepeatedPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
 
-  const [isEmailNotValid, setEmailNotValid] = useState(false);
-  const [isPasswordNotValid, setPasswordNotValid] = useState(false);
+  const [isEmailNotValid, setEmailNotValid] = useState(false)
+  const [isPasswordNotValid, setPasswordNotValid] = useState(false)
   const [isRepeatedPasswordNotValid, setRepeatedPasswordNotValid] =
-    useState(false);
-  const [isFirstNameNotValid, setFirstNameNotValid] = useState(false);
-  const [isLastNameNotValid, setLastNameNotValid] = useState(false);
+    useState(false)
+  const [isFirstNameNotValid, setFirstNameNotValid] = useState(false)
+  const [isLastNameNotValid, setLastNameNotValid] = useState(false)
 
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('')
   const [emailErrorMessage, setEmailErrorMessage] =
-    useState("Email is required.");
+    useState('Email is required.')
   const [passwordErrorMessage, setPasswordErrorMessage] = useState(
-    "Password is required."
-  );
+    'Password is required.'
+  )
   const [repeatedPasswordErrorMessage, setRepeatedPasswordErrorMessage] =
-    useState("Repeat password.");
+    useState('Repeat password.')
   const [firstNameErrorMessage, setFirstNameErrorMessage] = useState(
-    "First name is required."
-  );
+    'First name is required.'
+  )
   const [lastNameErrorMessage, setLastNameErrorMessage] = useState(
-    "Last name is required."
-  );
+    'Last name is required.'
+  )
 
   async function formSubmitButtonClickHandler(e) {
-    e.preventDefault();
+    e.preventDefault()
 
-    let emailValidationResult = await checkEmail(email);
-    setEmailNotValid(emailValidationResult.isNotValid);
-    setEmailErrorMessage(emailValidationResult.errorMessage);
+    let emailValidationResult = await checkEmail(email)
+    setEmailNotValid(emailValidationResult.isNotValid)
+    setEmailErrorMessage(emailValidationResult.errorMessage)
 
-    let passwordValidationResult = await checkPassword(password);
-    setPasswordNotValid(passwordValidationResult.isNotValid);
-    setPasswordErrorMessage(passwordValidationResult.errorMessage);
+    let passwordValidationResult = await checkPassword(password)
+    setPasswordNotValid(passwordValidationResult.isNotValid)
+    setPasswordErrorMessage(passwordValidationResult.errorMessage)
 
     let repeatedPasswordValidationResult = await checkRepeatedPassword(
       repeatedPassword,
       password
-    );
-    setRepeatedPasswordNotValid(repeatedPasswordValidationResult.isNotValid);
+    )
+    setRepeatedPasswordNotValid(repeatedPasswordValidationResult.isNotValid)
     setRepeatedPasswordErrorMessage(
       repeatedPasswordValidationResult.errorMessage
-    );
+    )
 
-    let firstNameValidationResult = await checkFirstName(firstName);
-    setFirstNameNotValid(firstNameValidationResult.isNotValid);
-    setFirstNameErrorMessage(firstNameValidationResult.errorMessage);
+    let firstNameValidationResult = await checkFirstName(firstName)
+    setFirstNameNotValid(firstNameValidationResult.isNotValid)
+    setFirstNameErrorMessage(firstNameValidationResult.errorMessage)
 
-    let lastNameValidationResult = await checkLastName(lastName);
-    setLastNameNotValid(lastNameValidationResult.isNotValid);
-    setLastNameErrorMessage(lastNameValidationResult.errorMessage);
+    let lastNameValidationResult = await checkLastName(lastName)
+    setLastNameNotValid(lastNameValidationResult.isNotValid)
+    setLastNameErrorMessage(lastNameValidationResult.errorMessage)
 
     if (
       emailValidationResult.isNotValid ||
@@ -105,7 +105,7 @@ const SignUp = () => {
       firstNameValidationResult.isNotValid ||
       lastNameValidationResult.isNotValid
     ) {
-      return;
+      return
     }
 
     API.post(`${allUsersEndPoint}/registration`, {
@@ -115,16 +115,16 @@ const SignUp = () => {
       lastName: lastName,
     })
       .then((response) => {
-        setToken(response.data);
-        history.push("/Flights");
+        setToken(response.data)
+        history.push('/Flights')
       })
       .catch((error) => {
         if (error.response) {
-          console.log(error.response.data);
-          setErrorMessage(error.response.data.message);
+          console.log(error.response.data)
+          setErrorMessage(error.response.data.message)
         }
-        console.log(error);
-      });
+        console.log(error)
+      })
   }
 
   return (
@@ -147,7 +147,7 @@ const SignUp = () => {
               autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
               autoFocus
-              helperText={isEmailNotValid ? emailErrorMessage : ""}
+              helperText={isEmailNotValid ? emailErrorMessage : ''}
             />
             <TextField
               error={isPasswordNotValid}
@@ -161,7 +161,7 @@ const SignUp = () => {
               id="password"
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
-              helperText={isPasswordNotValid ? passwordErrorMessage : ""}
+              helperText={isPasswordNotValid ? passwordErrorMessage : ''}
             />
             <TextField
               error={isRepeatedPasswordNotValid}
@@ -176,7 +176,7 @@ const SignUp = () => {
               autoComplete="repeated-password"
               onChange={(e) => setRepeatedPassword(e.target.value)}
               helperText={
-                isRepeatedPasswordNotValid ? repeatedPasswordErrorMessage : ""
+                isRepeatedPasswordNotValid ? repeatedPasswordErrorMessage : ''
               }
             />
             <TextField
@@ -189,7 +189,7 @@ const SignUp = () => {
               name="firstName"
               required
               onChange={(e) => setFirstName(e.target.value)}
-              helperText={isFirstNameNotValid ? firstNameErrorMessage : ""}
+              helperText={isFirstNameNotValid ? firstNameErrorMessage : ''}
             />
             <TextField
               error={isLastNameNotValid}
@@ -201,7 +201,7 @@ const SignUp = () => {
               name="lastName"
               required
               onChange={(e) => setLastName(e.target.value)}
-              helperText={isLastNameNotValid ? lastNameErrorMessage : ""}
+              helperText={isLastNameNotValid ? lastNameErrorMessage : ''}
             />
             <label className={classes.errorSignIn}>{errorMessage}</label>
             <Button
@@ -217,7 +217,7 @@ const SignUp = () => {
             <Grid container>
               <Grid item>
                 <Link href="/SignIn" variant="body2">
-                  {"Have an account? Sign In"}
+                  {'Have an account? Sign In'}
                 </Link>
               </Grid>
             </Grid>
@@ -225,7 +225,7 @@ const SignUp = () => {
         </div>
       </Container>
     </>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp

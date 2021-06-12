@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState } from 'react'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   field: {
@@ -12,15 +12,20 @@ const useStyles = makeStyles((theme) => ({
   searchButton: {
     height: 40,
   },
-}));
+}))
 
-const Filter = ({ fields, fieldsOptions, onFilterConfirmed, disableOptions = false }) => {
-  const classes = useStyles();
-  const [selectedValues, setSelectedValues] = useState(fields.map(() => ""));
+const Filter = ({
+  fields,
+  fieldsOptions,
+  onFilterConfirmed,
+  disableOptions = false,
+}) => {
+  const classes = useStyles()
+  const [selectedValues, setSelectedValues] = useState(fields.map(() => ''))
 
   const searchClickHandle = () => {
-    onFilterConfirmed(selectedValues);
-  };
+    onFilterConfirmed(selectedValues)
+  }
 
   return (
     <>
@@ -28,34 +33,39 @@ const Filter = ({ fields, fieldsOptions, onFilterConfirmed, disableOptions = fal
         {fields.map((field, key) => {
           return (
             <Grid item key={key}>
-              { disableOptions ? 
-                <TextField label={field} variant="outlined" onChange={(event) => {
-                  setSelectedValues([
-                    ...selectedValues.slice(0, key),
-                    event.target.value,
-                    ...selectedValues.slice(key + 1),
-                  ]);
-                }}/> :
-                <Autocomplete
-                id={`filter${key}`}
-                options={fieldsOptions[key]}
-                getOptionLabel={(option) => option.name}
-                className={classes.field}
-                inputValue={selectedValues[key]}
-                onInputChange={(event, newInputValue) => {
-                  setSelectedValues([
-                    ...selectedValues.slice(0, key),
-                    newInputValue,
-                    ...selectedValues.slice(key + 1),
-                  ]);
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} label={field} variant="outlined" />
-                )}
+              {disableOptions ? (
+                <TextField
+                  label={field}
+                  variant="outlined"
+                  onChange={(event) => {
+                    setSelectedValues([
+                      ...selectedValues.slice(0, key),
+                      event.target.value,
+                      ...selectedValues.slice(key + 1),
+                    ])
+                  }}
                 />
-              }
+              ) : (
+                <Autocomplete
+                  id={`filter${key}`}
+                  options={fieldsOptions[key]}
+                  getOptionLabel={(option) => option.name}
+                  className={classes.field}
+                  inputValue={selectedValues[key]}
+                  onInputChange={(event, newInputValue) => {
+                    setSelectedValues([
+                      ...selectedValues.slice(0, key),
+                      newInputValue,
+                      ...selectedValues.slice(key + 1),
+                    ])
+                  }}
+                  renderInput={(params) => (
+                    <TextField {...params} label={field} variant="outlined" />
+                  )}
+                />
+              )}
             </Grid>
-          );
+          )
         })}
         <Button
           variant="contained"
@@ -67,7 +77,7 @@ const Filter = ({ fields, fieldsOptions, onFilterConfirmed, disableOptions = fal
         </Button>
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default Filter;
+export default Filter

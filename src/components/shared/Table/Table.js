@@ -1,13 +1,15 @@
 import React from 'react';
-import { DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
+import Button from '@material-ui/core/Button';
+import { DataGrid } from '@material-ui/data-grid';
 import { makeStyles } from '@material-ui/core';
-import TablePagination from '@material-ui/core/TablePagination';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 import { elementsOnAdminTable } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
-  pagination: {
+  tableHeader: {
     display: 'flex',
+    justifyContent: 'flex-end',
   },
   grid: {
     height: '500px',
@@ -15,22 +17,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CustomPagination() {
+const Table = ({ rows, columns, onPageChange, rowCount, onAddClick }) => {
   const classes = useStyles();
-  const { state, apiRef } = useGridSlotComponentProps();
 
-  return (
-    <TablePagination
-      className={classes.pagination}
-      count={state.pagination.pageCount}
-      page={state.pagination.page + 1}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
-}
-
-const Table = ({ rows, columns, onPageChange, rowCount }) => {
-  const classes = useStyles();
+  function CustomHeader() {
+    return (
+      <div className={classes.tableHeader}>
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<AddCircleIcon />}
+          onClick={onAddClick}
+        >
+          add new
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <DataGrid
@@ -44,6 +47,9 @@ const Table = ({ rows, columns, onPageChange, rowCount }) => {
       disableColumnMenu={true}
       disableSelectionOnClick={true}
       className={classes.grid}
+      components={{
+        Header: CustomHeader,
+      }}
     />
   );
 };

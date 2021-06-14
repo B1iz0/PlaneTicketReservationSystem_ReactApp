@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -29,8 +27,6 @@ function PaperComponent(props) {
     </Draggable>
   );
 }
-
-const handleClickClose = () => {};
 
 const CustomDialog = ({ isOpened, closeDialog, DialogContent, title }) => {
   const classes = useStyles();

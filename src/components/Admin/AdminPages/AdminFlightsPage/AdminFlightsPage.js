@@ -19,6 +19,7 @@ import {
 
 import FlightInfoDialogContent from './FlightInfoDialogContent';
 import FlightEditDialogContent from './FlightEditDialogContent';
+import Table from 'components/shared/Table';
 
 const useStyles = makeStyles((theme) => ({
   flightsGrid: {
@@ -220,16 +221,11 @@ const AdminFlightsPage = () => {
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>
-      <DataGrid
-        columns={columns}
+      <Table
         rows={rows}
-        onPageChange={(page) => onPageChange(page.page)}
-        paginationMode="server"
-        pageSize={limit}
+        columns={columns}
+        onPageChange={onPageChange}
         rowCount={totalFlightsNumber}
-        checkboxSelection={false}
-        disableColumnMenu={true}
-        className={classes.flightsGrid}
       />
     </>
   );

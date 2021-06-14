@@ -6,6 +6,7 @@ import { Container, IconButton, Typography } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 
 import API from 'api';
+import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import {
@@ -13,6 +14,8 @@ import {
   allAirplanesCountEndPoint,
   elementsOnAdminTable,
 } from 'constants';
+
+import AirplaneCreateDialogContent from './AirplaneCreateDialogContent';
 
 const useStyles = makeStyles((theme) => ({
   airplanesGrid: {
@@ -154,6 +157,7 @@ const AdminAirplanesPage = () => {
         title="Add airplane"
         isOpened={isAddDialogOpened}
         closeDialog={closeAddDialog}
+        DialogContent={<AirplaneCreateDialogContent />}
       />
       <CustomDialog
         title="Edit"
@@ -173,16 +177,12 @@ const AdminAirplanesPage = () => {
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>
-      <DataGrid
-        columns={columns}
+      <Table
         rows={rows}
-        onPageChange={(page) => onPageChange(page.page)}
-        paginationMode="server"
-        pageSize={elementsOnAdminTable}
+        columns={columns}
+        onPageChange={onPageChange}
         rowCount={airplanesCount}
-        checkboxSelection={false}
-        disableColumnMenu={true}
-        className={classes.airplanesGrid}
+        onAddClick={openAddDialog}
       />
     </>
   );

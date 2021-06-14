@@ -4,7 +4,9 @@ import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
+import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
+import Table from 'components/shared/Table';
 import { refreshCurrentToken } from 'services/token-service';
 import API from 'api';
 import {
@@ -13,7 +15,6 @@ import {
   elementsOnAdminTable,
 } from 'constants';
 import { Flight } from '@material-ui/icons';
-import Table from '../../../shared/Table';
 
 const useStyles = makeStyles((theme) => ({
   usersGrid: {
@@ -38,6 +39,8 @@ const AdminUsersPage = () => {
   const [emailFilter, setEmailFilter] = useState('');
   const [firstNameFilter, setFirstNameFilter] = useState('');
   const [lastNameFilter, setLastNameFilter] = useState('');
+
+  const [isCreateDialogOpened, setIsCreateDialogOpened] = useState(false);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -107,8 +110,21 @@ const AdminUsersPage = () => {
     setOffset(page * limit);
   };
 
+  const openCreateDialog = () => {
+    setIsCreateDialogOpened(true);
+  };
+
+  const closeCreateDialog = () => {
+    setIsCreateDialogOpened(false);
+  };
+
   return (
     <>
+      <CustomDialog
+        title="Add user"
+        isOpened={isCreateDialogOpened}
+        closeDialog={closeCreateDialog}
+      />
       <div className={classes.tableHeader}>
         <Typography variant="h3">Users</Typography>
         <Filter
@@ -122,6 +138,7 @@ const AdminUsersPage = () => {
         columns={columns}
         onPageChange={onPageChange}
         rowCount={totalUsersNumber}
+        onAddClick={openCreateDialog}
       />
     </>
   );

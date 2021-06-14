@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import DialogContent from '@material-ui/core/DialogContent'
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import DialogContent from '@material-ui/core/DialogContent';
 import {
   Button,
   FormControl,
@@ -10,90 +10,90 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core'
-import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
+} from '@material-ui/core';
+import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
-import API from 'api'
-import { refreshCurrentToken } from 'services/token-service'
+import API from 'api';
+import { refreshCurrentToken } from 'services/token-service';
 import {
   allAirplanesEndPoint,
   allAirportsEndPoint,
   allFlightsEndPoint,
-} from 'constants'
+} from 'constants';
 
 const FlightEditDialogContent = ({ flightForEditing }) => {
-  const token = useSelector((state) => state.token)
+  const token = useSelector((state) => state.token);
 
-  const [freeAirplanes, setFreeAirplanes] = useState([])
-  const [airports, setAirports] = useState([])
+  const [freeAirplanes, setFreeAirplanes] = useState([]);
+  const [airports, setAirports] = useState([]);
 
   const [flightNumber, setFlightNumber] = useState(
     flightForEditing?.flightNumber
-  )
-  const [airplaneId, setAirplaneId] = useState(flightForEditing?.airplaneId)
+  );
+  const [airplaneId, setAirplaneId] = useState(flightForEditing?.airplaneId);
   const [fromAirportId, setFromAirportId] = useState(
     flightForEditing?.fromAirportId
-  )
-  const [toAirportId, setToAirportId] = useState(flightForEditing?.toAirportId)
+  );
+  const [toAirportId, setToAirportId] = useState(flightForEditing?.toAirportId);
   const [departureDate, setDepartureDate] = useState(
     new Date(flightForEditing?.departureDate)
-  )
+  );
   const [arrivalDate, setArrivalDate] = useState(
     new Date(flightForEditing?.arrivalDate)
-  )
+  );
 
-  const [airplane, setAirplane] = useState(flightForEditing?.airplaneModel)
+  const [airplane, setAirplane] = useState(flightForEditing?.airplaneModel);
   const [departureAirport, setDepartureAirport] = useState(
     flightForEditing?.fromAirportName
-  )
+  );
   const [arrivalAirport, setArrivalAirport] = useState(
     flightForEditing?.toAirportName
-  )
+  );
 
   useEffect(() => {
     const getAirplanesList = async () => {
       await API.get(`${allAirplanesEndPoint}/free`)
         .then((response) => response.data)
         .then((airplanes) => setFreeAirplanes(airplanes))
-        .catch((error) => console.log(error))
-    }
+        .catch((error) => console.log(error));
+    };
 
     const getAirportsList = async () => {
       await API.get(`${allAirportsEndPoint}`)
         .then((response) => response.data)
         .then((airplanes) => setAirports(airplanes))
-        .catch((error) => console.log(error))
-    }
+        .catch((error) => console.log(error));
+    };
 
-    getAirplanesList()
-    getAirportsList()
-  }, [])
+    getAirplanesList();
+    getAirportsList();
+  }, []);
 
   const onResetClick = () => {
-    setFlightNumber(flightForEditing?.flightNumber)
-    setAirplaneId(flightForEditing?.airplaneId)
-    setFromAirportId(flightForEditing?.fromAirportId)
-    setToAirportId(flightForEditing?.toAirportId)
-    setArrivalDate(new Date(flightForEditing?.arrivalDate))
-    setDepartureDate(new Date(flightForEditing?.departureDate))
-    setAirplane(flightForEditing?.airplaneModel)
-    setDepartureAirport(flightForEditing?.fromAirportName)
-    setArrivalAirport(flightForEditing?.toAirportName)
-  }
+    setFlightNumber(flightForEditing?.flightNumber);
+    setAirplaneId(flightForEditing?.airplaneId);
+    setFromAirportId(flightForEditing?.fromAirportId);
+    setToAirportId(flightForEditing?.toAirportId);
+    setArrivalDate(new Date(flightForEditing?.arrivalDate));
+    setDepartureDate(new Date(flightForEditing?.departureDate));
+    setAirplane(flightForEditing?.airplaneModel);
+    setDepartureAirport(flightForEditing?.fromAirportName);
+    setArrivalAirport(flightForEditing?.toAirportName);
+  };
 
   const onSaveClick = () => {
-    let departureDateWithoutTZ = departureDate
+    let departureDateWithoutTZ = departureDate;
     let hoursDiff =
       departureDateWithoutTZ.getHours() -
-      departureDateWithoutTZ.getTimezoneOffset() / 60
-    departureDateWithoutTZ.setHours(hoursDiff)
+      departureDateWithoutTZ.getTimezoneOffset() / 60;
+    departureDateWithoutTZ.setHours(hoursDiff);
 
-    let arrivalDateWithoutTZ = arrivalDate
+    let arrivalDateWithoutTZ = arrivalDate;
     hoursDiff =
       arrivalDateWithoutTZ.getHours() -
-      arrivalDateWithoutTZ.getTimezoneOffset() / 60
-    arrivalDateWithoutTZ.setHours(hoursDiff)
+      arrivalDateWithoutTZ.getTimezoneOffset() / 60;
+    arrivalDateWithoutTZ.setHours(hoursDiff);
 
     const saveFlight = async () => {
       await API.put(
@@ -114,30 +114,30 @@ const FlightEditDialogContent = ({ flightForEditing }) => {
           },
         }
       ).catch((error) => {
-        refreshCurrentToken(token.refreshToken)
+        refreshCurrentToken(token.refreshToken);
         if (error.response) {
-          console.log(error.response.data)
+          console.log(error.response.data);
         }
-      })
-    }
+      });
+    };
 
-    saveFlight()
-  }
+    saveFlight();
+  };
 
   const onAirplaneChange = (event, child) => {
-    setAirplane(event.target.value)
-    setAirplaneId(child.props.id)
-  }
+    setAirplane(event.target.value);
+    setAirplaneId(child.props.id);
+  };
 
   const onDepartureAirportChange = (event, child) => {
-    setDepartureAirport(event.target.value)
-    setFromAirportId(child.props.id)
-  }
+    setDepartureAirport(event.target.value);
+    setFromAirportId(child.props.id);
+  };
 
   const onArrivalAirportChange = (event, child) => {
-    setArrivalAirport(event.target.value)
-    setToAirportId(child.props.id)
-  }
+    setArrivalAirport(event.target.value);
+    setToAirportId(child.props.id);
+  };
 
   return (
     <DialogContent>
@@ -252,7 +252,7 @@ const FlightEditDialogContent = ({ flightForEditing }) => {
         </Button>
       </form>
     </DialogContent>
-  )
-}
+  );
+};
 
-export default FlightEditDialogContent
+export default FlightEditDialogContent;

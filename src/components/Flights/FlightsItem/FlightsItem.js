@@ -1,10 +1,10 @@
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-import FlightIcon from '@material-ui/icons/Flight'
-import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card'
+import React from 'react';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import FlightIcon from '@material-ui/icons/Flight';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 
 const useStyles = makeStyles((theme) => ({
   flightInfo: {
@@ -28,12 +28,12 @@ const useStyles = makeStyles((theme) => ({
   airplaneInfo: {
     flexGrow: 1,
   },
-}))
+}));
 
 const FlightsItem = ({
   flight: { airplane, from, to, arrivalDate, departureDate },
 }) => {
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Grid item container>
@@ -133,7 +133,7 @@ const FlightsItem = ({
         </Grid>
       </Card>
     </Grid>
-  )
-}
+  );
+};
 
-export default FlightsItem
+export default FlightsItem;

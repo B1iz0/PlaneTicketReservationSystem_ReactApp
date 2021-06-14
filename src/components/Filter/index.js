@@ -1,2 +1,2 @@
-import Filter from './Filter'
-export default Filter
+import Filter from './Filter';
+export default Filter;

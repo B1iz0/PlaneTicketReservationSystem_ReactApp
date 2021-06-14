@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
-import Filter from 'components/Filter'
-import API from 'api'
-import { refreshCurrentToken } from 'services/token-service'
-import { allCtitesEndPoint } from 'constants'
+import Filter from 'components/Filter';
+import API from 'api';
+import { refreshCurrentToken } from 'services/token-service';
+import { allCtitesEndPoint } from 'constants';
 
-import FlightsList from '../FlightsList'
+import FlightsList from '../FlightsList';
+import { Container } from '@material-ui/core';
 
 const FlightsPage = () => {
-  const token = useSelector((state) => state.token)
-  const [cities, setCities] = useState([])
-  const [departureCity, setDepartureCity] = useState('')
-  const [arrivalCity, setArrivalCity] = useState('')
+  const token = useSelector((state) => state.token);
+  const [cities, setCities] = useState([]);
+  const [departureCity, setDepartureCity] = useState('');
+  const [arrivalCity, setArrivalCity] = useState('');
 
   useEffect(() => {
     const loadCities = async () => {
@@ -20,20 +21,20 @@ const FlightsPage = () => {
         .then((response) => response.data)
         .then((data) => setCities(data))
         .catch((error) => {
-          console.log(error)
+          console.log(error);
           if (token.refreshToken) {
-            refreshCurrentToken(token.refreshToken)
+            refreshCurrentToken(token.refreshToken);
           }
-        })
-    }
+        });
+    };
 
-    loadCities()
-  }, [token])
+    loadCities();
+  }, [token]);
 
   const onFilterConfirmed = (values) => {
-    setDepartureCity(values[0])
-    setArrivalCity(values[1])
-  }
+    setDepartureCity(values[0]);
+    setArrivalCity(values[1]);
+  };
 
   return (
     <>
@@ -44,7 +45,7 @@ const FlightsPage = () => {
       />
       <FlightsList departureCity={departureCity} arrivalCity={arrivalCity} />
     </>
-  )
-}
+  );
+};
 
-export default FlightsPage
+export default FlightsPage;

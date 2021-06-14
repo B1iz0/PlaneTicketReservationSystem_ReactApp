@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react'
-import Button from '@material-ui/core/Button'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Grow from '@material-ui/core/Grow'
-import Paper from '@material-ui/core/Paper'
-import Popper from '@material-ui/core/Popper'
-import MenuItem from '@material-ui/core/MenuItem'
-import MenuList from '@material-ui/core/MenuList'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch } from 'react-redux'
+import React, { useState, useEffect, useRef } from 'react';
+import Button from '@material-ui/core/Button';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
 
-import { removeJwtToken, removeRefreshToken } from 'reduxStore/tokenSlice'
+import { removeJwtToken, removeRefreshToken } from 'reduxStore/tokenSlice';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,49 +23,49 @@ const useStyles = makeStyles((theme) => ({
   accountIcon: {
     marginRight: theme.spacing(1),
   },
-}))
+}));
 
 const ProfileDropdownMenu = ({ userEmail }) => {
-  const classes = useStyles()
-  const [open, setOpen] = useState(false)
-  const anchorRef = useRef(null)
-  const dispatch = useDispatch()
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen)
-  }
+    setOpen((prevOpen) => !prevOpen);
+  };
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return
+      return;
     }
 
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleLogout = (event) => {
-    localStorage.removeItem('jwtToken')
-    localStorage.removeItem('refreshToken')
-    dispatch(removeJwtToken())
-    dispatch(removeRefreshToken())
-    handleClose(event)
-  }
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('refreshToken');
+    dispatch(removeJwtToken());
+    dispatch(removeRefreshToken());
+    handleClose(event);
+  };
 
   function handleListKeyDown(event) {
     if (event.key === 'Tab') {
-      event.preventDefault()
-      setOpen(false)
+      event.preventDefault();
+      setOpen(false);
     }
   }
 
-  const prevOpen = useRef(open)
+  const prevOpen = useRef(open);
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus()
+      anchorRef.current.focus();
     }
 
-    prevOpen.current = open
-  }, [open])
+    prevOpen.current = open;
+  }, [open]);
 
   return (
     <div className={classes.root}>
@@ -111,7 +111,7 @@ const ProfileDropdownMenu = ({ userEmail }) => {
         )}
       </Popper>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileDropdownMenu
+export default ProfileDropdownMenu;

@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react'
-import { DataGrid } from '@material-ui/data-grid'
-import Typography from '@material-ui/core/Typography'
-import { useSelector } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
-import EditIcon from '@material-ui/icons/Edit'
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
-import { IconButton } from '@material-ui/core'
+import React, { useState, useEffect } from 'react';
+import { DataGrid } from '@material-ui/data-grid';
+import Typography from '@material-ui/core/Typography';
+import { useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { Container, IconButton } from '@material-ui/core';
 
-import CustomDialog from 'components/shared/CustomDialog'
-import Filter from 'components/Filter'
-import { refreshCurrentToken } from 'services/token-service'
-import API from 'api'
+import CustomDialog from 'components/shared/CustomDialog';
+import Filter from 'components/Filter';
+import { refreshCurrentToken } from 'services/token-service';
+import API from 'api';
 import {
   allFlightsEndPoint,
   allFlightsCountEndPoint,
   elementsOnAdminTable,
-} from 'constants'
+} from 'constants';
 
-import FlightInfoDialogContent from './FlightInfoDialogContent'
-import FlightEditDialogContent from './FlightEditDialogContent'
+import FlightInfoDialogContent from './FlightInfoDialogContent';
+import FlightEditDialogContent from './FlightEditDialogContent';
 
 const useStyles = makeStyles((theme) => ({
   flightsGrid: {
@@ -29,25 +29,25 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
-}))
+}));
 
 const AdminFlightsPage = () => {
-  const classes = useStyles()
-  const token = useSelector((state) => state.token)
+  const classes = useStyles();
+  const token = useSelector((state) => state.token);
 
-  const [flights, setFlights] = useState([])
-  const [totalFlightsNumber, setTotalFlightsNumber] = useState(0)
+  const [flights, setFlights] = useState([]);
+  const [totalFlightsNumber, setTotalFlightsNumber] = useState(0);
 
-  const [offset, setOffset] = useState(0)
-  const [limit, setLimit] = useState(elementsOnAdminTable)
-  const [departureCityFilter, setDepartureCityFilter] = useState('')
-  const [arrivalCityFilter, setArrivalCityFilter] = useState('')
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(elementsOnAdminTable);
+  const [departureCityFilter, setDepartureCityFilter] = useState('');
+  const [arrivalCityFilter, setArrivalCityFilter] = useState('');
 
-  const [flightForEditing, setFlightForEditing] = useState()
-  const [isEditDialogOpened, setIsEditDialogOpened] = useState(false)
+  const [flightForEditing, setFlightForEditing] = useState();
+  const [isEditDialogOpened, setIsEditDialogOpened] = useState(false);
 
-  const [flightIdEdit, setFlightIdInfo] = useState()
-  const [isMoreInfoDialogOpened, setIsMoreInfoDialogOpened] = useState(false)
+  const [flightIdEdit, setFlightIdInfo] = useState();
+  const [isMoreInfoDialogOpened, setIsMoreInfoDialogOpened] = useState(false);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -77,7 +77,7 @@ const AdminFlightsPage = () => {
           >
             <EditIcon />
           </IconButton>
-        )
+        );
       },
     },
     {
@@ -91,10 +91,10 @@ const AdminFlightsPage = () => {
           >
             <InfoOutlinedIcon className={classes.moreInfoIcon} />
           </IconButton>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const rows = flights.map((value) => {
     return {
@@ -109,8 +109,8 @@ const AdminFlightsPage = () => {
       toAirportId: value.to.id,
       departureDate: value.departureDate,
       arrivalDate: value.arrivalDate,
-    }
-  })
+    };
+  });
 
   useEffect(() => {
     const getFlights = async () => {
@@ -128,12 +128,12 @@ const AdminFlightsPage = () => {
         .then((response) => response.data)
         .then((data) => setFlights(data))
         .catch((error) => {
-          refreshCurrentToken(token.refreshToken)
+          refreshCurrentToken(token.refreshToken);
           if (error.response) {
-            console.log(error.response.data)
+            console.log(error.response.data);
           }
-        })
-    }
+        });
+    };
     const getFlightsCount = async () => {
       await API.get(`${allFlightsCountEndPoint}`, {
         params: {
@@ -147,53 +147,53 @@ const AdminFlightsPage = () => {
         .then((response) => response.data)
         .then((data) => setTotalFlightsNumber(data))
         .catch((error) => {
-          refreshCurrentToken(token.refreshToken)
+          refreshCurrentToken(token.refreshToken);
           if (error.response) {
-            console.log(error.response.data)
+            console.log(error.response.data);
           }
-        })
-    }
+        });
+    };
 
-    getFlights()
-    getFlightsCount()
+    getFlights();
+    getFlightsCount();
   }, [
     offset,
     limit,
     departureCityFilter,
     arrivalCityFilter,
     isEditDialogOpened,
-  ])
+  ]);
 
   const onFilterConfirmed = (values) => {
-    setDepartureCityFilter(values[0])
-    setArrivalCityFilter(values[1])
-    setOffset(0)
-  }
+    setDepartureCityFilter(values[0]);
+    setArrivalCityFilter(values[1]);
+    setOffset(0);
+  };
 
   const onPageChange = (page) => {
-    setOffset(page * limit)
-  }
+    setOffset(page * limit);
+  };
 
   const openMoreInfoDialog = (id) => {
-    setFlightIdInfo(id)
-    setIsMoreInfoDialogOpened(true)
-  }
+    setFlightIdInfo(id);
+    setIsMoreInfoDialogOpened(true);
+  };
 
   const closeMoreInfoDialog = () => {
-    setIsMoreInfoDialogOpened(false)
-  }
+    setIsMoreInfoDialogOpened(false);
+  };
 
   const openEditInfoDialog = (row) => {
-    setFlightForEditing(row)
-    setIsEditDialogOpened(true)
-  }
+    setFlightForEditing(row);
+    setIsEditDialogOpened(true);
+  };
 
   const closeEditInfoDialog = () => {
-    setIsEditDialogOpened(false)
-  }
+    setIsEditDialogOpened(false);
+  };
 
   return (
-    <div>
+    <>
       <CustomDialog
         title="More info"
         isOpened={isMoreInfoDialogOpened}
@@ -231,8 +231,8 @@ const AdminFlightsPage = () => {
         disableColumnMenu={true}
         className={classes.flightsGrid}
       />
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default AdminFlightsPage
+export default AdminFlightsPage;

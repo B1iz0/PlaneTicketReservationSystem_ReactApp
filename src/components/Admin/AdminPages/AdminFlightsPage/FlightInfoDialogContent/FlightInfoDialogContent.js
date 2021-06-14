@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import Grid from '@material-ui/core/Grid'
-import DialogContent from '@material-ui/core/DialogContent'
-import { makeStyles } from '@material-ui/core/styles'
-import { Typography } from '@material-ui/core'
-import FlightIcon from '@material-ui/icons/Flight'
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Grid from '@material-ui/core/Grid';
+import DialogContent from '@material-ui/core/DialogContent';
+import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+import FlightIcon from '@material-ui/icons/Flight';
 
-import API from 'api'
-import { refreshCurrentToken } from 'services/token-service'
-import PriceTable from 'components/shared/PriceTable'
+import API from 'api';
+import { refreshCurrentToken } from 'services/token-service';
+import PriceTable from 'components/shared/PriceTable';
 
 const useStyles = makeStyles((theme) => ({
   flightAirplaneInfo: {},
@@ -16,13 +16,13 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'center',
     transform: 'rotate(90deg)',
   },
-}))
+}));
 
 const FlightInfoDialogContent = ({ elementUrl }) => {
-  const classes = useStyles()
-  const token = useSelector((state) => state.token)
+  const classes = useStyles();
+  const token = useSelector((state) => state.token);
 
-  const [flight, setFlight] = useState()
+  const [flight, setFlight] = useState();
 
   useEffect(() => {
     const loadElement = async () => {
@@ -34,15 +34,15 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
         .then((response) => response.data)
         .then((data) => setFlight(data))
         .catch((error) => {
-          refreshCurrentToken(token.refreshToken)
+          refreshCurrentToken(token.refreshToken);
           if (error.response) {
-            console.log(error.response.data)
+            console.log(error.response.data);
           }
-        })
-    }
+        });
+    };
 
-    loadElement()
-  }, [])
+    loadElement();
+  }, []);
 
   return (
     <DialogContent>
@@ -124,7 +124,7 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
         </Grid>
       </Grid>
     </DialogContent>
-  )
-}
+  );
+};
 
-export default FlightInfoDialogContent
+export default FlightInfoDialogContent;

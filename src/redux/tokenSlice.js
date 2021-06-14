@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const tokenSlice = createSlice({
   name: 'token',
@@ -8,25 +8,25 @@ export const tokenSlice = createSlice({
   },
   reducers: {
     setJwtToken: (state, action) => {
-      state.jwtToken = action.payload
+      state.jwtToken = action.payload;
     },
     removeJwtToken: (state) => {
-      state.jwtToken = ''
+      state.jwtToken = '';
     },
     setRefreshToken: (state, action) => {
-      state.refreshToken = action.payload
+      state.refreshToken = action.payload;
     },
     removeRefreshToken: (state) => {
-      state.refreshToken = ''
+      state.refreshToken = '';
     },
   },
-})
+});
 
 export const {
   setJwtToken,
   removeJwtToken,
   setRefreshToken,
   removeRefreshToken,
-} = tokenSlice.actions
+} = tokenSlice.actions;
 
-export default tokenSlice.reducer
+export default tokenSlice.reducer;

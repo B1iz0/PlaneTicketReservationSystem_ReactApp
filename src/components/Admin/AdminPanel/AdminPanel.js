@@ -1,37 +1,92 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-import { blueGrey, indigo } from '@material-ui/core/colors'
+import React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import {
+  BusinessCenter,
+  Flight,
+  FlightTakeoff,
+  Group,
+} from '@material-ui/icons';
+
+import { drawerWidth } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
-  adminPanel: {
-    position: 'sticky',
-    height: 'auto',
-    maxWidth: '100px',
-    left: 0,
-    padding: '10px',
-    backgroundColor: indigo[400],
-    color: blueGrey[50],
+  drawer: {
+    width: drawerWidth,
   },
-}))
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  active: {
+    background: '#f4f4f4',
+  },
+  title: {
+    padding: theme.spacing(2),
+  },
+}));
 
 const AdminPanel = () => {
-  const classes = useStyles()
+  const classes = useStyles();
+  let history = useHistory();
+  let location = useLocation();
+
+  const menuItems = [
+    {
+      text: 'Users',
+      icon: <Group color="primary" />,
+      path: '/admin/users',
+    },
+    {
+      text: 'Companies',
+      icon: <BusinessCenter color="primary" />,
+      path: '/admin/companies',
+    },
+    {
+      text: 'Airplanes',
+      icon: <Flight color="primary" />,
+      path: '/admin/airplanes',
+    },
+    {
+      text: 'Flights',
+      icon: <FlightTakeoff color="primary" />,
+      path: '/admin/flights',
+    },
+  ];
 
   return (
-    <Toolbar className={classes.adminPanel}>
-      <Grid>
-        <Typography align="center">Admin</Typography>
-        <Button href="/admin/users">Users</Button>
-        <Button href="/admin/companies">Companies</Button>
-        <Button href="/admin/airplanes">Airplanes</Button>
-        <Button href="/admin/flights">Flights</Button>
-      </Grid>
-    </Toolbar>
-  )
-}
+    <Drawer
+      className={classes.drawer}
+      variant="permanent"
+      anchor="left"
+      classes={{ paper: classes.drawerPaper }}
+    >
+      <div>
+        <Typography variant="h5" className={classes.title}>
+          Admin panel
+        </Typography>
+      </div>
 
-export default AdminPanel
+      <List>
+        {menuItems.map((item) => (
+          <ListItem
+            button
+            key={item.text}
+            onClick={() => history.push(item.path)}
+            className={location.pathname == item.path ? classes.active : null}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItem>
+        ))}
+      </List>
+    </Drawer>
+  );
+};
+
+export default AdminPanel;

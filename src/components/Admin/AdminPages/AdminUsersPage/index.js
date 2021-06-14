@@ -1,2 +1,2 @@
-import AdminUsersPage from './AdminUsersPage'
-export default AdminUsersPage
+import AdminUsersPage from './AdminUsersPage';
+export default AdminUsersPage;

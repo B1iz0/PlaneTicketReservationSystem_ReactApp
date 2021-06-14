@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { DataGrid } from '@material-ui/data-grid'
-import Typography from '@material-ui/core/Typography'
-import { useSelector } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react';
+import { DataGrid } from '@material-ui/data-grid';
+import Typography from '@material-ui/core/Typography';
+import { useSelector } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 
-import Filter from 'components/Filter'
-import { refreshCurrentToken } from 'services/token-service'
-import API from 'api'
+import Filter from 'components/Filter';
+import { refreshCurrentToken } from 'services/token-service';
+import API from 'api';
 import {
   allUsersEndPoint,
   allUsersCountEndPoint,
   elementsOnAdminTable,
-} from 'constants'
+} from 'constants';
+import { Flight } from '@material-ui/icons';
+import Table from '../../../shared/Table';
 
 const useStyles = makeStyles((theme) => ({
   usersGrid: {
@@ -22,20 +24,20 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
-}))
+}));
 
 const AdminUsersPage = () => {
-  const classes = useStyles()
-  const token = useSelector((state) => state.token)
+  const classes = useStyles();
+  const token = useSelector((state) => state.token);
 
-  const [users, setUsers] = useState([])
-  const [totalUsersNumber, setTotalUsersNumber] = useState(0)
+  const [users, setUsers] = useState([]);
+  const [totalUsersNumber, setTotalUsersNumber] = useState(0);
 
-  const [offset, setOffset] = useState(0)
-  const [limit, setLimit] = useState(elementsOnAdminTable)
-  const [emailFilter, setEmailFilter] = useState('')
-  const [firstNameFilter, setFirstNameFilter] = useState('')
-  const [lastNameFilter, setLastNameFilter] = useState('')
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(elementsOnAdminTable);
+  const [emailFilter, setEmailFilter] = useState('');
+  const [firstNameFilter, setFirstNameFilter] = useState('');
+  const [lastNameFilter, setLastNameFilter] = useState('');
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -44,7 +46,7 @@ const AdminUsersPage = () => {
     { field: 'lastName', headerName: 'Last name', width: 150 },
     { field: 'roleId', headerName: 'Role ID', width: 150 },
     { field: 'phoneNumber', headerName: 'Phone number', width: 200 },
-  ]
+  ];
 
   useEffect(() => {
     const getUsers = async () => {
@@ -63,12 +65,12 @@ const AdminUsersPage = () => {
         .then((response) => response.data)
         .then((data) => setUsers(data))
         .catch((error) => {
-          refreshCurrentToken(token.refreshToken)
+          refreshCurrentToken(token.refreshToken);
           if (error.response) {
-            console.log(error.response.data)
+            console.log(error.response.data);
           }
-        })
-    }
+        });
+    };
     const getUsersCount = async () => {
       await API.get(`${allUsersCountEndPoint}`, {
         params: {
@@ -83,30 +85,30 @@ const AdminUsersPage = () => {
         .then((response) => response.data)
         .then((data) => setTotalUsersNumber(data))
         .catch((error) => {
-          refreshCurrentToken(token.refreshToken)
+          refreshCurrentToken(token.refreshToken);
           if (error.response) {
-            console.log(error.response.data)
+            console.log(error.response.data);
           }
-        })
-    }
+        });
+    };
 
-    getUsers()
-    getUsersCount()
-  }, [offset, limit, emailFilter, firstNameFilter, lastNameFilter])
+    getUsers();
+    getUsersCount();
+  }, [offset, limit, emailFilter, firstNameFilter, lastNameFilter]);
 
   const onFilterConfirmed = (values) => {
-    setEmailFilter(values[0])
-    setFirstNameFilter(values[1])
-    setLastNameFilter(values[2])
-    setOffset(0)
-  }
+    setEmailFilter(values[0]);
+    setFirstNameFilter(values[1]);
+    setLastNameFilter(values[2]);
+    setOffset(0);
+  };
 
   const onPageChange = (page) => {
-    setOffset(page * limit)
-  }
+    setOffset(page * limit);
+  };
 
   return (
-    <div>
+    <>
       <div className={classes.tableHeader}>
         <Typography variant="h3">Users</Typography>
         <Filter
@@ -115,19 +117,14 @@ const AdminUsersPage = () => {
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>
-      <DataGrid
-        columns={columns}
+      <Table
         rows={users}
-        onPageChange={(page) => onPageChange(page.page)}
-        paginationMode="server"
-        pageSize={limit}
+        columns={columns}
+        onPageChange={onPageChange}
         rowCount={totalUsersNumber}
-        checkboxSelection={false}
-        disableColumnMenu={true}
-        className={classes.usersGrid}
       />
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default AdminUsersPage
+export default AdminUsersPage;

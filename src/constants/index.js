@@ -1,6 +1,7 @@
 export const reservationSystemURL = 'https://localhost:5001';
 
 export const allAirplanesEndPoint = 'api/airplanes';
+export const allFreeAirplanesEndPoint = 'api/airplanes/free';
 export const allAirplanesCountEndPoint = 'api/airplanes/count';
 
 export const allAirplaneTypesEndPoint = 'api/airplaneTypes';

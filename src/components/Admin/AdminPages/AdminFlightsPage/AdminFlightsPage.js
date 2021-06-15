@@ -9,6 +9,7 @@ import { Container, IconButton } from '@material-ui/core';
 
 import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
+import Table from 'components/shared/Table';
 import { refreshCurrentToken } from 'services/token-service';
 import API from 'api';
 import {
@@ -19,7 +20,7 @@ import {
 
 import FlightInfoDialogContent from './FlightInfoDialogContent';
 import FlightEditDialogContent from './FlightEditDialogContent';
-import Table from 'components/shared/Table';
+import FlightCreateDialogContent from './FlightCreateDialogContent';
 
 const useStyles = makeStyles((theme) => ({
   flightsGrid: {
@@ -49,6 +50,8 @@ const AdminFlightsPage = () => {
 
   const [flightIdEdit, setFlightIdInfo] = useState();
   const [isMoreInfoDialogOpened, setIsMoreInfoDialogOpened] = useState(false);
+
+  const [isCreateDialogOpened, setIsCreateDialogOpened] = useState(false);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -195,6 +198,14 @@ const AdminFlightsPage = () => {
 
   return (
     <>
+      <CustomDialog 
+        title="Create flight"
+        isOpened={isCreateDialogOpened}
+        DialogContent={
+          <FlightCreateDialogContent />
+        }
+        closeDialog={() => setIsCreateDialogOpened(false)}
+      />
       <CustomDialog
         title="More info"
         isOpened={isMoreInfoDialogOpened}
@@ -226,6 +237,7 @@ const AdminFlightsPage = () => {
         columns={columns}
         onPageChange={onPageChange}
         rowCount={totalFlightsNumber}
+        onAddClick={() => setIsCreateDialogOpened(true)}
       />
     </>
   );

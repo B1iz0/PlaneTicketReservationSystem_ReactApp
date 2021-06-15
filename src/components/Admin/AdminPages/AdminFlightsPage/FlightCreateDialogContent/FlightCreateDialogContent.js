@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import { useSelector } from 'react-redux';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
@@ -15,7 +15,7 @@ import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import API from "api";
-import { allFreeAirplanesEndPoint, allAirportsEndPoint } from 'constants';
+import { allFreeAirplanesEndPoint, allAirportsEndPoint, allFlightsEndPoint } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
     formField: {
@@ -25,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
 
 const FlightCreateDialogContent = () => {
     const classes = useStyles();
+    const token = useSelector((state) => state.token);
+
     const [freeAirplanes, setFreeAirplanes] = useState([]);
     const [airports, setAirports] = useState([]);
 
@@ -32,6 +34,8 @@ const FlightCreateDialogContent = () => {
     const [airplaneId, setAirplaneId] = useState();
     const [departureAirportId, setDepartureAirportId] = useState();
     const [arrivalAirportId, setArrivalAirportId] = useState();
+    const [departureDate, setDepartureDate] = useState();
+    const [arrivalDate, setArrivalDate] = useState();
 
     const [airplane, setAirplane] = useState('');
     const [departureAirport, setDepartureAirport] = useState('');
@@ -55,8 +59,47 @@ const FlightCreateDialogContent = () => {
         getAirports();
     }, [])
 
-    const handleSave = () => {
+    const handleCreate = () => {
+        let departureDateWithoutTZ = departureDate;
+        let hoursDiff =
+            departureDateWithoutTZ.getHours() -
+            departureDateWithoutTZ.getTimezoneOffset() / 60;
+        departureDateWithoutTZ.setHours(hoursDiff);
 
+        let arrivalDateWithoutTZ = arrivalDate;
+        hoursDiff =
+            arrivalDateWithoutTZ.getHours() -
+            arrivalDateWithoutTZ.getTimezoneOffset() / 60;
+        arrivalDateWithoutTZ.setHours(hoursDiff);
+
+        console.log(departureDateWithoutTZ.toJSON());
+        console.log(arrivalDateWithoutTZ.toJSON());
+
+        const createFlight = async () => {
+            await API.post(`${allFlightsEndPoint}`,
+            {
+                airplaneId: airplaneId,
+                flightNumber: parseInt(flightNumber, 10),
+                fromId: departureAirportId,
+                toId: arrivalAirportId,
+                departureDate: `${departureDateWithoutTZ.toJSON()}`,
+                departureTime: `${departureDateWithoutTZ.toJSON()}`,
+                arrivalDate: `${arrivalDateWithoutTZ.toJSON()}`,
+                arrivalTime: `${arrivalDateWithoutTZ.toJSON()}`,
+            },
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token.jwtToken,
+                },
+            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response.data);
+                  }
+            });
+        };
+
+        createFlight();
     };
 
     return(
@@ -136,6 +179,8 @@ const FlightCreateDialogContent = () => {
                                 <Grid item lg={6}>
                                     <DateTimePicker 
                                         className={classes.formField}
+                                        value={departureDate}
+                                        onChange={value => setDepartureDate(value)}
                                         variant="inline"
                                         label="Departure date"
                                     />
@@ -143,6 +188,8 @@ const FlightCreateDialogContent = () => {
                                 <Grid item lg={6}>
                                     <DateTimePicker 
                                         className={classes.formField}
+                                        value={arrivalDate}
+                                        onChange={value => setArrivalDate(value)}
                                         variant="inline"
                                         label="Arrival date"
                                     />
@@ -157,7 +204,7 @@ const FlightCreateDialogContent = () => {
                     variant="contained"
                     color="primary"
                     startIcon={<KeyboardArrowRightIcon />}
-                    onClick={handleSave}
+                    onClick={handleCreate}
                 >
                     Create
                 </Button>

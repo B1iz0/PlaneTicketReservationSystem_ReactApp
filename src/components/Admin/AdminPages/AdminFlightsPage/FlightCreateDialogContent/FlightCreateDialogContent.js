@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const FlightCreateDialogContent = () => {
+const FlightCreateDialogContent = ({ closeDialog }) => {
     const classes = useStyles();
     const token = useSelector((state) => state.token);
 
@@ -72,9 +72,6 @@ const FlightCreateDialogContent = () => {
             arrivalDateWithoutTZ.getTimezoneOffset() / 60;
         arrivalDateWithoutTZ.setHours(hoursDiff);
 
-        console.log(departureDateWithoutTZ.toJSON());
-        console.log(arrivalDateWithoutTZ.toJSON());
-
         const createFlight = async () => {
             await API.post(`${allFlightsEndPoint}`,
             {
@@ -100,6 +97,7 @@ const FlightCreateDialogContent = () => {
         };
 
         createFlight();
+        closeDialog();
     };
 
     return(

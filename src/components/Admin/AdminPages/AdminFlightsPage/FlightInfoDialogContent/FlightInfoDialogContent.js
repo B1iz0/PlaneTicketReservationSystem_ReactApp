@@ -11,7 +11,10 @@ import { refreshCurrentToken } from 'services/token-service';
 import PriceTable from 'components/shared/PriceTable';
 
 const useStyles = makeStyles((theme) => ({
-  flightAirplaneInfo: {},
+  infoDialog: {
+    padding: theme.spacing(3),
+    paddingTop: 0,
+  },
   airplaneIcon: {
     alignSelf: 'center',
     transform: 'rotate(90deg)',
@@ -45,81 +48,93 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
   }, []);
 
   return (
-    <DialogContent>
-      <Grid container direction="column">
-        <Grid item className={classes.flightTitle}>
-          <Typography gutterBottom component="h1" variant="h3" align="center">
+    <DialogContent className={classes.infoDialog}>
+      <Grid container spacing={1}>
+        <Grid item lg={12} className={classes.flightTitle}>
+          <Typography component="h1" variant="h3" align="center">
             Flight: {flight?.flightNumber}
           </Typography>
         </Grid>
-        <Grid
-          item
-          container
-          direction="column"
-          className={classes.flightAirplaneInfo}
-        >
+        <Grid item lg={12}>
+          <Typography 
+            component="h1" 
+            variant="h5"
+            align="center"
+          >
+            Airplane ({flight?.airplane.model})
+          </Typography>
+        </Grid>
+        <Grid item lg={12}>
+          <Typography 
+            variant="overline"
+            display="block" 
+            align="center"
+          >
+            Registration number: {flight?.airplane.registrationNumber}
+          </Typography>
+        </Grid>
+        <Grid item lg={12}>
+          <Typography 
+            variant="overline"
+            display="block" 
+            align="center"
+          >
+            Airplane type: {flight?.airplane.airplaneType.typeName}
+          </Typography>
+        </Grid>
+        <Grid item lg={12}>
+          <Typography 
+            variant="overline"
+            display="block" 
+            align="center"
+          >
+            Company: {flight?.airplane.company.name}
+          </Typography>
+        </Grid>
+        <Grid item lg={12}>
+          <PriceTable prices={flight?.airplane.prices} />
+        </Grid>
+        <Grid item container direction="column" lg={5} justify="center">
           <Grid item>
-            <Typography gutterBottom component="h1" variant="h5">
-              Airplane ({flight?.airplane.model})
+            <Typography 
+              variant="overline" 
+              display="block" 
+              align="center"
+            >
+              {flight?.from.name} ({flight?.from.city.name})
             </Typography>
           </Grid>
-          <Grid item container>
-            <Grid item md={6}>
-              <Typography align="left">Registration number:</Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography align="center">
-                {flight?.airplane.registrationNumber}
-              </Typography>
-            </Grid>
+          <Grid item>
+            <Typography 
+              variant="overline" 
+              display="block" 
+              align="center"
+            >
+              {flight?.departureDate}
+            </Typography>
           </Grid>
-          <Grid item container>
-            <Grid item md={6}>
-              <Typography align="left">Airplane type:</Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography align="center">
-                {flight?.airplane.airplaneType.typeName}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item container>
-            <Grid item md={6}>
-              <Typography align="left">Company:</Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography align="center">
-                {flight?.airplane.company.name}
-              </Typography>
-            </Grid>
+        </Grid>
+        <Grid item lg={2}>
+          <FlightIcon className={classes.airplaneIcon}/>
+        </Grid>
+        <Grid item container direction="column" lg={5} justify="center">
+          <Grid item>
+            <Typography 
+              variant="overline" 
+              display="block" 
+              align="center"
+            >
+              {flight?.to.name} ({flight?.to.city.name})
+            </Typography>
           </Grid>
           <Grid item>
-            <PriceTable prices={flight?.airplane.prices} />
-          </Grid>
-          <Grid item container spacing={2}>
-            <Grid item container direction="column" md={5} justify="center">
-              <Grid item>
-                <Typography>
-                  {flight?.from.name} ({flight?.from.city.name})
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography>{flight?.departureDate}</Typography>
-              </Grid>
-            </Grid>
-            <Grid item className={classes.airplaneIcon} md={2}>
-              <FlightIcon />
-            </Grid>
-            <Grid item container direction="column" md={5} justify="center">
-              <Grid item>
-                <Typography>
-                  {flight?.to.name} ({flight?.to.city.name})
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography>{flight?.arrivalDate}</Typography>
-              </Grid>
-            </Grid>
+            <Typography 
+              variant="overline" 
+              display="block" 
+              align="center"
+            >
+              {flight?.arrivalDate}
+            </Typography>
           </Grid>
         </Grid>
       </Grid>

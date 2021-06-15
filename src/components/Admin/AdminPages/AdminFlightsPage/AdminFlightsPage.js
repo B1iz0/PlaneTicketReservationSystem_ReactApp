@@ -166,6 +166,7 @@ const AdminFlightsPage = () => {
     departureCityFilter,
     arrivalCityFilter,
     isEditDialogOpened,
+    isCreateDialogOpened
   ]);
 
   const onFilterConfirmed = (values) => {
@@ -183,18 +184,15 @@ const AdminFlightsPage = () => {
     setIsMoreInfoDialogOpened(true);
   };
 
-  const closeMoreInfoDialog = () => {
-    setIsMoreInfoDialogOpened(false);
-  };
-
   const openEditInfoDialog = (row) => {
     setFlightForEditing(row);
     setIsEditDialogOpened(true);
   };
 
-  const closeEditInfoDialog = () => {
-    setIsEditDialogOpened(false);
-  };
+  const closeCreateFlightDialog = () => {
+    console.log('he');
+    setIsCreateDialogOpened(false);
+  }
 
   return (
     <>
@@ -202,9 +200,9 @@ const AdminFlightsPage = () => {
         title="Create flight"
         isOpened={isCreateDialogOpened}
         DialogContent={
-          <FlightCreateDialogContent />
+          <FlightCreateDialogContent closeDialog={closeCreateFlightDialog}/>
         }
-        closeDialog={() => setIsCreateDialogOpened(false)}
+        closeDialog={closeCreateFlightDialog}
       />
       <CustomDialog
         title="More info"
@@ -214,15 +212,18 @@ const AdminFlightsPage = () => {
             elementUrl={`${allFlightsEndPoint}/${flightIdEdit}`}
           />
         }
-        closeDialog={closeMoreInfoDialog}
+        closeDialog={() => setIsMoreInfoDialogOpened(false)}
       />
       <CustomDialog
         title="Edit"
         isOpened={isEditDialogOpened}
         DialogContent={
-          <FlightEditDialogContent flightForEditing={flightForEditing} />
+          <FlightEditDialogContent 
+            flightForEditing={flightForEditing} 
+            closeDialog={() => setIsEditDialogOpened(false)}
+          />
         }
-        closeDialog={closeEditInfoDialog}
+        closeDialog={() => setIsEditDialogOpened(false)}
       />
       <div className={classes.tableHeader}>
         <Typography variant="h3">Flights</Typography>

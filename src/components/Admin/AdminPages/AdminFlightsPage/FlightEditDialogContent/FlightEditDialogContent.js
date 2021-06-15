@@ -22,7 +22,7 @@ import {
   allFlightsEndPoint,
 } from 'constants';
 
-const FlightEditDialogContent = ({ flightForEditing }) => {
+const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
   const token = useSelector((state) => state.token);
 
   const [freeAirplanes, setFreeAirplanes] = useState([]);
@@ -122,6 +122,7 @@ const FlightEditDialogContent = ({ flightForEditing }) => {
     };
 
     saveFlight();
+    closeDialog();
   };
 
   const onAirplaneChange = (event, child) => {

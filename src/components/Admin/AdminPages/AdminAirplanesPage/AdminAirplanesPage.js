@@ -114,7 +114,7 @@ const AdminAirplanesPage = () => {
 
     getAirplanes();
     getAirplanesCount();
-  }, [airplaneTypeFilter, companyFilter, modelFilter, offset]);
+  }, [airplaneTypeFilter, companyFilter, modelFilter, offset, isAddDialogOpened, isEditDialogOpened]);
 
   const onFilterConfirmed = (values) => {
     setAirplaneTypeFilter(values[0]);
@@ -157,7 +157,7 @@ const AdminAirplanesPage = () => {
         title="Add airplane"
         isOpened={isAddDialogOpened}
         closeDialog={closeAddDialog}
-        DialogContent={<AirplaneCreateDialogContent />}
+        DialogContent={<AirplaneCreateDialogContent closeDialog={closeAddDialog}/>}
       />
       <CustomDialog
         title="Edit"

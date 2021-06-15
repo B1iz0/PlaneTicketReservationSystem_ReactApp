@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AirplaneCreateDialogContent = () => {
+const AirplaneCreateDialogContent = ({ closeDialog }) => {
   const classes = useStyles();
   const token = useSelector((state) => state.token);
 
@@ -83,6 +83,7 @@ const AirplaneCreateDialogContent = () => {
     };
 
     addAirplane();
+    closeDialog();
   };
 
   return (

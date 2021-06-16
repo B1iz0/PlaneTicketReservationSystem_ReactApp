@@ -62,27 +62,27 @@ const AirplaneCreateDialogContent = ({ closeDialog }) => {
     getCompanies();
   }, []);
 
-  const handleSave = () => {
-    const addAirplane = async () => {
-      await API.post(
-        `${allAirplanesEndPoint}`,
-        {
-          airplaneTypeId: airplaneTypeId,
-          companyId: companyId,
-          model: model,
-          registrationNumber: parseInt(registrationNumber, 10),
-          rows: parseInt(rows, 10),
-          columns: parseInt(columns, 10),
+  const addAirplane = async () => {
+    await API.post(
+      `${allAirplanesEndPoint}`,
+      {
+        airplaneTypeId: airplaneTypeId,
+        companyId: companyId,
+        model: model,
+        registrationNumber: parseInt(registrationNumber, 10),
+        rows: parseInt(rows, 10),
+        columns: parseInt(columns, 10),
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + token.jwtToken,
         },
-        {
-          headers: {
-            Authorization: 'Bearer ' + token.jwtToken,
-          },
-        }
-      ).catch((error) => console.log(error));
-    };
+      }
+    ).catch((error) => console.log(error));
+  };
 
-    addAirplane();
+  const handleSave = async () => {
+    await addAirplane();
     closeDialog();
   };
 

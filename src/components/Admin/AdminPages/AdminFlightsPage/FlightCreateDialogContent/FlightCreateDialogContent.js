@@ -15,6 +15,7 @@ import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import API from "api";
+import { refreshCurrentToken } from 'services/token-service';
 import { allFreeAirplanesEndPoint, allAirportsEndPoint, allFlightsEndPoint } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -57,9 +58,9 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
 
         getFreeAirplanes();
         getAirports();
-    }, [])
-
-    const handleCreate = () => {
+    }, [token])
+    
+    const createFlight = async () => {
         let departureDateWithoutTZ = departureDate;
         let hoursDiff =
             departureDateWithoutTZ.getHours() -
@@ -72,31 +73,32 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
             arrivalDateWithoutTZ.getTimezoneOffset() / 60;
         arrivalDateWithoutTZ.setHours(hoursDiff);
 
-        const createFlight = async () => {
-            await API.post(`${allFlightsEndPoint}`,
-            {
-                airplaneId: airplaneId,
-                flightNumber: parseInt(flightNumber, 10),
-                fromId: departureAirportId,
-                toId: arrivalAirportId,
-                departureDate: `${departureDateWithoutTZ.toJSON()}`,
-                departureTime: `${departureDateWithoutTZ.toJSON()}`,
-                arrivalDate: `${arrivalDateWithoutTZ.toJSON()}`,
-                arrivalTime: `${arrivalDateWithoutTZ.toJSON()}`,
+        await API.post(`${allFlightsEndPoint}`,
+        {
+            airplaneId: airplaneId,
+            flightNumber: parseInt(flightNumber, 10),
+            fromId: departureAirportId,
+            toId: arrivalAirportId,
+            departureDate: `${departureDateWithoutTZ.toJSON()}`,
+            departureTime: `${departureDateWithoutTZ.toJSON()}`,
+            arrivalDate: `${arrivalDateWithoutTZ.toJSON()}`,
+            arrivalTime: `${arrivalDateWithoutTZ.toJSON()}`,
+        },
+        {
+            headers: {
+                Authorization: 'Bearer ' + token.jwtToken,
             },
-            {
-                headers: {
-                    Authorization: 'Bearer ' + token.jwtToken,
-                },
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response.data);
-                  }
-            });
-        };
-
-        createFlight();
+        })
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response.data);
+            }
+            refreshCurrentToken(token.refreshToken);
+        });
+    };
+    
+    const handleCreate = async () => {
+        await createFlight();
         closeDialog();
     };
 

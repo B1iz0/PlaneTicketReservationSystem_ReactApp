@@ -68,7 +68,7 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
 
     getAirplanesList();
     getAirportsList();
-  }, []);
+  }, [token]);
 
   const onResetClick = () => {
     setFlightNumber(flightForEditing?.flightNumber);
@@ -81,8 +81,8 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
     setDepartureAirport(flightForEditing?.fromAirportName);
     setArrivalAirport(flightForEditing?.toAirportName);
   };
-
-  const onSaveClick = () => {
+  
+  const saveFlight = async () => {
     let departureDateWithoutTZ = departureDate;
     let hoursDiff =
       departureDateWithoutTZ.getHours() -
@@ -95,33 +95,33 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
       arrivalDateWithoutTZ.getTimezoneOffset() / 60;
     arrivalDateWithoutTZ.setHours(hoursDiff);
 
-    const saveFlight = async () => {
-      await API.put(
-        `${allFlightsEndPoint}/${flightForEditing?.id}`,
-        {
-          airplaneId: airplaneId,
-          flightNumber: flightNumber,
-          fromId: fromAirportId,
-          toId: toAirportId,
-          departureDate: `${departureDateWithoutTZ.toJSON()}`,
-          departureTime: `${departureDateWithoutTZ.toJSON()}`,
-          arrivalDate: `${arrivalDateWithoutTZ.toJSON()}`,
-          arrivalTime: `${arrivalDateWithoutTZ.toJSON()}`,
+    await API.put(
+      `${allFlightsEndPoint}/${flightForEditing?.id}`,
+      {
+        airplaneId: airplaneId,
+        flightNumber: flightNumber,
+        fromId: fromAirportId,
+        toId: toAirportId,
+        departureDate: `${departureDateWithoutTZ.toJSON()}`,
+        departureTime: `${departureDateWithoutTZ.toJSON()}`,
+        arrivalDate: `${arrivalDateWithoutTZ.toJSON()}`,
+        arrivalTime: `${arrivalDateWithoutTZ.toJSON()}`,
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + token.jwtToken,
         },
-        {
-          headers: {
-            Authorization: 'Bearer ' + token.jwtToken,
-          },
-        }
-      ).catch((error) => {
-        refreshCurrentToken(token.refreshToken);
-        if (error.response) {
-          console.log(error.response.data);
-        }
-      });
-    };
+      }
+    ).catch((error) => {
+      refreshCurrentToken(token.refreshToken);
+      if (error.response) {
+        console.log(error.response.data);
+      }
+    });
+  };
 
-    saveFlight();
+  const onSaveClick = async () => {
+    await saveFlight();
     closeDialog();
   };
 

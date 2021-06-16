@@ -24,6 +24,14 @@ const getRole = (token) => {
   }
 };
 
+const getId = (token) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1])).id;
+  } catch {
+    return null;
+  }
+}
+
 const setToken = (token) => {
   localStorage.setItem('jwtToken', token.jwtToken);
   localStorage.setItem('refreshToken', token.refreshToken);
@@ -51,4 +59,4 @@ const refreshCurrentToken = async (refreshToken) => {
     });
 };
 
-export { getEmail, getRole, refreshCurrentToken, setToken };
+export { getEmail, getRole, getId, refreshCurrentToken, setToken };

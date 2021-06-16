@@ -7,7 +7,6 @@ import { refreshCurrentToken } from 'services/token-service';
 import { allCtitesEndPoint } from 'constants';
 
 import FlightsList from '../FlightsList';
-import { Container } from '@material-ui/core';
 
 const FlightsPage = () => {
   const token = useSelector((state) => state.token);

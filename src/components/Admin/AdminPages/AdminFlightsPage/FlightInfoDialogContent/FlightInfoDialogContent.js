@@ -45,7 +45,7 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
     };
 
     loadElement();
-  }, []);
+  }, [token, elementUrl]);
 
   return (
     <DialogContent className={classes.infoDialog}>

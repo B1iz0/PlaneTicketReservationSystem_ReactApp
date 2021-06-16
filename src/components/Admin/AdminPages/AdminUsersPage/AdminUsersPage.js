@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
 import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,7 +13,6 @@ import {
   allUsersCountEndPoint,
   elementsOnAdminTable,
 } from 'constants';
-import { Flight } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   usersGrid: {
@@ -35,7 +33,6 @@ const AdminUsersPage = () => {
   const [totalUsersNumber, setTotalUsersNumber] = useState(0);
 
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(elementsOnAdminTable);
   const [emailFilter, setEmailFilter] = useState('');
   const [firstNameFilter, setFirstNameFilter] = useState('');
   const [lastNameFilter, setLastNameFilter] = useState('');
@@ -56,7 +53,7 @@ const AdminUsersPage = () => {
       await API.get(`${allUsersEndPoint}`, {
         params: {
           offset: offset,
-          limit: limit,
+          limit: elementsOnAdminTable,
           email: emailFilter,
           firstName: firstNameFilter,
           lastName: lastNameFilter,
@@ -88,7 +85,7 @@ const AdminUsersPage = () => {
         .then((response) => response.data)
         .then((data) => setTotalUsersNumber(data))
         .catch((error) => {
-          refreshCurrentToken(token.refreshToken);
+          // refreshCurrentToken(token.refreshToken);
           if (error.response) {
             console.log(error.response.data);
           }
@@ -97,7 +94,7 @@ const AdminUsersPage = () => {
 
     getUsers();
     getUsersCount();
-  }, [offset, limit, emailFilter, firstNameFilter, lastNameFilter]);
+  }, [token, offset, emailFilter, firstNameFilter, lastNameFilter]);
 
   const onFilterConfirmed = (values) => {
     setEmailFilter(values[0]);
@@ -107,7 +104,7 @@ const AdminUsersPage = () => {
   };
 
   const onPageChange = (page) => {
-    setOffset(page * limit);
+    setOffset(page * elementsOnAdminTable);
   };
 
   const openCreateDialog = () => {

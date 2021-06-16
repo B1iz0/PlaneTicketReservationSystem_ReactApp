@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Toolbar, Typography } from '@material-ui/core/';
+import { Toolbar, Link } from '@material-ui/core/';
 import AppBar from '@material-ui/core/AppBar';
 import { useSelector } from 'react-redux';
 
@@ -41,9 +41,15 @@ const Header = () => {
   return (
     <AppBar color="default" className={classes.appBar}>
       <Toolbar>
-        <Typography variant="h5" className={classes.title}>
+        <Link 
+          variant="h5" 
+          href="/" 
+          color="inherit"
+          underline="none"
+          className={classes.title}
+        >
           Plane ticket reservation
-        </Typography>
+        </Link>
         <Profile userEmail={userEmail} />
       </Toolbar>
     </AppBar>

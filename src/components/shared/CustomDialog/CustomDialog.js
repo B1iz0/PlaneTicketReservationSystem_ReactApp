@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,7 +6,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -39,7 +38,7 @@ const CustomDialog = ({ isOpened, closeDialog, DialogContent, title }) => {
       aria-labelledby="draggable-dialog-title"
     >
       <MuiDialogTitle>
-        <Typography variant="h6">{title}</Typography>
+        {title}
         <IconButton
           className={classes.closeButton}
           onClick={() => closeDialog()}

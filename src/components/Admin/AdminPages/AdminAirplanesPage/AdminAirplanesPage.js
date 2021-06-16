@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { Container, IconButton, Typography } from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
+import { IconButton, Typography } from '@material-ui/core';
 
 import API from 'api';
 import Table from 'components/shared/Table';
@@ -17,16 +15,7 @@ import {
 
 import AirplaneCreateDialogContent from './AirplaneCreateDialogContent';
 
-const useStyles = makeStyles((theme) => ({
-  airplanesGrid: {
-    height: 500,
-    width: '100%',
-  },
-}));
-
 const AdminAirplanesPage = () => {
-  const classes = useStyles();
-
   const [airplanes, setAirplanes] = useState([]);
   const [airplanesCount, setAirplanesCount] = useState(0);
 

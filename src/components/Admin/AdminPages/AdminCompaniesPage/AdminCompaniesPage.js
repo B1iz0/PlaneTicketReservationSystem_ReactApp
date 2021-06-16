@@ -12,7 +12,6 @@ import {
   allCompaniesCountEndPoint,
   elementsOnAdminTable,
 } from 'constants';
-import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   companiesGrid: {
@@ -33,7 +32,6 @@ const AdminCompaniesPage = () => {
   const [totalCompaniesNumber, setTotalCompaniesNumber] = useState(0);
 
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(elementsOnAdminTable);
   const [companyNameFilter, setCompanyNameFilter] = useState('');
   const [countryNameFilter, setCountryNameFilter] = useState('');
 
@@ -56,7 +54,7 @@ const AdminCompaniesPage = () => {
       await API.get(`${allCompaniesEndPoint}`, {
         params: {
           offset: offset,
-          limit: limit,
+          limit: elementsOnAdminTable,
           companyName: companyNameFilter,
           countryName: countryNameFilter,
         },
@@ -95,7 +93,7 @@ const AdminCompaniesPage = () => {
 
     getCompanies();
     getCompaniesCount();
-  }, [offset, limit, companyNameFilter, countryNameFilter]);
+  }, [token, offset, companyNameFilter, countryNameFilter]);
 
   const onFilterConfirmed = (values) => {
     setCompanyNameFilter(values[0]);
@@ -104,7 +102,7 @@ const AdminCompaniesPage = () => {
   };
 
   const onPageChange = (page) => {
-    setOffset(page * limit);
+    setOffset(page * elementsOnAdminTable);
   };
 
   return (
@@ -122,7 +120,7 @@ const AdminCompaniesPage = () => {
         rows={rows}
         onPageChange={(page) => onPageChange(page.page)}
         paginationMode="server"
-        pageSize={limit}
+        pageSize={elementsOnAdminTable}
         rowCount={totalCompaniesNumber}
         checkboxSelection={false}
         disableColumnMenu={true}

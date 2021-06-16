@@ -123,6 +123,7 @@ const FlightsItem = ({
           <hr className={classes.dividedLine}></hr>
           <Grid item container>
             <Button
+              disabled
               variant="contained"
               color="primary"
               className={classes.bookButton}

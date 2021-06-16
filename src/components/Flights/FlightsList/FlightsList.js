@@ -76,11 +76,11 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
 
   return flights.length ? (
     <div className={classes.flightList}>
-      <Grid container direction="column" spacing={3}>
+      <Grid container spacing={3}>
         {flights.map((flight) => {
           return <FlightsItem flight={flight} id={flight.id} key={flight.id} />;
         })}
-        <Grid item container>
+        <Grid item container lg={12}>
           <Pagination
             count={amountOfPages}
             shape="rounded"

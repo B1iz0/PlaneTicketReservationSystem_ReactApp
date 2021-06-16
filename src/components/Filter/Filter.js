@@ -29,7 +29,7 @@ const Filter = ({
 
   return (
     <>
-      <Grid container spacing={1} alignItems="center">
+      <Grid container spacing={1} alignItems="center" justify="center">
         {fields.map((field, key) => {
           return (
             <Grid item key={key}>

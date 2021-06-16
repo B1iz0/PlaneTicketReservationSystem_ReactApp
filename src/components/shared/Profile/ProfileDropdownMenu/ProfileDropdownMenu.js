@@ -9,6 +9,7 @@ import MenuList from '@material-ui/core/MenuList';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 
 import { removeJwtToken, removeRefreshToken } from 'reduxStore/tokenSlice';
 
@@ -30,6 +31,7 @@ const ProfileDropdownMenu = ({ userEmail }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -49,7 +51,13 @@ const ProfileDropdownMenu = ({ userEmail }) => {
     dispatch(removeJwtToken());
     dispatch(removeRefreshToken());
     handleClose(event);
+    history.push('/');
   };
+
+  const handleMyProfileCLick = (event) => {
+    handleClose(event);
+    history.push('/account');
+  }
 
   function handleListKeyDown(event) {
     if (event.key === 'Tab') {
@@ -58,7 +66,9 @@ const ProfileDropdownMenu = ({ userEmail }) => {
     }
   }
 
+
   const prevOpen = useRef(open);
+
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
@@ -99,10 +109,8 @@ const ProfileDropdownMenu = ({ userEmail }) => {
                   autoFocusItem={open}
                   id="menu-list-grow"
                   onKeyDown={handleListKeyDown}
-                  zIndex="tooltip"
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleMyProfileCLick}>My profile</MenuItem>
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
               </ClickAwayListener>

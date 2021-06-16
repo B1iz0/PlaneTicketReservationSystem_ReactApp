@@ -8,11 +8,12 @@ import Header from 'components/shared/Header';
 import Footer from 'components/shared/Footer';
 import SignIn from 'components/Authorization/SignIn';
 import SignUp from 'components/Authorization/SignUp';
+import AccountPage from 'components/AccountPage';
 import FlightsPage from 'components/Flights/FlightsPage';
 import AdminUsersPage from 'components/Admin/AdminPages/AdminUsersPage';
 import AdminCompaniesPage from 'components/Admin/AdminPages/AdminCompaniesPage';
 import AdminFlightsPage from 'components/Admin/AdminPages/AdminFlightsPage';
-import { getEmail, getRole } from 'services/token-service';
+import { getRole } from 'services/token-service';
 import AdminAirplanesPage from '../Admin/AdminPages/AdminAirplanesPage/AdminAirplanesPage';
 import { Container } from '@material-ui/core';
 
@@ -65,6 +66,9 @@ function App() {
                 </Route>
                 <Route path="/admin/flights">
                   <AdminFlightsPage />
+                </Route>
+                <Route path="/account">
+                  <AccountPage />
                 </Route>
                 <Route path="/">
                   <FlightsPage />

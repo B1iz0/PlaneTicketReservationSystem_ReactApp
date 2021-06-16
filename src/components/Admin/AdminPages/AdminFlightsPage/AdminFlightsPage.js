@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
 import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { Container, IconButton } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 
 import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
@@ -41,7 +40,6 @@ const AdminFlightsPage = () => {
   const [totalFlightsNumber, setTotalFlightsNumber] = useState(0);
 
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(elementsOnAdminTable);
   const [departureCityFilter, setDepartureCityFilter] = useState('');
   const [arrivalCityFilter, setArrivalCityFilter] = useState('');
 
@@ -121,7 +119,7 @@ const AdminFlightsPage = () => {
       await API.get(`${allFlightsEndPoint}`, {
         params: {
           offset: offset,
-          limit: limit,
+          limit: elementsOnAdminTable,
           departureCity: departureCityFilter,
           arrivalCity: arrivalCityFilter,
         },
@@ -161,8 +159,8 @@ const AdminFlightsPage = () => {
     getFlights();
     getFlightsCount();
   }, [
+    token,
     offset,
-    limit,
     departureCityFilter,
     arrivalCityFilter,
     isEditDialogOpened,
@@ -176,7 +174,7 @@ const AdminFlightsPage = () => {
   };
 
   const onPageChange = (page) => {
-    setOffset(page * limit);
+    setOffset(page * elementsOnAdminTable);
   };
 
   const openMoreInfoDialog = (id) => {

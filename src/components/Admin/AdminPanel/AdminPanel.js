@@ -78,7 +78,7 @@ const AdminPanel = () => {
             button
             key={item.text}
             onClick={() => history.push(item.path)}
-            className={location.pathname == item.path ? classes.active : null}
+            className={location.pathname === item.path ? classes.active : null}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.text} />

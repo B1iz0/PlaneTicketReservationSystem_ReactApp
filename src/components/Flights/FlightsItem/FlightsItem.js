@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FlightsItem = ({
-  flight: { airplane, from, to, arrivalDate, departureDate },
+  flight: { airplane, from, to, arrivalTime, departureTime },
 }) => {
   const classes = useStyles();
 
@@ -64,12 +64,12 @@ const FlightsItem = ({
               <Grid item container direction="column">
                 <Grid item>
                   <Typography variant="subtitle1" align="center">
-                    {departureDate.split('T')[1]}
+                    {departureTime.split('T')[1]}
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography variant="body2" align="center">
-                    {departureDate.split('T')[0]}
+                    {departureTime.split('T')[0]}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -95,12 +95,12 @@ const FlightsItem = ({
               <Grid item container direction="column">
                 <Grid item>
                   <Typography variant="subtitle1" align="center">
-                    {arrivalDate.split('T')[1]}
+                    {arrivalTime.split('T')[1]}
                   </Typography>
                 </Grid>
                 <Grid item>
                   <Typography variant="body2" align="center">
-                    {arrivalDate.split('T')[0]}
+                    {arrivalTime.split('T')[0]}
                   </Typography>
                 </Grid>
                 <Grid item>

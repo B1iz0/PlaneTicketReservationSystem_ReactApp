@@ -8,7 +8,6 @@ import { Grid } from '@material-ui/core';
 import API from 'api';
 import Table from 'components/shared/Table';
 import { allUsersEndPoint } from 'constants';
-import { getId, refreshCurrentToken } from 'services/token-service';
 
 const useStyles = makeStyles((theme) => ({
   largeAvatar: {
@@ -38,9 +37,7 @@ const AccountPage = () => {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      let userId = getId(token.jwtToken);
-
-      await API.get(`${allUsersEndPoint}/${userId}`,
+      await API.get(`${allUsersEndPoint}/myself`,
         {
           headers: {
             Authorization: 'Bearer ' + token.jwtToken,
@@ -49,7 +46,6 @@ const AccountPage = () => {
       )
         .then(response => response.data)
         .then(data => setUser(data))
-        .catch(error => refreshCurrentToken(token.refreshToken));
     };
 
     getUserInfo();

@@ -46,6 +46,7 @@ const AccountPage = () => {
       )
         .then(response => response.data)
         .then(data => setUser(data))
+        .catch(error => console.log(error));
     };
 
     getUserInfo();

@@ -1,4 +1,6 @@
+import axios from 'axios';
 import API from 'api';
+import { bearerAuthorization } from 'api';
 import {
   setJwtToken,
   removeJwtToken,
@@ -39,24 +41,25 @@ const setToken = (token) => {
   store.dispatch(setRefreshToken(token.refreshToken));
 };
 
-const refreshCurrentToken = async (refreshToken) => {
+const removeToken = () => {
+  localStorage.removeItem('jwtToken');
+  localStorage.removeItem('refreshToken');
+  store.dispatch(removeJwtToken());
+  store.dispatch(removeRefreshToken());
+}
+
+const refreshCurrentToken = async (refreshToken, originalRequest) => {
   await API.post(`${allUsersEndPoint}/refresh-token`, {
     refreshToken: refreshToken,
-  })
+  }, bearerAuthorization)
     .then((response) => response.data)
     .then((data) => {
-      localStorage.setItem('jwtToken', data.jwtToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      store.dispatch(setJwtToken(data.jwtToken));
-      store.dispatch(setRefreshToken(data.refreshToken));
+      setToken(data);
+      return axios(originalRequest)
     })
     .catch((error) => {
       console.log(error);
-      localStorage.removeItem('jwtToken');
-      localStorage.removeItem('refreshToken');
-      store.dispatch(removeJwtToken());
-      store.dispatch(removeRefreshToken());
     });
 };
 
-export { getEmail, getRole, getId, refreshCurrentToken, setToken };
+export { getEmail, getRole, getId, refreshCurrentToken, setToken, removeToken };

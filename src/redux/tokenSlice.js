@@ -7,6 +7,9 @@ export const tokenSlice = createSlice({
     refreshToken: localStorage.getItem('refreshToken'),
   },
   reducers: {
+    getJwtToken: (state) => {
+      return state.jwtToken;
+    },
     setJwtToken: (state, action) => {
       state.jwtToken = action.payload;
     },
@@ -23,6 +26,7 @@ export const tokenSlice = createSlice({
 });
 
 export const {
+  getJwtToken,
   setJwtToken,
   removeJwtToken,
   setRefreshToken,

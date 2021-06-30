@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from 'reduxStore/store';
 
 import { refreshCurrentToken, removeToken } from 'services/token-service';
-import { allUsersEndPoint } from 'constants';
+import { usersEndPoint } from 'constants';
 import { reservationSystemURL } from 'constants';
 
 const instanse = axios.create({
@@ -21,7 +21,7 @@ instanse.interceptors.response.use((response) => {
 }, (error) => {
   const originalRequest = error.config;
 
-  if (originalRequest.url === `${allUsersEndPoint}/refresh-token`) {
+  if (originalRequest.url === `${usersEndPoint}/refresh-token`) {
     removeToken();
     window.location.href = '/SignIn';
   };

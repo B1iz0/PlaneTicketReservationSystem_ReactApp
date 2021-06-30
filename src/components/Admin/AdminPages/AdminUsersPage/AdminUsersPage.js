@@ -6,11 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
-import { refreshCurrentToken } from 'services/token-service';
-import API from 'api';
+import { getFilteredUsers, getFilteredUsersCount } from 'api/apiRequests';
 import {
-  allUsersEndPoint,
-  allUsersCountEndPoint,
   elementsOnAdminTable,
 } from 'constants';
 
@@ -49,51 +46,15 @@ const AdminUsersPage = () => {
   ];
 
   useEffect(() => {
-    const getUsers = async () => {
-      await API.get(`${allUsersEndPoint}`, {
-        params: {
-          offset: offset,
-          limit: elementsOnAdminTable,
-          email: emailFilter,
-          firstName: firstNameFilter,
-          lastName: lastNameFilter,
-        },
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setUsers(data))
-        .catch((error) => {
-          refreshCurrentToken(token.refreshToken);
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
-    const getUsersCount = async () => {
-      await API.get(`${allUsersCountEndPoint}`, {
-        params: {
-          email: emailFilter,
-          firstName: firstNameFilter,
-          lastName: lastNameFilter,
-        },
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setTotalUsersNumber(data))
-        .catch((error) => {
-          // refreshCurrentToken(token.refreshToken);
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
+    const fetchData = async () => {
+      const users = await getFilteredUsers(offset, emailFilter, firstNameFilter, lastNameFilter);
+      const usersCount = await getFilteredUsersCount(emailFilter, firstNameFilter, lastNameFilter);
 
-    getUsers();
-    getUsersCount();
+      setUsers(users)
+      setTotalUsersNumber(usersCount);
+    }
+
+    fetchData();
   }, [token, offset, emailFilter, firstNameFilter, lastNameFilter]);
 
   const onFilterConfirmed = (values) => {

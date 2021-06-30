@@ -8,7 +8,7 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 
 import API from 'api';
-import { allUsersEndPoint } from 'constants';
+import { usersEndPoint } from 'constants';
 import { setToken } from 'services/token-service';
 import { checkEmail, checkPassword } from 'services/authorizationValidation';
 import { useHistory } from 'react-router-dom';
@@ -63,7 +63,7 @@ const SignIn = () => {
     if (emailValidationResult.isNotValid || passwordValidationResult.isNotValid)
       return;
 
-    await API.post(`${allUsersEndPoint}/authenticate`, {
+    await API.post(`${usersEndPoint}/authenticate`, {
       email: email,
       password: password,
     })

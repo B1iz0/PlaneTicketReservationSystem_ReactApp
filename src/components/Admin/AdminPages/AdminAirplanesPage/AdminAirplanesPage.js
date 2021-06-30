@@ -3,13 +3,14 @@ import EditIcon from '@material-ui/icons/Edit';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { IconButton, Typography } from '@material-ui/core';
 
-import API from 'api';
+import { 
+  getAirplanes,
+  getAirplanesCount
+} from 'api/apiRequests';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import {
-  allAirplanesEndPoint,
-  allAirplanesCountEndPoint,
   elementsOnAdminTable,
 } from 'constants';
 
@@ -74,35 +75,15 @@ const AdminAirplanesPage = () => {
   });
 
   useEffect(() => {
-    const getAirplanes = async () => {
-      await API.get(`${allAirplanesEndPoint}`, {
-        params: {
-          offset: offset,
-          limit: elementsOnAdminTable,
-          airplaneType: airplaneTypeFilter,
-          company: companyFilter,
-          model: modelFilter,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setAirplanes(data))
-        .catch((error) => console.log(error));
-    };
-    const getAirplanesCount = async () => {
-      await API.get(`${allAirplanesCountEndPoint}`, {
-        params: {
-          airplaneType: airplaneTypeFilter,
-          company: companyFilter,
-          model: modelFilter,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setAirplanesCount(data))
-        .catch((error) => console.log(error));
-    };
+    const fetchData = async () => {
+      const airplanes = await getAirplanes(offset, airplaneTypeFilter, companyFilter, modelFilter);
+      const airplanesCount = await getAirplanesCount(airplaneTypeFilter, companyFilter, modelFilter);
 
-    getAirplanes();
-    getAirplanesCount();
+      setAirplanes(airplanes);
+      setAirplanesCount(airplanesCount);
+    }
+
+    fetchData();
   }, [airplaneTypeFilter, companyFilter, modelFilter, offset, isAddDialogOpened, isEditDialogOpened]);
 
   const onFilterConfirmed = (values) => {

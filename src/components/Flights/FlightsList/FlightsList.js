@@ -3,11 +3,9 @@ import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination';
 import { makeStyles } from '@material-ui/core/styles';
 
-import API from 'api';
+import { getFilteredFlights, getFlightsCount } from 'api/apiRequests';
 import {
   flightsOnPage,
-  allFlightsEndPoint,
-  allFlightsCountEndPoint,
 } from 'constants';
 
 import FlightsItem from '../FlightsItem';
@@ -29,43 +27,15 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
   const [flights, setFlights] = useState([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      await API.get(`${allFlightsEndPoint}`, {
-        params: {
-          offset: offset,
-          limit: flightsOnPage,
-          departureCity: departureCity,
-          arrivalCity: arrivalCity,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setFlights(data))
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
-    const getFlightsAmount = async () => {
-      await API.get(`${allFlightsCountEndPoint}`, {
-        params: {
-          departureCity: departureCity,
-          arrivalCity: arrivalCity,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => {
-          setPagesAmount(Math.ceil(data / flightsOnPage));
-        })
-        .catch((error) => {
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
+    const fetchData = async () => {
+      const flights = await getFilteredFlights(offset, flightsOnPage, departureCity, arrivalCity);
+      const flightsCount = await getFlightsCount(departureCity, arrivalCity);
 
-    getFlightsAmount();
-    loadData();
+      setFlights(flights);
+      setPagesAmount(Math.ceil(flightsCount / flightsOnPage));
+    }
+
+    fetchData();
   }, [departureCity, arrivalCity, page, offset]);
 
   const handlePageChange = (event, value) => {

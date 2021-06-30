@@ -14,13 +14,7 @@ import {
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import API from 'api';
-import { refreshCurrentToken } from 'services/token-service';
-import {
-  allAirplanesEndPoint,
-  allAirportsEndPoint,
-  allFlightsEndPoint,
-} from 'constants';
+import { getFreeAirplanes, getAllAirports, putFlight } from 'api/apiRequests';
 
 const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
   const token = useSelector((state) => state.token);
@@ -37,10 +31,10 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
   );
   const [toAirportId, setToAirportId] = useState(flightForEditing?.toAirportId);
   const [departureDate, setDepartureDate] = useState(
-    new Date(flightForEditing?.departureDate)
+    new Date(flightForEditing?.departureTime)
   );
   const [arrivalDate, setArrivalDate] = useState(
-    new Date(flightForEditing?.arrivalDate)
+    new Date(flightForEditing?.arrivalTime)
   );
 
   const [airplane, setAirplane] = useState(flightForEditing?.airplaneModel);
@@ -52,22 +46,15 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
   );
 
   useEffect(() => {
-    const getAirplanesList = async () => {
-      await API.get(`${allAirplanesEndPoint}/free`)
-        .then((response) => response.data)
-        .then((airplanes) => setFreeAirplanes(airplanes))
-        .catch((error) => console.log(error));
-    };
+    const fetchData = async () => {
+      const freeAirplanes = await getFreeAirplanes();
+      const allAirports = await getAllAirports();
 
-    const getAirportsList = async () => {
-      await API.get(`${allAirportsEndPoint}`)
-        .then((response) => response.data)
-        .then((airplanes) => setAirports(airplanes))
-        .catch((error) => console.log(error));
-    };
+      setFreeAirplanes(freeAirplanes);
+      setAirports(allAirports);
+    }
 
-    getAirplanesList();
-    getAirportsList();
+    fetchData();
   }, [token]);
 
   const onResetClick = () => {
@@ -75,49 +62,35 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
     setAirplaneId(flightForEditing?.airplaneId);
     setFromAirportId(flightForEditing?.fromAirportId);
     setToAirportId(flightForEditing?.toAirportId);
-    setArrivalDate(new Date(flightForEditing?.arrivalDate));
-    setDepartureDate(new Date(flightForEditing?.departureDate));
+    setArrivalDate(new Date(flightForEditing?.arrivalTime));
+    setDepartureDate(new Date(flightForEditing?.departureTime));
     setAirplane(flightForEditing?.airplaneModel);
     setDepartureAirport(flightForEditing?.fromAirportName);
     setArrivalAirport(flightForEditing?.toAirportName);
   };
   
   const saveFlight = async () => {
-    let departureDateWithoutTZ = departureDate;
+    let departureTimeWithoutTZ = departureDate;
     let hoursDiff =
-      departureDateWithoutTZ.getHours() -
-      departureDateWithoutTZ.getTimezoneOffset() / 60;
-    departureDateWithoutTZ.setHours(hoursDiff);
+      departureTimeWithoutTZ.getHours() -
+      departureTimeWithoutTZ.getTimezoneOffset() / 60;
+    departureTimeWithoutTZ.setHours(hoursDiff);
 
-    let arrivalDateWithoutTZ = arrivalDate;
+    let arrivalTimeWithoutTZ = arrivalDate;
     hoursDiff =
-      arrivalDateWithoutTZ.getHours() -
-      arrivalDateWithoutTZ.getTimezoneOffset() / 60;
-    arrivalDateWithoutTZ.setHours(hoursDiff);
+      arrivalTimeWithoutTZ.getHours() -
+      arrivalTimeWithoutTZ.getTimezoneOffset() / 60;
+    arrivalTimeWithoutTZ.setHours(hoursDiff);
 
-    await API.put(
-      `${allFlightsEndPoint}/${flightForEditing?.id}`,
-      {
-        airplaneId: airplaneId,
-        flightNumber: flightNumber,
-        fromId: fromAirportId,
-        toId: toAirportId,
-        departureDate: `${departureDateWithoutTZ.toJSON()}`,
-        departureTime: `${departureDateWithoutTZ.toJSON()}`,
-        arrivalDate: `${arrivalDateWithoutTZ.toJSON()}`,
-        arrivalTime: `${arrivalDateWithoutTZ.toJSON()}`,
-      },
-      {
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      }
-    ).catch((error) => {
-      refreshCurrentToken(token.refreshToken);
-      if (error.response) {
-        console.log(error.response.data);
-      }
-    });
+    await putFlight(
+      flightForEditing?.id,
+      airplaneId,
+      flightNumber,
+      fromAirportId,
+      toAirportId,
+      departureTimeWithoutTZ,
+      arrivalTimeWithoutTZ
+    )
   };
 
   const onSaveClick = async () => {

@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router-dom';
 
 import API from 'api';
-import { allUsersEndPoint } from 'constants';
+import { usersEndPoint } from 'constants';
 import { setToken } from 'services/token-service';
 import {
   checkEmail,
@@ -108,7 +108,7 @@ const SignUp = () => {
       return;
     }
 
-    API.post(`${allUsersEndPoint}/registration`, {
+    API.post(`${usersEndPoint}/registration`, {
       email: email,
       password: password,
       firstName: firstName,

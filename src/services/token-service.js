@@ -6,7 +6,7 @@ import {
   removeRefreshToken,
 } from 'reduxStore/tokenSlice';
 import store from 'reduxStore/store';
-import { allUsersEndPoint } from 'constants';
+import { usersEndPoint } from 'constants';
 
 const getEmail = (token) => {
   try {
@@ -47,7 +47,7 @@ const removeToken = () => {
 }
 
 const refreshCurrentToken = async (refreshToken) => {
-  await API.post(`${allUsersEndPoint}/refresh-token`, {
+  await API.post(`${usersEndPoint}/refresh-token`, {
     refreshToken: refreshToken,
   })
     .then((response) => response.data)

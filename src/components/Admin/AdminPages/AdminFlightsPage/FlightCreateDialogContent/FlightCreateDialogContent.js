@@ -14,9 +14,7 @@ import { makeStyles } from '@material-ui/styles';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import API from "api";
-import { refreshCurrentToken } from 'services/token-service';
-import { allFreeAirplanesEndPoint, allAirportsEndPoint, allFlightsEndPoint } from 'constants';
+import { getFreeAirplanes, getAllAirports, postFlight } from 'api/apiRequests';
 
 const useStyles = makeStyles((theme) => ({
     formField: {
@@ -43,58 +41,38 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
     const [arrivalAirport, setArrivalAirport] = useState('');
 
     useEffect(() => {
-        const getFreeAirplanes = async () => {
-            await API.get(`${allFreeAirplanesEndPoint}`)
-                .then(response => response.data)
-                .then(data => setFreeAirplanes(data))
-                .catch();
-        };
-        const getAirports = async () => {
-            await API.get(`${allAirportsEndPoint}`)
-                .then(response => response.data)
-                .then(data => setAirports(data))
-                .catch();
+        const fetchData = async () => {
+            const freeAirplanes = await getFreeAirplanes();
+            const allAirports = await getAllAirports();
+
+            setFreeAirplanes(freeAirplanes);
+            setAirports(allAirports);
         }
 
-        getFreeAirplanes();
-        getAirports();
+        fetchData();
     }, [token])
     
     const createFlight = async () => {
-        let departureDateWithoutTZ = departureDate;
+        let departureTimeWithoutTZ = departureDate;
         let hoursDiff =
-            departureDateWithoutTZ.getHours() -
-            departureDateWithoutTZ.getTimezoneOffset() / 60;
-        departureDateWithoutTZ.setHours(hoursDiff);
+            departureTimeWithoutTZ.getHours() -
+            departureTimeWithoutTZ.getTimezoneOffset() / 60;
+        departureTimeWithoutTZ.setHours(hoursDiff);
 
-        let arrivalDateWithoutTZ = arrivalDate;
+        let arrivalTimeWithoutTZ = arrivalDate;
         hoursDiff =
-            arrivalDateWithoutTZ.getHours() -
-            arrivalDateWithoutTZ.getTimezoneOffset() / 60;
-        arrivalDateWithoutTZ.setHours(hoursDiff);
+            arrivalTimeWithoutTZ.getHours() -
+            arrivalTimeWithoutTZ.getTimezoneOffset() / 60;
+        arrivalTimeWithoutTZ.setHours(hoursDiff);
 
-        await API.post(`${allFlightsEndPoint}`,
-        {
-            airplaneId: airplaneId,
-            flightNumber: parseInt(flightNumber, 10),
-            fromId: departureAirportId,
-            toId: arrivalAirportId,
-            departureDate: `${departureDateWithoutTZ.toJSON()}`,
-            departureTime: `${departureDateWithoutTZ.toJSON()}`,
-            arrivalDate: `${arrivalDateWithoutTZ.toJSON()}`,
-            arrivalTime: `${arrivalDateWithoutTZ.toJSON()}`,
-        },
-        {
-            headers: {
-                Authorization: 'Bearer ' + token.jwtToken,
-            },
-        })
-        .catch(error => {
-            if (error.response) {
-                console.log(error.response.data);
-            }
-            refreshCurrentToken(token.refreshToken);
-        });
+        await postFlight(
+            airplaneId,
+            flightNumber,
+            departureAirportId,
+            arrivalAirportId,
+            departureTimeWithoutTZ,
+            arrivalTimeWithoutTZ
+        );
     };
     
     const handleCreate = async () => {

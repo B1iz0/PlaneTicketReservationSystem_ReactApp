@@ -5,11 +5,8 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Filter from 'components/Filter';
-import { refreshCurrentToken } from 'services/token-service';
-import API from 'api';
+import { getFilteredCompanies, getCompaniesCount } from 'api/apiRequests';
 import {
-  allCompaniesEndPoint,
-  allCompaniesCountEndPoint,
   elementsOnAdminTable,
 } from 'constants';
 
@@ -50,49 +47,15 @@ const AdminCompaniesPage = () => {
   });
 
   useEffect(() => {
-    const getCompanies = async () => {
-      await API.get(`${allCompaniesEndPoint}`, {
-        params: {
-          offset: offset,
-          limit: elementsOnAdminTable,
-          companyName: companyNameFilter,
-          countryName: countryNameFilter,
-        },
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setCompanies(data))
-        .catch((error) => {
-          refreshCurrentToken(token.refreshToken);
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
-    const getCompaniesCount = async () => {
-      await API.get(`${allCompaniesCountEndPoint}`, {
-        params: {
-          companyName: companyNameFilter,
-          countryName: countryNameFilter,
-        },
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setTotalCompaniesNumber(data))
-        .catch((error) => {
-          refreshCurrentToken(token.refreshToken);
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
+    const fetchData = async () => {
+      const companies = await getFilteredCompanies(offset, companyNameFilter, countryNameFilter);
+      const companiesCount = await getCompaniesCount(companyNameFilter, countryNameFilter);
 
-    getCompanies();
-    getCompaniesCount();
+      setCompanies(companies);
+      setTotalCompaniesNumber(companiesCount);
+    }
+
+    fetchData();
   }, [token, offset, companyNameFilter, countryNameFilter]);
 
   const onFilterConfirmed = (values) => {

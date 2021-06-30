@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import { Grid } from '@material-ui/core';
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AccountPage = () => {
   const classes = useStyles();
-  const token = useSelector(state => state.token);
 
   const [user, setUser] = useState();
   const [rows, setRows] = useState([])

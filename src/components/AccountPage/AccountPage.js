@@ -5,9 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import { Grid } from '@material-ui/core';
 
-import API from 'api';
 import Table from 'components/shared/Table';
-import { allUsersEndPoint } from 'constants';
+import { getUserInfo } from 'api/apiRequests';
 
 const useStyles = makeStyles((theme) => ({
   largeAvatar: {
@@ -36,21 +35,13 @@ const AccountPage = () => {
   const [rows, setRows] = useState([])
 
   useEffect(() => {
-    const getUserInfo = async () => {
-      await API.get(`${allUsersEndPoint}/myself`,
-        {
-          headers: {
-            Authorization: 'Bearer ' + token.jwtToken,
-          },
-        }
-      )
-        .then(response => response.data)
-        .then(data => setUser(data))
-        .catch(error => console.log(error));
-    };
+    async function fetchData() {
+      const user = await getUserInfo();
+      setUser(user);
+    }
 
-    getUserInfo();
-  }, [token])
+    fetchData();
+  }, [])
 
   useEffect(() => {
     let currentRows = user?.bookings.map(item => {

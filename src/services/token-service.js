@@ -1,6 +1,5 @@
 import axios from 'axios';
 import API from 'api';
-import { bearerAuthorization } from 'api';
 import {
   setJwtToken,
   removeJwtToken,
@@ -34,7 +33,7 @@ const getId = (token) => {
   }
 }
 
-const setToken = (token) => {
+const setToken = async (token) => {
   localStorage.setItem('jwtToken', token.jwtToken);
   localStorage.setItem('refreshToken', token.refreshToken);
   store.dispatch(setJwtToken(token.jwtToken));
@@ -48,14 +47,13 @@ const removeToken = () => {
   store.dispatch(removeRefreshToken());
 }
 
-const refreshCurrentToken = async (refreshToken, originalRequest) => {
+const refreshCurrentToken = async (refreshToken) => {
   await API.post(`${allUsersEndPoint}/refresh-token`, {
     refreshToken: refreshToken,
-  }, bearerAuthorization)
+  })
     .then((response) => response.data)
-    .then((data) => {
-      setToken(data);
-      return axios(originalRequest)
+    .then(async (data) => {
+      await setToken(data);
     })
     .catch((error) => {
       console.log(error);

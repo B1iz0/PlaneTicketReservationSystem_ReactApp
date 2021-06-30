@@ -24,19 +24,25 @@ instanse.interceptors.response.use((response) => {
   if (originalRequest.url === `${allUsersEndPoint}/refresh-token`) {
     removeToken();
     window.location.href = '/SignIn';
-  }
+  };
 
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
-    return refreshCurrentToken(store.getState().token.refreshToken);
-  }
+    return refreshCurrentToken(store.getState().token.refreshToken)
+    .then(() => {
+      originalRequest.headers.Authorization = `Bearer ${store.getState().token.jwtToken}`;
+      return axios(originalRequest);
+    });
+  };
 
   return Promise.reject(error);
 });
 
-const bearerAuthorization = {
-  headers: {
-    'Authorization': `Bearer ${store.getState().token.jwtToken}`,
+const bearerAuthorization = (jwtToken) => {
+  return {
+    headers: {
+      'Authorization': `Bearer ${jwtToken}`,
+    }
   }
 };
 

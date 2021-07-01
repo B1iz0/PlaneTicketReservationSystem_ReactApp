@@ -64,13 +64,15 @@ const getAirplanesCount = async (airplaneTypeFilter, companyFilter, modelFilter)
 const getAirplaneTypes = async () => {
   return await API.get(`${allAirplaneTypesEndPoint}`)
     .then((response) => response.data)
-    .then((data) => data);
+    .then((data) => data)
+    .catch((error) => console.log(error));
 };
 
 const getAllCompanies = async () => {
   return await API.get(`${allCompaniesEndPoint}`)
     .then((response) => response.data)
-    .then((data) => data);
+    .then((data) => data)
+    .catch((error) => console.log(error));
 };
 
 const getFilteredCompanies = async (

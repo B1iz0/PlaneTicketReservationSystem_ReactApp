@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { IconButton, Typography } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 import { 
   getAirplanes,
@@ -17,6 +18,7 @@ import {
 import AirplaneCreateDialogContent from './AirplaneCreateDialogContent';
 
 const AdminAirplanesPage = () => {
+  let history = useHistory();
   const [airplanes, setAirplanes] = useState([]);
   const [airplanesCount, setAirplanesCount] = useState(0);
 
@@ -114,7 +116,8 @@ const AdminAirplanesPage = () => {
   };
 
   const openAddDialog = () => {
-    setIsAddDialogOpened(true);
+    history.push('/admin/airplanes/creation');
+    // setIsAddDialogOpened(true);
   };
 
   const closeAddDialog = () => {

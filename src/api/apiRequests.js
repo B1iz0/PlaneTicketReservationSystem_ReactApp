@@ -14,7 +14,8 @@ import {
   flightsCountEndPoint,
   allAirportsEndPoint,
   usersEndPoint,
-  usersCountEndPoint
+  usersCountEndPoint,
+  placeTypesEndPoint
 } from 'constants';
 
 const getUserInfo = async () => {
@@ -115,7 +116,7 @@ const addAirplane = async (
 ) => {
   let token = store.getState().token;
 
-  await API.post(
+  return await API.post(
     `${allAirplanesEndPoint}`,
     {
       airplaneTypeId: airplaneTypeId,
@@ -126,6 +127,7 @@ const addAirplane = async (
       columns: parseInt(columns, 10),
     }, 
     bearerAuthorization(token.jwtToken))
+      .then(response => response.data)
       .catch((error) => console.log(error));
 };
 
@@ -263,6 +265,12 @@ const getFilteredUsersCount = async (
     .catch((error) => console.log(error));
 };
 
+const getPlaceTypes = async () => {
+  return await API.get(`${placeTypesEndPoint}`)
+    .then(response => response.data)
+    .catch(error => console.log(error));
+}
+
 export { 
   getUserInfo,
   getAirplanes,
@@ -280,5 +288,6 @@ export {
   putFlight,
   getAllAirports,
   getFilteredUsers,
-  getFilteredUsersCount
+  getFilteredUsersCount,
+  getPlaceTypes
 }

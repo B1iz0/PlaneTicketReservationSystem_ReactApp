@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AirplaneCreationStep = ({ handleNext }) => {
+const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
   const classes = useStyles();
 
   const [airplaneTypeId, setAirplaneTypeId] = useState();
@@ -62,7 +62,7 @@ const AirplaneCreationStep = ({ handleNext }) => {
       && rowsAmount
       && columnsAmount)) return;
 
-    await addAirplane(
+    const createdAirplane = await addAirplane(
         airplaneTypeId,
         companyId,
         model,
@@ -71,6 +71,7 @@ const AirplaneCreationStep = ({ handleNext }) => {
         columnsAmount
       );
 
+    handleAirplaneCreation(createdAirplane?.id);
     handleNext();
   };
 

@@ -5,6 +5,8 @@ import { Grid } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 
+import AirplaneTypesAutocomplete from './AirplaneTypesAutocomplete';
+
 const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: theme.spacing(1),
@@ -18,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FulfillAirplaneStep = ({ handleBackToAdminTable }) => {
+const FulfillAirplaneStep = ({ airplaneId, handleBackToAdminTable }) => {
   const classes = useStyles();
 
   const [placeTypes, setPlaceTypes] = useState([]);
@@ -28,40 +30,51 @@ const FulfillAirplaneStep = ({ handleBackToAdminTable }) => {
     handleBackToAdminTable();
   }
 
-  const handleAddPlaceType = () => {
+  const handleAddPlaceType = (newValue) => {
     const updatePlaceTypes = [
       ...placeTypes,
-      '',
+      null,
     ];
 
     setPlaceTypes(updatePlaceTypes);
   }
 
-  console.log(placeTypes.length);
+  const handleChangeSomePlaceType = (key, newValue) => {
+    const updatePlaceTypes = [ ...placeTypes ];
+    updatePlaceTypes[key] = newValue;
+
+    setPlaceTypes(updatePlaceTypes);
+  }
+
+  const handleChangeAmountOfPlaces = (key, newValue) => {
+    const updatePlaceTypes = [ ...placeTypes ];
+    updatePlaceTypes[key].amount = newValue;
+
+    setPlaceTypes(updatePlaceTypes);
+  }
 
   return (
     <div>
       <Grid container spacing={2}>
         {
-          placeTypes.map(() => {
+          placeTypes.map((value, key) => {
             return (
-              <Grid item container lg={12} spacing={1} justify="flex-end">
+              <Grid key={key} item container lg={12} spacing={1}>
                 <Grid item lg={6}>
-                  <TextField 
+                  <AirplaneTypesAutocomplete 
+                    placeType={value}
+                    index={key}
+                    handleChange={handleChangeSomePlaceType}
                     className={classes.textField}
-                    variant="outlined"
                   />
                 </Grid>
                 <Grid item lg={6}>
                   <TextField 
                     className={classes.textField}
+                    onChange={(event) => handleChangeAmountOfPlaces(key, event.target.value)}
                     variant="outlined"
-                  />
-                </Grid>
-                <Grid item lg={6}>
-                  <TextField 
-                    className={classes.textField}
-                    variant="outlined"
+                    label="Amount of such places"
+                    type="number"
                   />
                 </Grid>
               </Grid>

@@ -14,12 +14,12 @@ const getSteps = () => {
   return ['Create airplane', 'Fulfill created airplane'];
 }
 
-const getStepContent = (step, handleNext, handleBackToAdminTable) => {
+const getStepContent = (step, handleNext, handleBackToAdminTable, createdAirplaneId, handleAirplaneCreation) => {
   switch (step) {
     case 0:
-      return (<AirplaneCreationStep handleNext={handleNext}/>);
+      return (<AirplaneCreationStep handleNext={handleNext} handleAirplaneCreation={handleAirplaneCreation}/>);
     case 1: 
-      return (<FulfillAirplaneStep handleBackToAdminTable={handleBackToAdminTable}/>);
+      return (<FulfillAirplaneStep airplaneId={createdAirplaneId} handleBackToAdminTable={handleBackToAdminTable}/>);
     default:
       return (<></>);
   }
@@ -30,6 +30,12 @@ const AirplaneCreationPage = () => {
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
+
+  const [createdAirplaneId, setCreatedAirplaneId] = useState();
+
+  const handleAirplaneCreation = (airplaneId) => {
+    setCreatedAirplaneId(airplaneId)
+  };
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -54,7 +60,7 @@ const AirplaneCreationPage = () => {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              {getStepContent(index, handleNext, handleBackToAdminTable)}
+              {getStepContent(index, handleNext, handleBackToAdminTable, createdAirplaneId, handleAirplaneCreation)}
             </StepContent>
           </Step>
         ))}

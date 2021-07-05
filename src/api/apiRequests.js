@@ -15,7 +15,9 @@ import {
   allAirportsEndPoint,
   usersEndPoint,
   usersCountEndPoint,
-  placeTypesEndPoint
+  placeTypesEndPoint,
+  placesEndPoint,
+  pricesEndPoint,
 } from 'constants';
 
 const getUserInfo = async () => {
@@ -271,6 +273,34 @@ const getPlaceTypes = async () => {
     .catch(error => console.log(error));
 }
 
+const postPlacesList = async (requestModel) => {
+  let token = store.getState().token;
+
+  await API.post(
+      `${placesEndPoint}`, 
+      requestModel,
+      bearerAuthorization(token.jwtToken)
+    )
+      .catch(error => console.log(error));
+};
+
+const getAirplanePlacePrices = async (airplaneId) => {
+  return await API.get(`${pricesEndPoint}/${airplaneId}`)
+    .then(response => response.data)
+    .catch(error => console.log(error));
+};
+
+const putAirplanePrices = async (prices) => {
+  let token = store.getState().token;
+
+  await API.put(
+    `${pricesEndPoint}`,
+    prices,
+    bearerAuthorization(token.jwtToken)
+  )
+    .catch(error => console.log(error));
+};
+
 export { 
   getUserInfo,
   getAirplanes,
@@ -289,5 +319,8 @@ export {
   getAllAirports,
   getFilteredUsers,
   getFilteredUsersCount,
-  getPlaceTypes
+  getPlaceTypes,
+  postPlacesList,
+  getAirplanePlacePrices,
+  putAirplanePrices
 }

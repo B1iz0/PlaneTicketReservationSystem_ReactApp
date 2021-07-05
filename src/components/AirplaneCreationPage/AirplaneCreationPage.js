@@ -9,9 +9,10 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 import AirplaneCreationStep from './AirplaneCreationStep';
 import FulfillAirplaneStep from './FulfillAirplaneStep';
+import PricesCreationStep from './PricesCreationStep';
 
 const getSteps = () => {
-  return ['Create airplane', 'Fulfill created airplane'];
+  return ['Create airplane', 'Fulfill created airplane', 'Create prices'];
 }
 
 const getStepContent = (step, handleNext, handleBackToAdminTable, createdAirplaneId, handleAirplaneCreation) => {
@@ -19,7 +20,9 @@ const getStepContent = (step, handleNext, handleBackToAdminTable, createdAirplan
     case 0:
       return (<AirplaneCreationStep handleNext={handleNext} handleAirplaneCreation={handleAirplaneCreation}/>);
     case 1: 
-      return (<FulfillAirplaneStep airplaneId={createdAirplaneId} handleBackToAdminTable={handleBackToAdminTable}/>);
+      return (<FulfillAirplaneStep airplaneId={createdAirplaneId} handleNext={handleNext}/>);
+    case 2:
+      return (<PricesCreationStep airplaneId={createdAirplaneId} handleBackToAdminTable={handleBackToAdminTable}/>);
     default:
       return (<></>);
   }

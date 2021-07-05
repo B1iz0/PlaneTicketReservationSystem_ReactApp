@@ -6,6 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 
 import AirplaneTypesAutocomplete from './AirplaneTypesAutocomplete';
+import { postPlacesList } from 'api/apiRequests';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -20,14 +21,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FulfillAirplaneStep = ({ airplaneId, handleBackToAdminTable }) => {
+const FulfillAirplaneStep = ({ airplaneId, handleNext }) => {
   const classes = useStyles();
 
   const [placeTypes, setPlaceTypes] = useState([]);
 
-  const handleFulfillAirplane = () => {
-
-    handleBackToAdminTable();
+  const handleFulfillAirplane = async () => {
+    const requestPlaces = placeTypes.map(value => {
+      return {
+        placeTypeId: value.id,
+        placeTypeName: value.name,
+        placeAmount: parseInt(value.amount, 10),
+      };
+    });
+    
+    await postPlacesList({
+      airplaneId: airplaneId,
+      places: requestPlaces,
+    });
+    
+    handleNext();
   }
 
   const handleAddPlaceType = (newValue) => {

@@ -22,6 +22,10 @@ export const allCompaniesCountEndPoint = 'api/companies/count';
 
 export const placeTypesEndPoint = 'api/placeTypes';
 
+export const placesEndPoint = 'api/places';
+
+export const pricesEndPoint = 'api/prices';
+
 export const flightsOnPage = 4;
 
 export const elementsOnAdminTable = 5;

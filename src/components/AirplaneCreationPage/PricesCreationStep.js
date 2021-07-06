@@ -39,7 +39,6 @@ const PricesCreationStep = ({ airplaneId, handleBackToAdminTable }) => {
   useEffect(() => {
     const fetchData = async () => {
       const newPrices = await getAirplanePlacePrices(airplaneId);
-      console.log(newPrices);
 
       setPrices(newPrices);
     }

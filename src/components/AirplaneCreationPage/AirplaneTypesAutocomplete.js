@@ -42,12 +42,12 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
 
   const handleTypeSubmitCreation = (event) => {
     event.preventDefault();
-    setSelectedPlaceType({
-      name: dialogValue.placeTypeName,
-    });
-    handleChange(index, {
-      name: dialogValue.placeTypeName,
-    });
+    const prevType = selectedPlaceType;
+    prevType.id = '';
+    prevType.name = dialogValue.placeTypeName;
+
+    setSelectedPlaceType(prevType);
+    handleChange(index, prevType);
 
     handleClose();
   }
@@ -70,8 +70,20 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
               placeTypeName: newValue.inputValue,
             });
           } else {
-            setSelectedPlaceType(newValue);
-            handleChange(index, newValue);
+            let prevType = selectedPlaceType;
+            if (!prevType) {
+              prevType = {
+                id: '',
+                name: '',
+                amount: '',
+                isTypeValid: true,
+                isAmountValid: true,
+              }
+            }
+            prevType.id = newValue?.id;
+            prevType.name = newValue?.name;
+            setSelectedPlaceType(prevType);
+            handleChange(index, prevType);
           }
         }}
         filterOptions={(options, params) => {
@@ -101,7 +113,13 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
         renderOption={(option) => option.name}
         freeSolo
         renderInput={(params) => (
-          <TextField {...params} label="Place type" variant="outlined" />
+          <TextField 
+            {...params} 
+            label="Place type" 
+            variant="outlined" 
+            required
+            error={ placeType ? !placeType.isTypeValid : false }
+          />
         )}
       />
       <Dialog open={isDialogOpen} onClose={handleClose} aria-labelledby="form-dialog-title">

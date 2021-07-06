@@ -27,32 +27,71 @@ const FulfillAirplaneStep = ({ airplaneId, handleNext }) => {
   const [placeTypes, setPlaceTypes] = useState([]);
 
   const handleFulfillAirplane = async () => {
-    const requestPlaces = placeTypes.map(value => {
-      return {
-        placeTypeId: value.id,
-        placeTypeName: value.name,
-        placeAmount: parseInt(value.amount, 10),
-      };
+    let isValid = true;
+    const newPlaceTypes = [ ...placeTypes ];
+    newPlaceTypes.forEach((placeType, index) => {
+      if (!placeType) {
+        console.log('hehe');
+        placeType = {
+          isTypeValid: false,
+          isAmountValid: false,
+        };
+        isValid = false;
+      }
+      if (isValid) {
+        if (!placeType.name) {
+          placeType.isTypeValid = false;
+          isValid = false;
+        } else {
+          placeType.isTypeValid = true;
+        }
+        if (!placeType.amount || parseInt(placeType.amount, 10) < 0) {
+          placeType.isAmountValid = false;
+          isValid = false;
+        } else {
+          placeType.isAmountValid = true;
+        }
+      }
+      newPlaceTypes[index] = placeType;
     });
+
+    setPlaceTypes(newPlaceTypes);
     
-    await postPlacesList({
-      airplaneId: airplaneId,
-      places: requestPlaces,
-    });
-    
-    handleNext();
+    if (isValid) {
+      const requestPlaces = placeTypes.map(value => {
+        return {
+          placeTypeId: value.id,
+          placeTypeName: value.name,
+          placeAmount: parseInt(value.amount, 10),
+        };
+      });
+      
+      await postPlacesList({
+        airplaneId: airplaneId,
+        places: requestPlaces,
+      });
+      
+      handleNext();
+    }
   }
 
   const handleAddPlaceType = (newValue) => {
     const updatePlaceTypes = [
       ...placeTypes,
-      null,
+      {
+        id: '',
+        name: '',
+        amount: '',
+        isTypeValid: true,
+        isAmountValid: true,
+      },
     ];
 
     setPlaceTypes(updatePlaceTypes);
   }
 
   const handleChangeSomePlaceType = (key, newValue) => {
+    console.log(newValue);
     const updatePlaceTypes = [ ...placeTypes ];
     updatePlaceTypes[key] = newValue;
 
@@ -83,6 +122,8 @@ const FulfillAirplaneStep = ({ airplaneId, handleNext }) => {
                 </Grid>
                 <Grid item lg={6}>
                   <TextField 
+                    required
+                    error={ value ? !value.isAmountValid : false }
                     className={classes.textField}
                     onChange={(event) => handleChangeAmountOfPlaces(key, event.target.value)}
                     variant="outlined"

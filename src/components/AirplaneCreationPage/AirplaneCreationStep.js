@@ -4,9 +4,11 @@ import TextField from '@material-ui/core/TextField';
 import { Grid } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import { getAirplaneTypes, getAllCompanies, addAirplane } from 'api/apiRequests';
 
@@ -42,6 +44,15 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
   const [airplaneTypes, setAirplaneTypes] = useState([]);
   const [companies, setCompanies] = useState([]);
 
+  const [isModelValid, setIsModelValid] = useState(true);
+  const [isRegistrationNumberValid, setIsRegistrationNumberValid] = useState(true);
+  const [isAirplaneTypeValid, setIsAirplaneTypeValid] = useState(true);
+  const [isRowsNumberValid, setIsRowsNumberValid] = useState(true);
+  const [isColumnsNumberValid, setIsColumnsNumberValid] = useState(true);
+  const [isCompanyValid, setIsCompanyValid] = useState(true);
+
+  const [serverError, setServerError] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       const airplaneTypes = await getAirplaneTypes();
@@ -55,24 +66,50 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
   }, []);
 
   const handleSave = async () => {
-    if (!(airplaneTypeId
-      && companyId
-      && model
-      && registrationNumber
-      && rowsAmount
-      && columnsAmount)) return;
+    setServerError('');
+    let isValid = true;
+    if (!model) {
+      setIsModelValid(false);
+      isValid = false;
+    } else setIsModelValid(true);
+    if (!registrationNumber || registrationNumber.length > 7) {
+      setIsRegistrationNumberValid(false);
+      isValid = false;
+    } else setIsRegistrationNumberValid(true);
+    if (!airplaneTypeId) {
+      setIsAirplaneTypeValid(false);
+      isValid = false;
+    } else setIsAirplaneTypeValid(true);
+    if (!rowsAmount) {
+      setIsRowsNumberValid(false);
+      isValid = false;
+    } else setIsRowsNumberValid(true);
+    if (!columnsAmount) {
+      setIsColumnsNumberValid(false);
+      isValid = false;
+    } else setIsColumnsNumberValid(true);
+    if (!companyId) {
+      setIsCompanyValid(false);
+      isValid = false;
+    } else setIsCompanyValid(true);
+    
+    if (isValid) {
+      const [createdAirplane, error] = await addAirplane(
+          airplaneTypeId,
+          companyId,
+          model,
+          registrationNumber,
+          rowsAmount,
+          columnsAmount
+        );
 
-    const createdAirplane = await addAirplane(
-        airplaneTypeId,
-        companyId,
-        model,
-        registrationNumber,
-        rowsAmount,
-        columnsAmount
-      );
-
-    handleAirplaneCreation(createdAirplane?.id);
-    handleNext();
+      if (error) {
+        setServerError(error.response?.data?.message);
+      } else {
+        handleAirplaneCreation(createdAirplane?.id);
+        handleNext();
+      }
+    }
   };
 
   return(
@@ -81,7 +118,10 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
           <Grid container direction="column" spacing={1}>
             <Grid item lg={12}>
               <TextField
+                required
                 className={classes.formField}
+                error={!isModelValid}
+                helperText={!isModelValid && 'It\'s required field'}
                 variant="outlined"
                 label="Model"
                 onChange={(e) => setModel(e.target.value)}
@@ -89,14 +129,21 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
             </Grid>
             <Grid item lg={12}>
               <TextField
+                required  
                 className={classes.formField}
+                error={!isRegistrationNumberValid}
+                helperText={!isRegistrationNumberValid && 'It\'s required field and containes less 7 symbols'}
                 variant="outlined"
                 label="Registration number"
                 onChange={(e) => setRegistrationNumber(e.target.value)}
               />
             </Grid>
             <Grid item lg={12}>
-              <FormControl className={classes.formField}>
+              <FormControl 
+                className={classes.formField} 
+                error={!isAirplaneTypeValid} 
+                required
+                >
                 <InputLabel>Airplane type</InputLabel>
                 <Select
                   value={airplaneType}
@@ -112,12 +159,17 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>{!isAirplaneTypeValid && 'It\'s required field'}</FormHelperText>
               </FormControl>
             </Grid>
             <Grid item container spacing={1}>
               <Grid item lg={6}>
                 <TextField
+                  required
                   className={classes.formField}
+                  type="number"
+                  error={!isRowsNumberValid}
+                  helperText={!isRowsNumberValid && 'It\'s required field'}
                   variant="outlined"
                   label="Rows number"
                   onChange={(e) => setRowsAmount(e.target.value)}
@@ -125,7 +177,11 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
               </Grid>
               <Grid item lg={6}>
                 <TextField
+                  required
                   className={classes.formField}
+                  type="number"
+                  error={!isColumnsNumberValid}
+                  helperText={!isColumnsNumberValid && 'It\'s required field'}
                   variant="outlined"
                   label="Places number in a row"
                   onChange={(e) => setColumnsAmount(e.target.value)}
@@ -133,7 +189,7 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
               </Grid>
             </Grid>
             <Grid item lg={12}>
-              <FormControl className={classes.formField}>
+              <FormControl className={classes.formField} error={!isCompanyValid} required>
                 <InputLabel>Company</InputLabel>
                 <Select
                   value={company}
@@ -149,7 +205,13 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>{!isCompanyValid && 'It\'s required field'}</FormHelperText>
               </FormControl>
+            </Grid>
+            <Grid item lg={12}>
+              <Typography variant="subtitle1" color="error">
+                {serverError}
+              </Typography>
             </Grid>
           </Grid>
         </form>

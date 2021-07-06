@@ -129,8 +129,8 @@ const addAirplane = async (
       columns: parseInt(columns, 10),
     }, 
     bearerAuthorization(token.jwtToken))
-      .then(response => response.data)
-      .catch((error) => console.log(error));
+      .then(response => [response.data, null])
+      .catch((error) => [null, error]);
 };
 
 const getFilteredFlights = async (offset, limit, departureCityFilter, arrivalCityFilter) => {

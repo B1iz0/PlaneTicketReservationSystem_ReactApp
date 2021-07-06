@@ -152,7 +152,6 @@ const AdminFlightsPage = () => {
   };
 
   const closeCreateFlightDialog = () => {
-    console.log('he');
     setIsCreateDialogOpened(false);
   }
 

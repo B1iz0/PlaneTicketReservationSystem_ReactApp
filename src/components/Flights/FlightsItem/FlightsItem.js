@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import FlightIcon from '@material-ui/icons/Flight';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   flightInfo: {
@@ -30,10 +31,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FlightsItem = ({
+const FlightsItem = ({ flight, 
   flight: { airplane, from, to, arrivalTime, departureTime },
 }) => {
   const classes = useStyles();
+  let history = useHistory();
+
+  const handleBookClick = () => {
+    history.push({
+      pathname: '/reservation',
+      state: { flight: flight }
+    });
+  }
 
   return (
     <Grid item container>
@@ -123,10 +132,10 @@ const FlightsItem = ({
           <hr className={classes.dividedLine}></hr>
           <Grid item container>
             <Button
-              disabled
               variant="contained"
               color="primary"
               className={classes.bookButton}
+              onClick={handleBookClick}
             >
               Book
             </Button>

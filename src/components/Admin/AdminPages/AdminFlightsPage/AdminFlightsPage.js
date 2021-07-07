@@ -9,11 +9,9 @@ import { IconButton } from '@material-ui/core';
 import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
-import { refreshCurrentToken } from 'services/token-service';
-import API from 'api';
+import { getFilteredFlights, getFlightsCount } from 'api/apiRequests';
 import {
-  allFlightsEndPoint,
-  allFlightsCountEndPoint,
+  flightsEndPoint,
   elementsOnAdminTable,
 } from 'constants';
 
@@ -66,8 +64,8 @@ const AdminFlightsPage = () => {
       width: 200,
     },
     { field: 'toAirportName', headerName: 'Arrival airport', width: 150 },
-    { field: 'departureDate', headerName: 'Departure date', width: 200 },
-    { field: 'arrivalDate', headerName: 'Arrival date', width: 200 },
+    { field: 'departureTime', headerName: 'Departure time', width: 200 },
+    { field: 'arrivalTime', headerName: 'Arrival time', width: 200 },
     {
       field: 'edit',
       headerName: 'Edit',
@@ -109,55 +107,21 @@ const AdminFlightsPage = () => {
       fromAirportId: value.from.id,
       toAirportName: value.to.name,
       toAirportId: value.to.id,
-      departureDate: value.departureDate,
-      arrivalDate: value.arrivalDate,
+      departureTime: value.departureTime,
+      arrivalTime: value.arrivalTime,
     };
   });
 
   useEffect(() => {
-    const getFlights = async () => {
-      await API.get(`${allFlightsEndPoint}`, {
-        params: {
-          offset: offset,
-          limit: elementsOnAdminTable,
-          departureCity: departureCityFilter,
-          arrivalCity: arrivalCityFilter,
-        },
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setFlights(data))
-        .catch((error) => {
-          refreshCurrentToken(token.refreshToken);
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
-    const getFlightsCount = async () => {
-      await API.get(`${allFlightsCountEndPoint}`, {
-        params: {
-          departureCity: departureCityFilter,
-          arrivalCity: arrivalCityFilter,
-        },
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setTotalFlightsNumber(data))
-        .catch((error) => {
-          refreshCurrentToken(token.refreshToken);
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
+    const fetchData = async () => {
+      const flights = await getFilteredFlights(offset, elementsOnAdminTable, departureCityFilter, arrivalCityFilter);
+      const flightsCount = await getFlightsCount(departureCityFilter, arrivalCityFilter);
+    
+      setFlights(flights);
+      setTotalFlightsNumber(flightsCount);
+    }
 
-    getFlights();
-    getFlightsCount();
+    fetchData();
   }, [
     token,
     offset,
@@ -188,7 +152,6 @@ const AdminFlightsPage = () => {
   };
 
   const closeCreateFlightDialog = () => {
-    console.log('he');
     setIsCreateDialogOpened(false);
   }
 
@@ -207,7 +170,7 @@ const AdminFlightsPage = () => {
         isOpened={isMoreInfoDialogOpened}
         DialogContent={
           <FlightInfoDialogContent
-            elementUrl={`${allFlightsEndPoint}/${flightIdEdit}`}
+            elementUrl={`${flightsEndPoint}/${flightIdEdit}`}
           />
         }
         closeDialog={() => setIsMoreInfoDialogOpened(false)}

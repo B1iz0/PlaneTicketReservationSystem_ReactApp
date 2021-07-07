@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
@@ -12,12 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import API from 'api';
-import {
-  allAirplaneTypesEndPoint,
-  allCompaniesEndPoint,
-  allAirplanesEndPoint,
-} from 'constants';
+import { getAirplaneTypes, getAllCompanies, addAirplane } from 'api/apiRequests';
 
 const useStyles = makeStyles((theme) => ({
   formField: {
@@ -30,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AirplaneCreateDialogContent = ({ closeDialog }) => {
   const classes = useStyles();
-  const token = useSelector((state) => state.token);
 
   const [airplaneType, setAirplaneType] = useState('');
   const [airplaneTypeId, setAirplaneTypeId] = useState();
@@ -47,42 +40,26 @@ const AirplaneCreateDialogContent = ({ closeDialog }) => {
   const [columns, setColumns] = useState();
 
   useEffect(() => {
-    const getAirplaneTypes = async () => {
-      await API.get(`${allAirplaneTypesEndPoint}`)
-        .then((response) => response.data)
-        .then((data) => setAirplaneTypes(data));
-    };
-    const getCompanies = async () => {
-      await API.get(`${allCompaniesEndPoint}/all`)
-        .then((response) => response.data)
-        .then((data) => setCompanies(data));
-    };
+    const fetchData = async () => {
+      const airplaneTypes = await getAirplaneTypes();
+      const companies = await getAllCompanies();
 
-    getAirplaneTypes();
-    getCompanies();
+      setAirplaneTypes(airplaneTypes);
+      setCompanies(companies);
+    }
+
+    fetchData();
   }, []);
 
-  const addAirplane = async () => {
-    await API.post(
-      `${allAirplanesEndPoint}`,
-      {
-        airplaneTypeId: airplaneTypeId,
-        companyId: companyId,
-        model: model,
-        registrationNumber: parseInt(registrationNumber, 10),
-        rows: parseInt(rows, 10),
-        columns: parseInt(columns, 10),
-      },
-      {
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      }
-    ).catch((error) => console.log(error));
-  };
-
   const handleSave = async () => {
-    await addAirplane();
+    await addAirplane(
+        airplaneTypeId,
+        companyId,
+        model,
+        registrationNumber,
+        rows,
+        columns
+      );
     closeDialog();
   };
 

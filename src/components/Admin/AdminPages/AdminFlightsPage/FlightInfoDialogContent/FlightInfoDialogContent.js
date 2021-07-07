@@ -6,8 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import FlightIcon from '@material-ui/icons/Flight';
 
-import API from 'api';
-import { refreshCurrentToken } from 'services/token-service';
+import { getFlight } from 'api/apiRequests';
 import PriceTable from 'components/shared/PriceTable';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,23 +27,13 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
   const [flight, setFlight] = useState();
 
   useEffect(() => {
-    const loadElement = async () => {
-      await API.get(`${elementUrl}`, {
-        headers: {
-          Authorization: 'Bearer ' + token.jwtToken,
-        },
-      })
-        .then((response) => response.data)
-        .then((data) => setFlight(data))
-        .catch((error) => {
-          refreshCurrentToken(token.refreshToken);
-          if (error.response) {
-            console.log(error.response.data);
-          }
-        });
-    };
+    const fetchData = async () => {
+      const flight = await getFlight(elementUrl);
 
-    loadElement();
+      setFlight(flight);
+    }
+
+    fetchData();
   }, [token, elementUrl]);
 
   return (
@@ -110,7 +99,7 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
               display="block" 
               align="center"
             >
-              {flight?.departureDate}
+              {flight?.departureTime}
             </Typography>
           </Grid>
         </Grid>
@@ -133,7 +122,7 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
               display="block" 
               align="center"
             >
-              {flight?.arrivalDate}
+              {flight?.arrivalTime}
             </Typography>
           </Grid>
         </Grid>

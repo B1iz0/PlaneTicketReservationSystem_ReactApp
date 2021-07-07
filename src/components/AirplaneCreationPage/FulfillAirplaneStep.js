@@ -30,23 +30,27 @@ const FulfillAirplaneStep = ({ airplaneId, handleNext }) => {
     let isValid = true;
     const newPlaceTypes = [ ...placeTypes ];
     newPlaceTypes.forEach((placeType, index) => {
+      let isValidValue = true;
       if (!placeType) {
         console.log('hehe');
         placeType = {
           isTypeValid: false,
           isAmountValid: false,
         };
+        isValidValue = false;
         isValid = false;
       }
-      if (isValid) {
+      if (isValidValue) {
         if (!placeType.name) {
           placeType.isTypeValid = false;
+          isValidValue = false;
           isValid = false;
         } else {
           placeType.isTypeValid = true;
         }
         if (!placeType.amount || parseInt(placeType.amount, 10) < 0) {
           placeType.isAmountValid = false;
+          isValidValue = false;
           isValid = false;
         } else {
           placeType.isAmountValid = true;
@@ -91,7 +95,6 @@ const FulfillAirplaneStep = ({ airplaneId, handleNext }) => {
   }
 
   const handleChangeSomePlaceType = (key, newValue) => {
-    console.log(newValue);
     const updatePlaceTypes = [ ...placeTypes ];
     updatePlaceTypes[key] = newValue;
 

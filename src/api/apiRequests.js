@@ -44,6 +44,17 @@ const getAirplanes = async (offset, airplaneTypeFilter, companyFilter, modelFilt
     .catch((error) => console.log(error));
 };
 
+const deleteAirplane = async (airplaneId) => {
+  let token = store.getState().token;
+
+  return await API.delete(
+      `${allAirplanesEndPoint}/${airplaneId}`,
+      bearerAuthorization(token.jwtToken)
+    )
+    .then(response => [response, null])
+    .catch(error => [null, error]);
+}
+
 const getFreeAirplanes = async () => {
   return await API.get(`${freeAirplanesEndPoint}`)
     .then((response) => response.data)
@@ -304,6 +315,7 @@ const putAirplanePrices = async (prices) => {
 export { 
   getUserInfo,
   getAirplanes,
+  deleteAirplane,
   getFreeAirplanes,
   getAirplanesCount,
   getAirplaneTypes,

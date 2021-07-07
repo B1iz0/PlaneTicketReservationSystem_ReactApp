@@ -1,26 +1,38 @@
 import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import red from '@material-ui/core/colors/red';
 
 import { 
   getAirplanes,
+  deleteAirplane,
   getAirplanesCount
 } from 'api/apiRequests';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
+import DeleteConfirmDialog from 'components/shared/DeleteConfirmDialog';
 import Filter from 'components/Filter';
 import {
   elementsOnAdminTable,
 } from 'constants';
 
-import AirplaneCreateDialogContent from './AirplaneCreateDialogContent';
+
+const useStyles = makeStyles((theme) => ({
+  deleteButton: {
+    color: red[500],
+  },
+}));
 
 const AdminAirplanesPage = () => {
+  const classes = useStyles();
   let history = useHistory();
   const [airplanes, setAirplanes] = useState([]);
   const [airplanesCount, setAirplanesCount] = useState(0);
+  const [airplaneIdToDelete, setAirplaneIdToDelete] = useState();
 
   const [offset, setOffset] = useState(0);
 
@@ -28,9 +40,9 @@ const AdminAirplanesPage = () => {
   const [companyFilter, setCompanyFilter] = useState('');
   const [modelFilter, setModelFilter] = useState('');
 
-  const [isAddDialogOpened, setIsAddDialogOpened] = useState(false);
   const [isEditDialogOpened, setIsEditDialogOpened] = useState(false);
   const [isMoreInfoDialogOpened, setIsMoreInfoDialogOpened] = useState(false);
+  const [isDeleteConfirmDialogOpened, setIsDeleteConfirmDialogOpened] = useState(false);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -43,24 +55,22 @@ const AdminAirplanesPage = () => {
       width: 200,
     },
     {
-      field: 'edit',
-      headerName: 'Edit',
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
       renderCell: (row) => {
         return (
-          <IconButton color="primary" onClick={() => openEditInfoDialog()}>
-            <EditIcon />
-          </IconButton>
-        );
-      },
-    },
-    {
-      field: 'info',
-      headerName: 'More info',
-      renderCell: (row) => {
-        return (
-          <IconButton color="primary" onClick={() => openMoreInfoDialog()}>
-            <InfoOutlinedIcon />
-          </IconButton>
+          <>
+            <IconButton color="primary" onClick={() => openEditInfoDialog()}>
+              <EditIcon />
+            </IconButton>
+            <IconButton color="primary" onClick={() => openMoreInfoDialog()}>
+              <InfoOutlinedIcon />
+            </IconButton>
+            <IconButton className={classes.deleteButton} onClick={() => openDeleteConfirmDialog(row.id)}>
+              <DeleteIcon />
+            </IconButton>
+          </>
         );
       },
     },
@@ -86,7 +96,7 @@ const AdminAirplanesPage = () => {
     }
 
     fetchData();
-  }, [airplaneTypeFilter, companyFilter, modelFilter, offset, isAddDialogOpened, isEditDialogOpened]);
+  }, [airplaneTypeFilter, companyFilter, modelFilter, offset, isDeleteConfirmDialogOpened, isEditDialogOpened]);
 
   const onFilterConfirmed = (values) => {
     setAirplaneTypeFilter(values[0]);
@@ -115,22 +125,30 @@ const AdminAirplanesPage = () => {
     setIsEditDialogOpened(false);
   };
 
-  const openAddDialog = () => {
-    history.push('/admin/airplanes/creation');
-    // setIsAddDialogOpened(true);
+  const openDeleteConfirmDialog = (airplaneId) => {
+    setAirplaneIdToDelete(airplaneId);
+    setIsDeleteConfirmDialogOpened(true);
   };
 
-  const closeAddDialog = () => {
-    setIsAddDialogOpened(false);
+  const handleDeleteRejection = () => {
+    setIsDeleteConfirmDialogOpened(false);
+  }
+
+  const handleDeleteConfirmation = async () => {
+    await deleteAirplane(airplaneIdToDelete);
+    setIsDeleteConfirmDialogOpened(false);
+  }
+
+  const openAddPage = () => {
+    history.push('/admin/airplanes/creation');
   };
 
   return (
     <>
-      <CustomDialog
-        title="Add airplane"
-        isOpened={isAddDialogOpened}
-        closeDialog={closeAddDialog}
-        DialogContent={<AirplaneCreateDialogContent closeDialog={closeAddDialog}/>}
+      <DeleteConfirmDialog 
+        isOpened={isDeleteConfirmDialogOpened}
+        handleConfirmation={handleDeleteConfirmation}
+        handleRejection={handleDeleteRejection}
       />
       <CustomDialog
         title="Edit"
@@ -155,7 +173,7 @@ const AdminAirplanesPage = () => {
         columns={columns}
         onPageChange={onPageChange}
         rowCount={airplanesCount}
-        onAddClick={openAddDialog}
+        onAddClick={openAddPage}
       />
     </>
   );

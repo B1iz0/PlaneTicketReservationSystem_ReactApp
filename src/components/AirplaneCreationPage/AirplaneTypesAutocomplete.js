@@ -106,7 +106,7 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
           if (option.inputValue) {
             return option.inputValue;
           }
-          return option.name;
+          return option.name || '';
         }}
         selectOnFocus
         clearOnBlur

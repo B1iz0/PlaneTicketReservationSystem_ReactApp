@@ -106,7 +106,7 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
       if (error) {
         setServerError(error.response?.data?.message);
       } else {
-        handleAirplaneCreation(createdAirplane?.id);
+        handleAirplaneCreation(createdAirplane);
         handleNext();
       }
     }

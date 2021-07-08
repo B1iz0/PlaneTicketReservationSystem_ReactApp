@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import SelectedFlightStep from './SelectedFlightStep';
+import PlaceSelectionStep from './PlaceSelectionStep';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,26 +31,26 @@ const getSteps = () => {
   return ['Selected flight', 'Select places', 'Contact details'];
 }
 
-const getStepContent = (step, selectedFlight) => {
-  switch (step) {
-    case 0:
-      return <SelectedFlightStep selectedFlight={selectedFlight}/>;
-    case 1:
-      return 'An ad group contains one or more ads which target a shared set of keywords.';
-    case 2:
-      return `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`;
-    default:
-      return 'Unknown step';
-  }
-}
-
 const FlightReservationStepper = ({ flight }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
+
+  const [selectedPlaces, setSelectedPlaces] = useState([]);
+
+  const handlePlaceSelection = (place) => {
+    setSelectedPlaces([
+      ...selectedPlaces,
+      place
+    ]);
+  }
+
+  const handlePlaceRejection = (place) => {
+    const newSelectedPlaces = selectedPlaces.filter((value) => 
+      value.id !== place.id
+    );
+    setSelectedPlaces(newSelectedPlaces);
+  }
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -63,6 +64,33 @@ const FlightReservationStepper = ({ flight }) => {
     setActiveStep(0);
   };
 
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+        <SelectedFlightStep 
+          selectedFlight={flight}
+        />
+        );
+      case 1:
+        return (
+        <PlaceSelectionStep 
+          selectedPlaces={selectedPlaces}
+          selectedFlight={flight} 
+          handlePlaceSelection={handlePlaceSelection} 
+          handlePlaceRejection={handlePlaceRejection}
+        />
+        );
+      case 2:
+        return `Try out different ad text to see what brings in the most customers,
+                and learn how to enhance your ads using features like ad extensions.
+                If you run into any problems with your ads, find out how to tell if
+                they're running and how to resolve approval issues.`;
+      default:
+        return 'Unknown step';
+    }
+  }
+
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -70,7 +98,7 @@ const FlightReservationStepper = ({ flight }) => {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              {getStepContent(index, flight)}
+              {getStepContent(index)}
               <div className={classes.actionsContainer}>
                 <div>
                   <Button

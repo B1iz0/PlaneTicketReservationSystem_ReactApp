@@ -1,27 +1,23 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import { Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-const SelectedFlightStep = ({ selectedFlight, selectedFlight: { airplane, from, to } }) => {
+import FlightsItemInfo from 'components/Flights/FlightsItemInfo';
+
+const useStyles = makeStyles((theme) => ({
+  selectedFlightPaper: {
+    padding: theme.spacing(3),
+  },
+}));
+
+const SelectedFlightStep = ({ selectedFlight }) => {
+  const classes = useStyles();
+
+
   return (
-    <>
-      <Typography variant="h3">
-        {airplane.company.name}
-      </Typography>
-      <Paper>
-        <Grid container>
-          <Grid item>
-            <Typography>
-              {airplane.model}
-            </Typography>
-            <Typography>
-              ({airplane.airplaneType.typeName})
-            </Typography>
-          </Grid>
-        </Grid>
-      </Paper>
-    </>
+    <Paper className={classes.selectedFlightPaper}>
+      <FlightsItemInfo flight={selectedFlight}/>
+    </Paper>
   );
 };
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import FlightIcon from '@material-ui/icons/Flight';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { useHistory } from 'react-router-dom';
+
+import FlightsItemInfo from '../FlightsItemInfo';
 
 const useStyles = makeStyles((theme) => ({
   flightInfo: {
@@ -31,9 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FlightsItem = ({ flight, 
-  flight: { airplane, from, to, arrivalTime, departureTime },
-}) => {
+const FlightsItem = ({ flight }) => {
   const classes = useStyles();
   let history = useHistory();
 
@@ -49,86 +47,7 @@ const FlightsItem = ({ flight,
       <Card className={classes.flightInfo} variant="outlined">
         <Grid container direction="column" spacing={2}>
           <hr className={classes.dividedLine}></hr>
-          <Grid item container spacing={3}>
-            <Grid item className={classes.companyName}>
-              <Typography variant="h3" align="center">
-                {airplane.company.name}
-              </Typography>
-            </Grid>
-            <Grid item className={classes.airplaneInfo}>
-              <Grid item container direction="column">
-                <Grid item>
-                  <Typography variant="subtitle1" align="center">
-                    {airplane.model}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="body2" align="center">
-                    ({airplane.airplaneType.typeName})
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Grid item container direction="column">
-                <Grid item>
-                  <Typography variant="subtitle1" align="center">
-                    {departureTime.split('T')[1]}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="body2" align="center">
-                    {departureTime.split('T')[0]}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Grid container spacing={2}>
-                    <Grid item>
-                      <Typography variant="subtitle1" align="center">
-                        {from.city.name}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle1" align="center">
-                        "{from.name}"
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item className={classes.airplaneIcon}>
-              <FlightIcon />
-            </Grid>
-            <Grid item>
-              <Grid item container direction="column">
-                <Grid item>
-                  <Typography variant="subtitle1" align="center">
-                    {arrivalTime.split('T')[1]}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="body2" align="center">
-                    {arrivalTime.split('T')[0]}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Grid container spacing={1}>
-                    <Grid item>
-                      <Typography variant="subtitle1" align="center">
-                        {to.city.name}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle1" align="center">
-                        "{to.name}"
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+          <FlightsItemInfo flight={flight}/>
           <hr className={classes.dividedLine}></hr>
           <Grid item container>
             <Button

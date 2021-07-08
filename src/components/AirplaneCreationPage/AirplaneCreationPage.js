@@ -15,14 +15,29 @@ const getSteps = () => {
   return ['Create airplane', 'Fulfill created airplane', 'Create prices'];
 }
 
-const getStepContent = (step, handleNext, handleBackToAdminTable, createdAirplaneId, handleAirplaneCreation) => {
+const getStepContent = (step, handleNext, handleBackToAdminTable, createdAirplane, createdAirplaneId, handleAirplaneCreation) => {
   switch (step) {
     case 0:
-      return (<AirplaneCreationStep handleNext={handleNext} handleAirplaneCreation={handleAirplaneCreation}/>);
+      return (
+        <AirplaneCreationStep 
+          handleNext={handleNext} 
+          handleAirplaneCreation={handleAirplaneCreation}
+        />
+      );
     case 1: 
-      return (<FulfillAirplaneStep airplaneId={createdAirplaneId} handleNext={handleNext}/>);
+      return (
+        <FulfillAirplaneStep 
+          airplane={createdAirplane}
+          handleNext={handleNext}
+        />
+      );
     case 2:
-      return (<PricesCreationStep airplaneId={createdAirplaneId} handleBackToAdminTable={handleBackToAdminTable}/>);
+      return (
+        <PricesCreationStep 
+          airplaneId={createdAirplaneId} 
+          handleBackToAdminTable={handleBackToAdminTable}
+        />
+      );
     default:
       return (<></>);
   }
@@ -35,9 +50,11 @@ const AirplaneCreationPage = () => {
   const steps = getSteps();
 
   const [createdAirplaneId, setCreatedAirplaneId] = useState();
+  const [createdAirplane, setCreatedAirplane] = useState();
 
-  const handleAirplaneCreation = (airplaneId) => {
-    setCreatedAirplaneId(airplaneId)
+  const handleAirplaneCreation = (airplane) => {
+    setCreatedAirplane(airplane);
+    setCreatedAirplaneId(airplane?.id);
   };
 
   const handleNext = () => {
@@ -63,7 +80,7 @@ const AirplaneCreationPage = () => {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              {getStepContent(index, handleNext, handleBackToAdminTable, createdAirplaneId, handleAirplaneCreation)}
+              {getStepContent(index, handleNext, handleBackToAdminTable, createdAirplane, createdAirplaneId, handleAirplaneCreation)}
             </StepContent>
           </Step>
         ))}

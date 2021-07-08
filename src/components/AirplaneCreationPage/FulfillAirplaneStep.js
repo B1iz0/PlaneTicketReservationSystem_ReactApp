@@ -21,10 +21,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FulfillAirplaneStep = ({ airplaneId, handleNext }) => {
+const FulfillAirplaneStep = ({ airplane: { id, rows, columns }, handleNext }) => {
   const classes = useStyles();
 
   const [placeTypes, setPlaceTypes] = useState([]);
+  const [totalPlaceAmount, setTotalPlaceAmount] = useState(rows * columns);
 
   const handleFulfillAirplane = async () => {
     let isValid = true;
@@ -71,7 +72,7 @@ const FulfillAirplaneStep = ({ airplaneId, handleNext }) => {
       });
       
       await postPlacesList({
-        airplaneId: airplaneId,
+        airplaneId: id,
         places: requestPlaces,
       });
       

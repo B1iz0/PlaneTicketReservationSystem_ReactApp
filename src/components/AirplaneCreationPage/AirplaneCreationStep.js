@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { Grid } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -37,6 +38,7 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
   const [registrationNumber, setRegistrationNumber] = useState();
   const [rowsAmount, setRowsAmount] = useState();
   const [columnsAmount, setColumnsAmount] = useState();
+  const [baggageCapacity, setBaggageCapacity] = useState();
 
   const [airplaneType, setAirplaneType] = useState('');
   const [company, setCompany] = useState('');
@@ -49,6 +51,7 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
   const [isAirplaneTypeValid, setIsAirplaneTypeValid] = useState(true);
   const [isRowsNumberValid, setIsRowsNumberValid] = useState(true);
   const [isColumnsNumberValid, setIsColumnsNumberValid] = useState(true);
+  const [isBaggageCapacityValid, setIsBaggageCapacityValid] = useState(true);
   const [isCompanyValid, setIsCompanyValid] = useState(true);
 
   const [serverError, setServerError] = useState(false);
@@ -80,14 +83,18 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
       setIsAirplaneTypeValid(false);
       isValid = false;
     } else setIsAirplaneTypeValid(true);
-    if (!rowsAmount) {
+    if (!rowsAmount || parseInt(rowsAmount, 10) <= 0) {
       setIsRowsNumberValid(false);
       isValid = false;
     } else setIsRowsNumberValid(true);
-    if (!columnsAmount) {
+    if (!columnsAmount || parseInt(columnsAmount, 10) <= 0) {
       setIsColumnsNumberValid(false);
       isValid = false;
     } else setIsColumnsNumberValid(true);
+    if (!baggageCapacity || parseInt(baggageCapacity, 10) <= 0) {
+      setIsBaggageCapacityValid(false);
+      isValid = false;
+    } else setIsBaggageCapacityValid(true);
     if (!companyId) {
       setIsCompanyValid(false);
       isValid = false;
@@ -100,7 +107,8 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
           model,
           registrationNumber,
           rowsAmount,
-          columnsAmount
+          columnsAmount,
+          baggageCapacity,
         );
 
       if (error) {
@@ -169,7 +177,7 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
                   className={classes.formField}
                   type="number"
                   error={!isRowsNumberValid}
-                  helperText={!isRowsNumberValid && 'It\'s required field'}
+                  helperText={!isRowsNumberValid && 'It\'s required field (Only positive value)'}
                   variant="outlined"
                   label="Rows number"
                   onChange={(e) => setRowsAmount(e.target.value)}
@@ -181,12 +189,27 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
                   className={classes.formField}
                   type="number"
                   error={!isColumnsNumberValid}
-                  helperText={!isColumnsNumberValid && 'It\'s required field'}
+                  helperText={!isColumnsNumberValid && 'It\'s required field (Only positive value)'}
                   variant="outlined"
                   label="Places number in a row"
                   onChange={(e) => setColumnsAmount(e.target.value)}
                 />
               </Grid>
+            </Grid>
+            <Grid item lg={12}>
+              <TextField
+                  required
+                  className={classes.formField}
+                  type="number"
+                  error={!isBaggageCapacityValid}
+                  helperText={!isBaggageCapacityValid && 'It\'s required field (Only positive value)'}
+                  variant="outlined"
+                  label="Baggage capacity"
+                  onChange={(e) => setBaggageCapacity(e.target.value)}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">Kg</InputAdornment>
+                  }}
+                />
             </Grid>
             <Grid item lg={12}>
               <FormControl className={classes.formField} error={!isCompanyValid} required>

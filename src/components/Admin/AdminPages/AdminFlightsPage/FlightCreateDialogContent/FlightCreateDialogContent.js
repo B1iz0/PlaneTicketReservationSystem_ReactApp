@@ -10,6 +10,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/styles';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -35,6 +36,8 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
     const [arrivalAirportId, setArrivalAirportId] = useState();
     const [departureDate, setDepartureDate] = useState();
     const [arrivalDate, setArrivalDate] = useState();
+    const [freeBaggageLimit, setFreeBaggageLimit] = useState();
+    const [overweightPrice, setOverweightPrice] = useState();
 
     const [airplane, setAirplane] = useState('');
     const [departureAirport, setDepartureAirport] = useState('');
@@ -71,7 +74,9 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
             departureAirportId,
             arrivalAirportId,
             departureTimeWithoutTZ,
-            arrivalTimeWithoutTZ
+            arrivalTimeWithoutTZ,
+            freeBaggageLimit,
+            overweightPrice,
         );
     };
     
@@ -173,6 +178,30 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
                                     />
                                 </Grid>
                             </MuiPickersUtilsProvider>
+                        </Grid>
+                        <Grid item lg={6}>
+                            <TextField 
+                                className={classes.formField}
+                                variant="outlined"
+                                label="Free baggage limit"
+                                type="number"
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">Kg</InputAdornment>
+                                }}
+                                onChange={(e) => setFreeBaggageLimit(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item lg={6}>
+                            <TextField 
+                                className={classes.formField}
+                                variant="outlined"
+                                label="Overweight price for 1 Kg"
+                                type="number"
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">$</InputAdornment>
+                                }}
+                                onChange={(e) => setOverweightPrice(e.target.value)}
+                            />
                         </Grid>
                     </Grid>
                 </form>

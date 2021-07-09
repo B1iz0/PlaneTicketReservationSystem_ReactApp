@@ -37,6 +37,16 @@ const FlightReservationStepper = ({ flight }) => {
   const steps = getSteps();
 
   const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [baggageWeight, setBaggageWeight] = useState();
+  const [isBaggageServiceChecked, setIsBaggageServiceChecked] = useState(false);
+
+  const handleBaggageWeightChange = (event) => {
+    setBaggageWeight(event.target.value);
+  }
+
+  const handleBaggageChecked = (event) => {
+    setIsBaggageServiceChecked(event.target.checked);
+  };
 
   const handlePlaceSelection = (place) => {
     setSelectedPlaces([
@@ -68,24 +78,26 @@ const FlightReservationStepper = ({ flight }) => {
     switch (step) {
       case 0:
         return (
-        <SelectedFlightStep 
-          selectedFlight={flight}
-        />
+          <SelectedFlightStep 
+            selectedFlight={flight}
+          />
         );
       case 1:
         return (
-        <PlaceSelectionStep 
-          selectedPlaces={selectedPlaces}
-          selectedFlight={flight} 
-          handlePlaceSelection={handlePlaceSelection} 
-          handlePlaceRejection={handlePlaceRejection}
-        />
+          <PlaceSelectionStep 
+            selectedPlaces={selectedPlaces}
+            selectedFlight={flight} 
+            handlePlaceSelection={handlePlaceSelection} 
+            handlePlaceRejection={handlePlaceRejection}
+            isBaggageServiceChecked={isBaggageServiceChecked}
+            handleBaggageChecked={handleBaggageChecked}
+            handleBaggageWeightChange={handleBaggageWeightChange}
+          />
         );
       case 2:
-        return `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`;
+        return (
+          <div/>
+        );
       default:
         return 'Unknown step';
     }

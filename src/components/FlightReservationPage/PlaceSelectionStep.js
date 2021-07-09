@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 
 import PlaceItem from './PlaceItem';
+import BaggageRegistration from './BaggageRegistration';
 
 const useStyles = makeStyles((theme) => ({
   placeSelectionPapper: {
@@ -36,7 +37,16 @@ const columns = [
   },
 ]
 
-const PlaceSelectionStep = ({ selectedPlaces, selectedFlight, handlePlaceSelection, handlePlaceRejection }) => {
+const PlaceSelectionStep = (
+  { 
+    selectedPlaces, 
+    selectedFlight, 
+    handlePlaceSelection, 
+    handlePlaceRejection, 
+    isBaggageServiceChecked, 
+    handleBaggageChecked,
+    handleBaggageWeightChange
+  }) => {
   const classes = useStyles();
 
   const dataGridRows = selectedPlaces.map(value => {
@@ -85,6 +95,14 @@ const PlaceSelectionStep = ({ selectedPlaces, selectedFlight, handlePlaceSelecti
             rows={dataGridRows} 
             columns={columns} 
             disableColumnMenu
+          />
+        </Grid>
+        <Grid item lg={9}>
+          <BaggageRegistration 
+            selectedFlight={selectedFlight}
+            isBaggageServiceChecked={isBaggageServiceChecked}
+            handleBaggageChecked={handleBaggageChecked}
+            handleBaggageWeightChange={handleBaggageWeightChange}
           />
         </Grid>
       </Grid>

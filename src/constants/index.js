@@ -26,6 +26,8 @@ export const placesEndPoint = 'api/places';
 
 export const pricesEndPoint = 'api/prices';
 
+export const bookingsEndPoint = 'api/bookings';
+
 export const flightsOnPage = 4;
 
 export const elementsOnAdminTable = 5;

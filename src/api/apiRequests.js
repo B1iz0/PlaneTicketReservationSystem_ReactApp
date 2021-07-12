@@ -18,6 +18,7 @@ import {
   placeTypesEndPoint,
   placesEndPoint,
   pricesEndPoint,
+  bookingsEndPoint,
 } from 'constants';
 
 const getUserInfo = async () => {
@@ -318,6 +319,17 @@ const putAirplanePrices = async (prices) => {
     .catch(error => console.log(error));
 };
 
+const postBooking = async (booking) => {
+  let token = store.getState().token;
+
+  await API.post(
+    `${bookingsEndPoint}`,
+    booking,
+    bearerAuthorization(token.jwtToken)
+  )
+    .catch(error => console.log(error));
+}
+
 export { 
   getUserInfo,
   getAirplanes,
@@ -340,5 +352,6 @@ export {
   getPlaceTypes,
   postPlacesList,
   getAirplanePlacePrices,
-  putAirplanePrices
+  putAirplanePrices,
+  postBooking,
 }

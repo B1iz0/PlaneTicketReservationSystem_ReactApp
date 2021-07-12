@@ -25,9 +25,12 @@ const BaggageRegistration = (
     selectedFlight, 
     isBaggageServiceChecked, 
     handleBaggageChecked,
+    baggageWeight,
     handleBaggageWeightChange
   }) => {
   const classes = useStyles();
+
+  const [initialBaggageWeight] = useState(baggageWeight);
   
   return (
     <Paper className={classes.baggageService}>
@@ -45,6 +48,7 @@ const BaggageRegistration = (
                 variant="outlined"
                 type="number"
                 label="Your baggage weight"
+                value={initialBaggageWeight}
                 onChange={handleBaggageWeightChange}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">Kg</InputAdornment>

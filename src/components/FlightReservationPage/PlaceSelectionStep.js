@@ -45,6 +45,7 @@ const PlaceSelectionStep = (
     handlePlaceRejection, 
     isBaggageServiceChecked, 
     handleBaggageChecked,
+    baggageWeight,
     handleBaggageWeightChange
   }) => {
   const classes = useStyles();
@@ -102,6 +103,7 @@ const PlaceSelectionStep = (
             selectedFlight={selectedFlight}
             isBaggageServiceChecked={isBaggageServiceChecked}
             handleBaggageChecked={handleBaggageChecked}
+            baggageWeight={baggageWeight}
             handleBaggageWeightChange={handleBaggageWeightChange}
           />
         </Grid>

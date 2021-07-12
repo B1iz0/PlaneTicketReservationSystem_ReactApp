@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import SelectedFlightStep from './SelectedFlightStep';
 import PlaceSelectionStep from './PlaceSelectionStep';
+import ContactDetailsStep from './ContactDetailsStep';
+import { postBooking } from 'api/apiRequests';
+import { getId } from 'services/token-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,12 +36,17 @@ const getSteps = () => {
 
 const FlightReservationStepper = ({ flight }) => {
   const classes = useStyles();
+  const customerInfo = useSelector((state) => state.customerInfo);
+  const token = useSelector((state) => state.token);
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [baggageWeight, setBaggageWeight] = useState();
   const [isBaggageServiceChecked, setIsBaggageServiceChecked] = useState(false);
+
+  const [isReservationValid, setIsReservationValid] = useState(true);
+  const [errorHelperText, setErrorHelperText] = useState('');
 
   const handleBaggageWeightChange = (event) => {
     setBaggageWeight(event.target.value);
@@ -62,16 +70,36 @@ const FlightReservationStepper = ({ flight }) => {
     setSelectedPlaces(newSelectedPlaces);
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (activeStep === 1) {
+      if (selectedPlaces.length === 0) {
+        setIsReservationValid(false);
+        setErrorHelperText('You have to choose places in airplane');
+        setActiveStep(1);
+      } else {
+        setIsReservationValid(true);
+        setErrorHelperText('');
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
+    } else if (activeStep === steps.length - 1) {
+      if (customerInfo.firstName.isValid
+        && customerInfo.lastName.isValid
+        && customerInfo.email.isValid) {
+          const placesId = selectedPlaces.map(value => value.id);
+          await postBooking({
+            flightId: flight.id,
+            userId: getId(token.jwtToken),
+            placesId: placesId,
+            baggageWeightInKilograms: parseFloat(baggageWeight),
+          })
+        } 
+    } else {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   const getStepContent = (step) => {
@@ -91,18 +119,19 @@ const FlightReservationStepper = ({ flight }) => {
             handlePlaceRejection={handlePlaceRejection}
             isBaggageServiceChecked={isBaggageServiceChecked}
             handleBaggageChecked={handleBaggageChecked}
+            baggageWeight={baggageWeight}
             handleBaggageWeightChange={handleBaggageWeightChange}
           />
         );
       case 2:
         return (
-          <div/>
+          <ContactDetailsStep />
         );
       default:
         return 'Unknown step';
     }
   }
-
+  
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -111,6 +140,7 @@ const FlightReservationStepper = ({ flight }) => {
             <StepLabel>{label}</StepLabel>
             <StepContent>
               {getStepContent(index)}
+              {!isReservationValid && <Typography color='error'>{errorHelperText}</Typography>}
               <div className={classes.actionsContainer}>
                 <div>
                   <Button
@@ -134,14 +164,6 @@ const FlightReservationStepper = ({ flight }) => {
           </Step>
         ))}
       </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button>
-        </Paper>
-      )}
     </div>
   );
 }

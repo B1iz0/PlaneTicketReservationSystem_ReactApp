@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -11,8 +11,15 @@ import Typography from '@material-ui/core/Typography';
 import SelectedFlightStep from './SelectedFlightStep';
 import PlaceSelectionStep from './PlaceSelectionStep';
 import ContactDetailsStep from './ContactDetailsStep';
+import FinalPriceStep from './FinalPriceStep';
 import { postBooking } from 'api/apiRequests';
 import { getId } from 'services/token-service';
+
+import { 
+  setFirstNameValid,
+  setLastNameValid,
+  setEmailValid,
+} from 'reduxStore/customerInfoSlice';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,15 +35,24 @@ const useStyles = makeStyles((theme) => ({
   resetContainer: {
     padding: theme.spacing(3),
   },
+  errorMessage: {
+    padding: theme.spacing(1),
+  }
 }));
 
+const selectedFlightStepTitle = 'Selected flight';
+const placeSelectionStepTitle = 'Select places';
+const contactDetailsStepTitle = 'Contact details';
+const finalPriceStepTitle = 'Final price';
+
 const getSteps = () => {
-  return ['Selected flight', 'Select places', 'Contact details'];
+  return [selectedFlightStepTitle, placeSelectionStepTitle, contactDetailsStepTitle, finalPriceStepTitle];
 }
 
 const FlightReservationStepper = ({ flight }) => {
   const classes = useStyles();
   const customerInfo = useSelector((state) => state.customerInfo);
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -48,7 +64,15 @@ const FlightReservationStepper = ({ flight }) => {
   const [isReservationValid, setIsReservationValid] = useState(true);
   const [errorHelperText, setErrorHelperText] = useState('');
 
+  const [placesTotalPrice, setPlacesTotalPrice] = useState(0);
+  const [baggageTotalPrice, setBaggageTotalPrice] = useState(0);
+
   const handleBaggageWeightChange = (event) => {
+    if (event.target.value > flight.freeBaggageLimitInKilograms) {
+      setBaggageTotalPrice(Math.ceil(event.target.value - flight.freeBaggageLimitInKilograms) * flight.overweightPrice);
+    } else {
+      setBaggageTotalPrice(0);
+    };
     setBaggageWeight(event.target.value);
   }
 
@@ -56,7 +80,15 @@ const FlightReservationStepper = ({ flight }) => {
     setIsBaggageServiceChecked(event.target.checked);
   };
 
+  const getPlacePrice = (place, prices) => {
+    for (let i = 0; i < prices.length; i++) {
+      if (place.placeType === prices[i].placeType) return prices[i].ticketPrice;
+    };
+    return 0;
+  };
+
   const handlePlaceSelection = (place) => {
+    setPlacesTotalPrice(() => placesTotalPrice + getPlacePrice(place, flight.airplane.prices));
     setSelectedPlaces([
       ...selectedPlaces,
       place
@@ -67,32 +99,37 @@ const FlightReservationStepper = ({ flight }) => {
     const newSelectedPlaces = selectedPlaces.filter((value) => 
       value.id !== place.id
     );
+    setPlacesTotalPrice(() => placesTotalPrice - getPlacePrice(place, flight.airplane.prices));
     setSelectedPlaces(newSelectedPlaces);
   }
 
   const handleNext = async () => {
-    if (activeStep === 1) {
+    if (steps[activeStep] === placeSelectionStepTitle) {
       if (selectedPlaces.length === 0) {
         setIsReservationValid(false);
         setErrorHelperText('You have to choose places in airplane');
-        setActiveStep(1);
       } else {
         setIsReservationValid(true);
         setErrorHelperText('');
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
-    } else if (activeStep === steps.length - 1) {
-      if (customerInfo.firstName.isValid
-        && customerInfo.lastName.isValid
-        && customerInfo.email.isValid) {
-          const placesId = selectedPlaces.map(value => value.id);
-          await postBooking({
-            flightId: flight.id,
-            userId: getId(token.jwtToken),
-            placesId: placesId,
-            baggageWeightInKilograms: parseFloat(baggageWeight),
-          })
-        } 
+    } else if (steps[activeStep] === contactDetailsStepTitle) {
+      let isCustomInfoValid = true;
+      if (!customerInfo.firstName.value) {
+        dispatch(setFirstNameValid(false));
+        isCustomInfoValid = false;
+      }
+      if (!customerInfo.lastName.value) {
+        dispatch(setLastNameValid(false));
+        isCustomInfoValid = false;
+      }
+      if (!customerInfo.email.value) {
+        dispatch(setEmailValid(false));
+        isCustomInfoValid = false;
+      }
+      if (isCustomInfoValid) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
     } else {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
@@ -101,6 +138,19 @@ const FlightReservationStepper = ({ flight }) => {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
+  const handleFinish = async () => {
+    const placesId = selectedPlaces.map(value => value.id);
+    await postBooking({
+      flightId: flight.id,
+      userId: getId(token.jwtToken),
+      placesId: placesId,
+      baggageWeightInKilograms: parseFloat(baggageWeight),
+      customerFirstName: customerInfo.firstName.value,
+      customerLastName: customerInfo.lastName.value,
+      customerEmail: customerInfo.email.value,
+    })
+  }
 
   const getStepContent = (step) => {
     switch (step) {
@@ -127,6 +177,16 @@ const FlightReservationStepper = ({ flight }) => {
         return (
           <ContactDetailsStep />
         );
+      case 3: 
+        return (
+          <FinalPriceStep 
+            placesTotalPrice={placesTotalPrice}
+            baggageTotalPrice={baggageTotalPrice}
+            flight={flight}
+            places={selectedPlaces}
+            baggageWeight={baggageWeight}
+          />
+        );
       default:
         return 'Unknown step';
     }
@@ -140,7 +200,7 @@ const FlightReservationStepper = ({ flight }) => {
             <StepLabel>{label}</StepLabel>
             <StepContent>
               {getStepContent(index)}
-              {!isReservationValid && <Typography color='error'>{errorHelperText}</Typography>}
+              {!isReservationValid && <Typography className={classes.errorMessage} variant='h6' color='error'>{errorHelperText}</Typography>}
               <div className={classes.actionsContainer}>
                 <div>
                   <Button
@@ -150,14 +210,25 @@ const FlightReservationStepper = ({ flight }) => {
                   >
                     Back
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                  </Button>
+                  { 
+                    activeStep === steps.length - 1 ? 
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleFinish}
+                      className={classes.button}
+                    >
+                      Finish
+                    </Button> : 
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNext}
+                      className={classes.button}
+                    >
+                      Next
+                    </Button>
+                    }
                 </div>
               </div>
             </StepContent>

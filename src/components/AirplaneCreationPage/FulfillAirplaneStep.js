@@ -25,7 +25,6 @@ const FulfillAirplaneStep = ({ airplane: { id, rows, columns }, handleNext }) =>
   const classes = useStyles();
 
   const [placeTypes, setPlaceTypes] = useState([]);
-  const [totalPlaceAmount, setTotalPlaceAmount] = useState(rows * columns);
 
   const handleFulfillAirplane = async () => {
     let isValid = true;

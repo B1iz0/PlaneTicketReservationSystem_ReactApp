@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
+import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
@@ -18,7 +20,17 @@ import {
   checkLastName,
 } from 'services/authorizationValidation';
 
+const useStyles = makeStyles((theme) => ({
+  contactDetailsPaper: {
+    padding: theme.spacing(2),
+  },
+  contactDetailsField: {
+    width: '100%',
+  },
+}));
+
 const ContactDetailsStep = () => {
+  const classes = useStyles();
   const customerInfo = useSelector((state) => state.customerInfo);
   const dispatch = useDispatch();
 
@@ -54,32 +66,13 @@ const ContactDetailsStep = () => {
   const [emailErrorHelperText, setEmailErrorHelperText] = useState('');
   
   return (
-    <div>
+    <Paper 
+      className={classes.contactDetailsPaper}
+    >
       <Grid container spacing={2}>
-        <Grid item lg={6}>
+        <Grid item lg={12}>
           <TextField 
-            error={!customerInfo.firstName.isValid}
-            helperText={!customerInfo.firstName.isValid && 'This field is required'}
-            variant="outlined"
-            required
-            label="First name"
-            value={customerInfo.firstName.value}
-            onChange={(event) => handleFirstNameChange(event)}
-          />
-        </Grid>
-        <Grid item lg={6}>
-          <TextField 
-            error={!customerInfo.lastName.isValid}
-            helperText={!customerInfo.lastName.isValid && 'This field is required'}
-            variant="outlined"
-            required
-            label="Last Name"
-            value={customerInfo.lastName.value}
-            onChange={(event) => handleLastNameChange(event)}
-          />
-        </Grid>
-        <Grid item lg={6}>
-          <TextField 
+            className={classes.contactDetailsField}
             error={!customerInfo.email.isValid}
             helperText={!customerInfo.email.isValid && emailErrorHelperText}
             variant="outlined"
@@ -91,6 +84,31 @@ const ContactDetailsStep = () => {
         </Grid>
         <Grid item lg={6}>
           <TextField 
+            className={classes.contactDetailsField}
+            error={!customerInfo.firstName.isValid}
+            helperText={!customerInfo.firstName.isValid && 'This field is required'}
+            variant="outlined"
+            required
+            label="First name"
+            value={customerInfo.firstName.value}
+            onChange={(event) => handleFirstNameChange(event)}
+          />
+        </Grid>
+        <Grid item lg={6}>
+          <TextField 
+            className={classes.contactDetailsField}
+            error={!customerInfo.lastName.isValid}
+            helperText={!customerInfo.lastName.isValid && 'This field is required'}
+            variant="outlined"
+            required
+            label="Last Name"
+            value={customerInfo.lastName.value}
+            onChange={(event) => handleLastNameChange(event)}
+          />
+        </Grid>
+        <Grid item lg={12}>
+          <TextField 
+            className={classes.contactDetailsField}
             variant="outlined"
             label="Phone number"
             value={customerInfo.phone}
@@ -98,7 +116,7 @@ const ContactDetailsStep = () => {
           />
         </Grid>
       </Grid>
-    </div>
+    </Paper>
   );
 };
 

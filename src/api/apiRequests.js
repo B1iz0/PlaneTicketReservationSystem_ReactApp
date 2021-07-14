@@ -322,12 +322,13 @@ const putAirplanePrices = async (prices) => {
 const postBooking = async (booking) => {
   let token = store.getState().token;
 
-  await API.post(
+  return await API.post(
     `${bookingsEndPoint}`,
     booking,
     bearerAuthorization(token.jwtToken)
   )
-    .catch(error => console.log(error));
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
 }
 
 export { 

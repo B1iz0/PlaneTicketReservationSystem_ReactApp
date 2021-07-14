@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -8,18 +9,21 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import SelectedFlightStep from './SelectedFlightStep';
-import PlaceSelectionStep from './PlaceSelectionStep';
-import ContactDetailsStep from './ContactDetailsStep';
-import FinalPriceStep from './FinalPriceStep';
 import { postBooking } from 'api/apiRequests';
 import { getId } from 'services/token-service';
-
 import { 
   setFirstNameValid,
   setLastNameValid,
   setEmailValid,
 } from 'reduxStore/customerInfoSlice';
+import {
+  setIsBookingCreationActive,
+} from 'reduxStore/notificationsSlice';
+
+import SelectedFlightStep from './SelectedFlightStep';
+import PlaceSelectionStep from './PlaceSelectionStep';
+import ContactDetailsStep from './ContactDetailsStep';
+import FinalPriceStep from './FinalPriceStep';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,6 +55,7 @@ const getSteps = () => {
 
 const FlightReservationStepper = ({ flight }) => {
   const classes = useStyles();
+  const history = useHistory();
   const customerInfo = useSelector((state) => state.customerInfo);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -58,7 +63,7 @@ const FlightReservationStepper = ({ flight }) => {
   const steps = getSteps();
 
   const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const [baggageWeight, setBaggageWeight] = useState();
+  const [baggageWeight, setBaggageWeight] = useState(0);
   const [isBaggageServiceChecked, setIsBaggageServiceChecked] = useState(false);
 
   const [isReservationValid, setIsReservationValid] = useState(true);
@@ -141,7 +146,7 @@ const FlightReservationStepper = ({ flight }) => {
 
   const handleFinish = async () => {
     const placesId = selectedPlaces.map(value => value.id);
-    await postBooking({
+    const [createdBookingId, error] = await postBooking({
       flightId: flight.id,
       userId: getId(token.jwtToken),
       placesId: placesId,
@@ -149,7 +154,16 @@ const FlightReservationStepper = ({ flight }) => {
       customerFirstName: customerInfo.firstName.value,
       customerLastName: customerInfo.lastName.value,
       customerEmail: customerInfo.email.value,
+      placesTotalPrice: placesTotalPrice,
+      baggageTotalPrice: baggageTotalPrice,
     })
+    if (createdBookingId) {
+      dispatch(setIsBookingCreationActive(true));
+      history.goBack();
+    } else {
+      setIsReservationValid(false);
+      setErrorHelperText(error.response?.data?.message);
+    }
   }
 
   const getStepContent = (step) => {

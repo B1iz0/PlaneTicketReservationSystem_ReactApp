@@ -29,22 +29,22 @@ const FinalPriceStep = ({ placesTotalPrice, baggageTotalPrice, flight, flight: {
         </Grid>
         <Grid item xs={6}>
           <Paper variant='outlined' className={classes.finalPricePaper}>
-            <Typography variant='h6'>Places</Typography>
+            <Typography variant='h6'>Places: {placesTotalPrice} $</Typography>
             <hr/>
             {uniquePlacesInfo.map(value => {
               return (
-                <Typography key={value.placeType}>{value.amount} x {value.placeType}: {value.totalPrice} $</Typography>
+                <Typography key={value.placeType}>{value.amount} x {value.placeType}: {value.totalPrice} $ ({value.onePlacePrice} $ per 1 place)</Typography>
               )
             })}
           </Paper>
         </Grid>
         <Grid item xs={6}>
           <Paper variant='outlined' className={classes.finalPricePaper}>
-            <Typography variant='h6'>Baggage</Typography>
+            <Typography variant='h6'>Baggage: {baggageTotalPrice} $</Typography>
             <hr/>
-            <Typography>Your baggage: {baggageWeight} Kg</Typography>
+            <Typography>Your baggage: {baggageWeight} Kg (Free limit: {freeBaggageLimitInKilograms} Kg)</Typography>
             {baggageWeight > freeBaggageLimitInKilograms && <Typography>Overweight: {baggageWeight - freeBaggageLimitInKilograms} Kg</Typography>}
-            <Typography>Overweight price: {(baggageWeight - freeBaggageLimitInKilograms) * overweightPrice} $</Typography>
+            <Typography>Overweight price: {baggageWeight > freeBaggageLimitInKilograms ? (baggageWeight - freeBaggageLimitInKilograms) * overweightPrice : 0} $ ({overweightPrice} $ per 1 Kg)</Typography>
           </Paper> 
         </Grid>
       </Grid>

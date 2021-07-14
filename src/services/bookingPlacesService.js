@@ -7,7 +7,8 @@ const getUniquePlacesInfo = (places, prices) => {
     });
     if (!isAlreadyMarked) {
       const amountOfIdenticalPlaces = getAmountOfIdenticalPlaces(place.placeType, places);
-      let totalPrice = getPlacePrice(place, prices) * amountOfIdenticalPlaces;
+      let onePlacePrice = getPlacePrice(place, prices);
+      let totalPrice = onePlacePrice * amountOfIdenticalPlaces;
       
       uniquePlacesInfo = [
         ...uniquePlacesInfo,
@@ -15,6 +16,7 @@ const getUniquePlacesInfo = (places, prices) => {
           amount: amountOfIdenticalPlaces,
           placeType: place.placeType,
           totalPrice: totalPrice,
+          onePlacePrice: onePlacePrice,
         }
       ]
     }

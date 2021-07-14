@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,15 +49,24 @@ const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRej
   };
 
   return (
-    <Button 
-      variant="contained" 
-      color={!selectedPlace.isSelected ? 'primary' : 'default'}
-      disabled={!place.isFree}
-      key={place.id} 
-      className={classes.placeButton}
-      onClick={handlePlaceClick}
-      startIcon={!place.isFree ? <CloseIcon /> : null}
-    />
+    <>
+      {
+        !place.isFree ? 
+        <IconButton
+          disabled
+          className={classes.placeButton}
+        >
+          <CloseIcon />
+        </IconButton> :
+        <Button 
+          variant="contained" 
+          color={!selectedPlace.isSelected ? 'primary' : 'default'}
+          key={place.id} 
+          className={classes.placeButton}
+          onClick={handlePlaceClick}
+        />
+      }
+    </>
   );
 };
 

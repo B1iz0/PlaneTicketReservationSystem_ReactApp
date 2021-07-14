@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
@@ -19,6 +19,9 @@ import {
   checkFirstName,
   checkLastName,
 } from 'services/authorizationValidation';
+import {
+  getEmail,
+} from 'services/token-service';
 
 const useStyles = makeStyles((theme) => ({
   contactDetailsPaper: {
@@ -32,7 +35,15 @@ const useStyles = makeStyles((theme) => ({
 const ContactDetailsStep = () => {
   const classes = useStyles();
   const customerInfo = useSelector((state) => state.customerInfo);
+  const token = useSelector((state) => state.token);
+  const userEmail = getEmail(token.jwtToken);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (userEmail !== customerInfo.email) {
+      dispatch(setEmail(userEmail));
+    }
+  }, []);
 
   const handleFirstNameChange = async (event) => {
     dispatch(setFirstName(event.target.value));
@@ -78,6 +89,7 @@ const ContactDetailsStep = () => {
             variant="outlined"
             required
             label="Email"
+            disabled={ userEmail ? true : false }
             value={customerInfo.email.value}
             onChange={(event) => handleEmailChange(event)}
           />

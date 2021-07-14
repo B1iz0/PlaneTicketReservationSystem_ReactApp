@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -30,8 +30,6 @@ const BaggageRegistration = (
   }) => {
   const classes = useStyles();
 
-  const [initialBaggageWeight] = useState(baggageWeight);
-  
   return (
     <Paper className={classes.baggageService}>
       <FormControlLabel 
@@ -48,7 +46,7 @@ const BaggageRegistration = (
                 variant="outlined"
                 type="number"
                 label="Your baggage weight"
-                value={initialBaggageWeight}
+                defaultValue={baggageWeight}
                 onChange={handleBaggageWeightChange}
                 InputProps={{
                   startAdornment: <InputAdornment position="start">Kg</InputAdornment>

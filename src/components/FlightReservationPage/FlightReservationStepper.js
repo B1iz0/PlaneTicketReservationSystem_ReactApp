@@ -9,7 +9,7 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import { postBooking } from 'api/apiRequests';
+import { postBooking, blockPlace, unblockPlace } from 'api/apiRequests';
 import { getId } from 'services/token-service';
 import { 
   setFirstNameValid,
@@ -62,7 +62,18 @@ const FlightReservationStepper = ({ flight }) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
-  const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [selectedPlaces, setSelectedPlaces] = useState(() => {
+    let places = [];
+    flight?.airplane?.places?.forEach(place => {
+      if (!place.isFree && !place.bookingId && place.lastBlockedByUserId === getId(token.jwtToken)) {
+        places = [
+          ...places,
+          place
+        ];
+      };
+    });
+    return places;
+  });
   const [baggageWeight, setBaggageWeight] = useState(0);
   const [isBaggageServiceChecked, setIsBaggageServiceChecked] = useState(false);
 
@@ -72,13 +83,19 @@ const FlightReservationStepper = ({ flight }) => {
   const [placesTotalPrice, setPlacesTotalPrice] = useState(0);
   const [baggageTotalPrice, setBaggageTotalPrice] = useState(0);
 
+  console.log(baggageWeight);
+
   const handleBaggageWeightChange = (event) => {
     if (event.target.value > flight.freeBaggageLimitInKilograms) {
       setBaggageTotalPrice(Math.ceil(event.target.value - flight.freeBaggageLimitInKilograms) * flight.overweightPrice);
     } else {
       setBaggageTotalPrice(0);
     };
-    setBaggageWeight(event.target.value);
+    if (event.target.value) {
+      setBaggageWeight(event.target.value);
+    } else {
+      setBaggageWeight(0);
+    }
   }
 
   const handleBaggageChecked = (event) => {
@@ -93,6 +110,7 @@ const FlightReservationStepper = ({ flight }) => {
   };
 
   const handlePlaceSelection = (place) => {
+    blockPlace(place.id, getId(token.jwtToken));
     setPlacesTotalPrice(() => placesTotalPrice + getPlacePrice(place, flight.airplane.prices));
     setSelectedPlaces([
       ...selectedPlaces,
@@ -101,6 +119,7 @@ const FlightReservationStepper = ({ flight }) => {
   }
 
   const handlePlaceRejection = (place) => {
+    unblockPlace(place.id);
     const newSelectedPlaces = selectedPlaces.filter((value) => 
       value.id !== place.id
     );
@@ -113,6 +132,9 @@ const FlightReservationStepper = ({ flight }) => {
       if (selectedPlaces.length === 0) {
         setIsReservationValid(false);
         setErrorHelperText('You have to choose places in airplane');
+      } else if (baggageWeight < 0 || baggageWeight > flight?.airplane?.onePersonBaggageLimitInKilograms) {
+        setIsReservationValid(false);
+        setErrorHelperText('You have to enter correct baggage weight');
       } else {
         setIsReservationValid(true);
         setErrorHelperText('');
@@ -150,10 +172,11 @@ const FlightReservationStepper = ({ flight }) => {
       flightId: flight.id,
       userId: getId(token.jwtToken),
       placesId: placesId,
-      baggageWeightInKilograms: parseFloat(baggageWeight),
+      baggageWeightInKilograms: isBaggageServiceChecked ? parseFloat(baggageWeight) : 0,
       customerFirstName: customerInfo.firstName.value,
       customerLastName: customerInfo.lastName.value,
       customerEmail: customerInfo.email.value,
+      customerPhone: customerInfo.phone,
       placesTotalPrice: placesTotalPrice,
       baggageTotalPrice: baggageTotalPrice,
     })

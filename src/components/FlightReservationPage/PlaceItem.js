@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+
+import { getId } from 'services/token-service';
 
 const useStyles = makeStyles((theme) => ({
   placeButton: {
@@ -16,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
 
 const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRejection }) => {
   const classes = useStyles();
+  const token = useSelector((state) => state.token);
+  const userId = getId(token.jwtToken);
 
   const [selectedPlace, setSelectedPlace] = useState(() => {
     let isSelected = false;
@@ -25,6 +30,10 @@ const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRej
         isSelected = true;
       }
     });
+
+    if (!place.isFree) {
+      isSelected = true;
+    }
 
     return {
       ...place,
@@ -51,7 +60,7 @@ const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRej
   return (
     <>
       {
-        !place.isFree ? 
+        (!place.isFree) && (!place.lastBlockedByUserId || (place.lastBlockedByUserId !== userId)) ? 
         <IconButton
           disabled
           className={classes.placeButton}

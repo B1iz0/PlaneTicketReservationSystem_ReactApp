@@ -43,7 +43,7 @@ const ContactDetailsStep = () => {
     if (userEmail !== customerInfo.email) {
       dispatch(setEmail(userEmail));
     }
-  }, []);
+  }, [customerInfo.email, userEmail, dispatch]);
 
   const handleFirstNameChange = async (event) => {
     dispatch(setFirstName(event.target.value));

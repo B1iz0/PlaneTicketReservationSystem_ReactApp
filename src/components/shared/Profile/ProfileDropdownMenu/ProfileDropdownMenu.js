@@ -8,10 +8,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
 import { removeJwtToken, removeRefreshToken } from 'reduxStore/tokenSlice';
+import { getRole } from 'services/token-service';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,11 +28,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProfileDropdownMenu = ({ userEmail }) => {
+  const token = useSelector((state) => state.token);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    setRole(getRole(token.jwtToken));
+  }, [token.jwtToken]);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -57,6 +65,11 @@ const ProfileDropdownMenu = ({ userEmail }) => {
   const handleMyProfileCLick = (event) => {
     handleClose(event);
     history.push('/account');
+  }
+
+  const handleMyCompanyClick = (event) => {
+    handleClose(event);
+    history.push('/myCompany');
   }
 
   function handleListKeyDown(event) {
@@ -111,6 +124,7 @@ const ProfileDropdownMenu = ({ userEmail }) => {
                   onKeyDown={handleListKeyDown}
                 >
                   <MenuItem onClick={handleMyProfileCLick}>My profile</MenuItem>
+                  {role === 'Admin' ? <MenuItem onClick={handleMyCompanyClick}>My company</MenuItem> : null}
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
               </ClickAwayListener>

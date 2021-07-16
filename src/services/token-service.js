@@ -32,6 +32,14 @@ const getId = (token) => {
   }
 }
 
+const getCompanyId = (token) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1])).companyId;
+  } catch {
+    return null;
+  }
+}
+
 const setToken = async (token) => {
   localStorage.setItem('jwtToken', token.jwtToken);
   localStorage.setItem('refreshToken', token.refreshToken);
@@ -59,4 +67,4 @@ const refreshCurrentToken = async (refreshToken) => {
     });
 };
 
-export { getEmail, getRole, getId, refreshCurrentToken, setToken, removeToken };
+export { getEmail, getRole, getId, getCompanyId, refreshCurrentToken, setToken, removeToken };

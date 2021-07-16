@@ -6,7 +6,9 @@ export const allAirplanesCountEndPoint = 'api/airplanes/count';
 
 export const allAirplaneTypesEndPoint = 'api/airplaneTypes';
 
-export const allAirportsEndPoint = 'api/airports';
+export const allAirportsEndPoint = 'api/airports/all';
+export const airportsEndPoint = 'api/airports';
+export const airportsCountEndPoint = 'api/airports/count';
 
 export const flightsEndPoint = 'api/flights';
 export const flightsCountEndPoint = 'api/flights/count';

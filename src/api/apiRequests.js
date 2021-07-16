@@ -13,6 +13,8 @@ import {
   flightsEndPoint,
   flightsCountEndPoint,
   allAirportsEndPoint,
+  airportsEndPoint,
+  airportsCountEndPoint,
   usersEndPoint,
   usersCountEndPoint,
   placeTypesEndPoint,
@@ -240,6 +242,40 @@ const getAllAirports = async () => {
     .catch((error) => console.log(error));
 };
 
+const getFilteredAirports = async (offset, filters) => {
+  return await API.get(
+    `${airportsEndPoint}`,
+    {
+      params: {
+        company: filters.company,
+        airportName: filters.airport,
+        city: filters.city,
+        country: filters.country,
+        offset: offset,
+        limit: elementsOnAdminTable,
+      },
+    },
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
+const getFilteredAirpotCount = async (filters) => {
+  return await API.get(
+    `${airportsCountEndPoint}`,
+    {
+      params: {
+        company: filters.company,
+        airportName: filters.airport,
+        city: filters.city,
+        country: filters.country,
+      },
+    },
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
 const getFilteredUsers = async (
   offset,
   emailFilter,
@@ -341,6 +377,14 @@ const unblockPlace = async (placeId) => {
   await API.put(`${placesEndPoint}/${placeId}/unblock`);
 };
 
+const getCompany = async (companyId) => {
+  let token = store.getState().token;
+
+  return await API.get(`${companiesEndPoint}/${companyId}`, bearerAuthorization(token.jwtToken))
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
 export { 
   getUserInfo,
   getAirplanes,
@@ -358,6 +402,8 @@ export {
   postFlight,
   putFlight,
   getAllAirports,
+  getFilteredAirports,
+  getFilteredAirpotCount,
   getFilteredUsers,
   getFilteredUsersCount,
   getPlaceTypes,
@@ -367,4 +413,5 @@ export {
   postBooking,
   blockPlace, 
   unblockPlace,
+  getCompany
 }

@@ -173,8 +173,8 @@ const getFlightsCount = async (departureCityFilter, arrivalCityFilter) => {
     .catch((error) => console.log(error));
 };
 
-const getFlight = async (flightUrl) => {
-  return await API.get(`${flightUrl}`)
+const getFlight = async (flightId) => {
+  return await API.get(`${flightsEndPoint}/${flightId}`)
     .then((response) => response.data)
     .then((data) => data)
     .catch((error) => console.log(error));

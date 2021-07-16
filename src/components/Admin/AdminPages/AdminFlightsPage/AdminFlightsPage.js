@@ -11,7 +11,6 @@ import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import { getFilteredFlights, getFlightsCount } from 'api/apiRequests';
 import {
-  flightsEndPoint,
   elementsOnAdminTable,
 } from 'constants';
 
@@ -170,7 +169,7 @@ const AdminFlightsPage = () => {
         isOpened={isMoreInfoDialogOpened}
         DialogContent={
           <FlightInfoDialogContent
-            elementUrl={`${flightsEndPoint}/${flightIdEdit}`}
+          flightId={flightIdEdit}
           />
         }
         closeDialog={() => setIsMoreInfoDialogOpened(false)}

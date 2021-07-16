@@ -62,6 +62,7 @@ const FlightReservationStepper = ({ flight }) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
+  const [placesTotalPrice, setPlacesTotalPrice] = useState(0);
   const [selectedPlaces, setSelectedPlaces] = useState(() => {
     let places = [];
     flight?.airplane?.places?.forEach(place => {
@@ -70,6 +71,7 @@ const FlightReservationStepper = ({ flight }) => {
           ...places,
           place
         ];
+        setPlacesTotalPrice(() => placesTotalPrice + getPlacePrice(place, flight.airplane.prices));
       };
     });
     return places;
@@ -80,10 +82,7 @@ const FlightReservationStepper = ({ flight }) => {
   const [isReservationValid, setIsReservationValid] = useState(true);
   const [errorHelperText, setErrorHelperText] = useState('');
 
-  const [placesTotalPrice, setPlacesTotalPrice] = useState(0);
   const [baggageTotalPrice, setBaggageTotalPrice] = useState(0);
-
-  console.log(baggageWeight);
 
   const handleBaggageWeightChange = (event) => {
     if (event.target.value > flight.freeBaggageLimitInKilograms) {

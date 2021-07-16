@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FlightInfoDialogContent = ({ elementUrl }) => {
+const FlightInfoDialogContent = ({ flightId }) => {
   const classes = useStyles();
   const token = useSelector((state) => state.token);
 
@@ -28,13 +28,13 @@ const FlightInfoDialogContent = ({ elementUrl }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const flight = await getFlight(elementUrl);
+      const flight = await getFlight(flightId);
 
       setFlight(flight);
     }
 
     fetchData();
-  }, [token, elementUrl]);
+  }, [token, flightId]);
 
   return (
     <DialogContent className={classes.infoDialog}>

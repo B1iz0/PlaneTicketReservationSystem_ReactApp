@@ -40,7 +40,8 @@ const ContactDetailsStep = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userEmail !== customerInfo.email) {
+    if (userEmail && (userEmail !== customerInfo.email)) {
+      console.log(userEmail);
       dispatch(setEmail(userEmail));
     }
   }, [customerInfo.email, userEmail, dispatch]);

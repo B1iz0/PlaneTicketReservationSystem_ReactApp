@@ -60,7 +60,7 @@ const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRej
   return (
     <>
       {
-        (!place.isFree) && (!place.lastBlockedByUserId || (place.lastBlockedByUserId !== userId)) ? 
+        place.bookingId || ((!place.isFree) && (!place.lastBlockedByUserId || (place.lastBlockedByUserId !== userId))) ? 
         <IconButton
           disabled
           className={classes.placeButton}

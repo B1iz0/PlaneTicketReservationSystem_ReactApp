@@ -49,8 +49,8 @@ const AccountPage = () => {
         airplaneModel: item.flight.airplane.model,
         departureAirport: item.flight.from.name,
         arrivalAirport: item.flight.to.name,
-        departureDate: item.flight.departureDate,
-        arrivalDate: item.flight.arrivalDate,
+        departureTime: item.flight.departureTime,
+        arrivalTime: item.flight.arrivalTime,
       }
     })
 
@@ -69,8 +69,8 @@ const AccountPage = () => {
     { field: 'airplaneModel', headerName: 'Airplane model', width: 200 },
     { field: 'departureAirport', headerName: 'Departure airport', width: 200 },
     { field: 'arrivalAirport', headerName: 'Arrival airport', width: 200 },
-    { field: 'departureDate', headerName: 'Departure date', width: 200 },
-    { field: 'arrivalDate', headerName: 'Arrival date', width: 200 },
+    { field: 'departureTime', headerName: 'Departure time', width: 200 },
+    { field: 'arrivalTime', headerName: 'Arrival time', width: 200 },
   ];
   
   return(

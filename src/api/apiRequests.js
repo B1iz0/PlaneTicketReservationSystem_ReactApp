@@ -18,6 +18,7 @@ import {
   placeTypesEndPoint,
   placesEndPoint,
   pricesEndPoint,
+  bookingsEndPoint,
 } from 'constants';
 
 const getUserInfo = async () => {
@@ -125,7 +126,8 @@ const addAirplane = async (
   model,
   registrationNumber,
   rows,
-  columns
+  columns,
+  baggageCapacity
 ) => {
   let token = store.getState().token;
 
@@ -138,6 +140,7 @@ const addAirplane = async (
       registrationNumber: parseInt(registrationNumber, 10),
       rows: parseInt(rows, 10),
       columns: parseInt(columns, 10),
+      baggageCapacityInKilograms: parseFloat(baggageCapacity, 10),
     }, 
     bearerAuthorization(token.jwtToken))
       .then(response => [response.data, null])
@@ -170,8 +173,8 @@ const getFlightsCount = async (departureCityFilter, arrivalCityFilter) => {
     .catch((error) => console.log(error));
 };
 
-const getFlight = async (flightUrl) => {
-  return await API.get(`${flightUrl}`)
+const getFlight = async (flightId) => {
+  return await API.get(`${flightsEndPoint}/${flightId}`)
     .then((response) => response.data)
     .then((data) => data)
     .catch((error) => console.log(error));
@@ -183,7 +186,9 @@ const postFlight = async (
   departureAirportId,
   arrivalAirportId,
   departureTimeWithoutTZ,
-  arrivalTimeWithoutTZ
+  arrivalTimeWithoutTZ,
+  freeBaggageLimit,
+  overweightPrice,
 ) => {
   let token = store.getState().token;
 
@@ -196,6 +201,8 @@ const postFlight = async (
         toId: arrivalAirportId,
         departureTime: `${departureTimeWithoutTZ.toJSON()}`,
         arrivalTime: `${arrivalTimeWithoutTZ.toJSON()}`,
+        freeBaggageLimitInKilograms: parseFloat(freeBaggageLimit),
+        overweightPrice: parseFloat(overweightPrice),
     },
     bearerAuthorization(token.jwtToken))
       .catch((error) => console.log(error));
@@ -312,6 +319,28 @@ const putAirplanePrices = async (prices) => {
     .catch(error => console.log(error));
 };
 
+const postBooking = async (booking) => {
+  let token = store.getState().token;
+
+  return await API.post(
+    `${bookingsEndPoint}`,
+    booking,
+    bearerAuthorization(token.jwtToken)
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
+const blockPlace = async (placeId, userId) => {
+  await API.put(
+    `${placesEndPoint}/${placeId}/block?blockingByUserId=${userId ? userId : ''}`,
+  );
+};
+
+const unblockPlace = async (placeId) => {
+  await API.put(`${placesEndPoint}/${placeId}/unblock`);
+};
+
 export { 
   getUserInfo,
   getAirplanes,
@@ -334,5 +363,8 @@ export {
   getPlaceTypes,
   postPlacesList,
   getAirplanePlacePrices,
-  putAirplanePrices
+  putAirplanePrices,
+  postBooking,
+  blockPlace, 
+  unblockPlace,
 }

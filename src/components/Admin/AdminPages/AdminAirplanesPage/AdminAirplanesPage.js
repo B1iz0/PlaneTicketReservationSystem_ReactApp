@@ -54,6 +54,15 @@ const AdminAirplanesPage = () => {
       headerName: 'Registration number',
       width: 200,
     },
+    { 
+      field: 'baggageCapacity',
+      headerName: 'Baggage capacity',
+      width: 200,
+      type: 'number',
+      valueFormatter: (params) => {
+        return `${params.value} Kg`;
+      }
+    },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -83,6 +92,7 @@ const AdminAirplanesPage = () => {
       companyName: value.company.name,
       model: value.model,
       registrationNumber: value.registrationNumber,
+      baggageCapacity: value.baggageCapacityInKilograms,
     };
   });
 

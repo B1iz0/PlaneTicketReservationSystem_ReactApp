@@ -14,6 +14,8 @@ import AdminUsersPage from 'components/Admin/AdminPages/AdminUsersPage';
 import AdminCompaniesPage from 'components/Admin/AdminPages/AdminCompaniesPage';
 import AdminFlightsPage from 'components/Admin/AdminPages/AdminFlightsPage';
 import AirplaneCreationPage from 'components/AirplaneCreationPage';
+import FLightReservationPage from 'components/FlightReservationPage';
+import Notifications from 'components/Notifications';
 import { getRole } from 'services/token-service';
 import AdminAirplanesPage from '../Admin/AdminPages/AdminAirplanesPage/AdminAirplanesPage';
 import { Container } from '@material-ui/core';
@@ -74,11 +76,15 @@ function App() {
                 <Route path="/account">
                   <AccountPage />
                 </Route>
+                <Route path="/reservation">
+                  <FLightReservationPage />
+                </Route>
                 <Route path="/">
                   <FlightsPage />
                 </Route>
               </Switch>
             </Container>
+            <Notifications />
           </div>
         </main>
         <Footer />

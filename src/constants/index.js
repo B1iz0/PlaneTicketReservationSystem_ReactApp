@@ -22,6 +22,8 @@ export const allCompaniesEndPoint = 'api/companies/all';
 export const companiesEndPoint = 'api/companies';
 export const allCompaniesCountEndPoint = 'api/companies/count';
 
+export const countriesEndPoint = 'api/countries';
+
 export const placeTypesEndPoint = 'api/placeTypes';
 
 export const placesEndPoint = 'api/places';

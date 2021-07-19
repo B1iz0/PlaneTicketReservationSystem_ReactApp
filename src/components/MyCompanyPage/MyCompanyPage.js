@@ -121,7 +121,7 @@ const MyCompanyPage = () => {
           <CompanyAirportsTable companyName={company?.name}/>
         </TabPanel>
         <TabPanel value={currentTab} index={1}>
-          <CompanyAirplanesTable />
+          <CompanyAirplanesTable companyName={company?.name}/>
         </TabPanel>
         <TabPanel value={currentTab} index={2}>
           {/* <DataGrid /> */}

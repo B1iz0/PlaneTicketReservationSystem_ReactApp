@@ -21,6 +21,7 @@ import {
   placesEndPoint,
   pricesEndPoint,
   bookingsEndPoint,
+  countriesEndPoint,
 } from 'constants';
 
 const getUserInfo = async () => {
@@ -383,7 +384,28 @@ const getCompany = async (companyId) => {
   return await API.get(`${companiesEndPoint}/${companyId}`, bearerAuthorization(token.jwtToken))
     .then(response => [response.data, null])
     .catch(error => [null, error]);
-}
+};
+
+const postCompany = async (company) => {
+  let token = store.getState().token;
+
+  return await API.post(
+    `${companiesEndPoint}`,
+    {
+      name: company.name,
+      countryId: company.countryId,
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
+const getCountries = async () => {
+  return await API.get(`${countriesEndPoint}`)
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
 
 export { 
   getUserInfo,
@@ -413,5 +435,7 @@ export {
   postBooking,
   blockPlace, 
   unblockPlace,
-  getCompany
+  getCompany,
+  postCompany,
+  getCountries
 }

@@ -66,7 +66,7 @@ const AdminAirplanesPage = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 1,
+      width: 200,
       renderCell: (row) => {
         return (
           <>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
 import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,11 +8,17 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import DeleteIcon from '@material-ui/icons/Delete'; 
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import red from '@material-ui/core/colors/red';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
-import { getFilteredCompanies, getCompaniesCount } from 'api/apiRequests';
+import DeleteConfirmDialog from 'components/shared/DeleteConfirmDialog';
+import { 
+  getFilteredCompanies, 
+  getCompaniesCount,
+  deleteCompany 
+} from 'api/apiRequests';
 import {
   elementsOnAdminTable,
 } from 'constants';
@@ -42,12 +47,17 @@ const AdminCompaniesPage = () => {
   const [companies, setCompanies] = useState([]);
   const [totalCompaniesNumber, setTotalCompaniesNumber] = useState(0);
 
+  const [companyIdToDelete, setCompanyIdToDelete] = useState('');
+
   const [offset, setOffset] = useState(0);
   const [companyNameFilter, setCompanyNameFilter] = useState('');
   const [countryNameFilter, setCountryNameFilter] = useState('');
 
   const [isCreateDialogOpened, setIsCreateDialogOpened] = useState(false);
   const [isManagersDialogOpened, setIsManagersDialogOpened] = useState(false);
+  const [isDeleteConfirmDialogOpened, setIsDeleteConfirmDialogOpened] = useState(false);
+
+  const [companyId, setCompanyId] = useState('');
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 300 },
@@ -60,21 +70,32 @@ const AdminCompaniesPage = () => {
       renderCell: (row) => {
         return (
           <>
-            <IconButton color="primary">
-              <EditIcon />
-            </IconButton>
-            <IconButton color="primary">
-              <InfoOutlinedIcon />
-            </IconButton>
-            <IconButton 
-              color="primary"
-              onClick={() => setIsManagersDialogOpened(true)}
-            >
-              <SupervisorAccountIcon />
-            </IconButton>
-            <IconButton className={classes.deleteButton}>
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title='Edit'>
+              <IconButton color="primary">
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='More info'>
+              <IconButton color="primary">
+                <InfoOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Show managers'>
+              <IconButton 
+                color="primary"
+                onClick={() => openManagersDialog(row.id)}
+              >
+                <SupervisorAccountIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Delete'>
+              <IconButton 
+                className={classes.deleteButton}
+                onClick={() => openDeleteConfirmDialog(row.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </>
         );
       },
@@ -99,7 +120,7 @@ const AdminCompaniesPage = () => {
     }
 
     fetchData();
-  }, [token, offset, companyNameFilter, countryNameFilter, isCreateDialogOpened]);
+  }, [token, offset, companyNameFilter, countryNameFilter, isCreateDialogOpened, isDeleteConfirmDialogOpened]);
 
   const onFilterConfirmed = (values) => {
     setCompanyNameFilter(values[0]);
@@ -115,21 +136,43 @@ const AdminCompaniesPage = () => {
     setIsCreateDialogOpened(true);
   }
 
-  const openCreateDialog = () => {
-    setIsCreateDialogOpened(true);
-  }
-
   const closeCreateDialog = () => {
     setIsCreateDialogOpened(false);
   }
 
+  const openManagersDialog = (id) => {
+    setCompanyId(id);
+    setIsManagersDialogOpened(true);
+  }
+
+  const openDeleteConfirmDialog = (companyId) => {
+    setCompanyIdToDelete(companyId);
+    setIsDeleteConfirmDialogOpened(true);
+  };
+
+  const handleDeleteRejection = () => {
+    setIsDeleteConfirmDialogOpened(false);
+  }
+
+  const handleDeleteConfirmation = async () => {
+    await deleteCompany(companyIdToDelete);
+    setIsDeleteConfirmDialogOpened(false);
+  }
+
   return (
     <>
-    <CustomDialog 
+      <DeleteConfirmDialog 
+        isOpened={isDeleteConfirmDialogOpened}
+        handleConfirmation={handleDeleteConfirmation}
+        handleRejection={handleDeleteRejection}
+      />
+      <CustomDialog 
+        fullWidth={true}
+        maxWidth='md'
         title="Managers"
         isOpened={isManagersDialogOpened}
         closeDialog={() => setIsManagersDialogOpened(false)}
-        DialogContent={<CompanyManagersDialogContent />}
+        DialogContent={<CompanyManagersDialogContent companyId={companyId}/>}
       />
       <CustomDialog 
         title="Company registration"

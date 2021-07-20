@@ -3,8 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import { Grid } from '@material-ui/core';
+import { DataGrid } from '@material-ui/data-grid';
 
 import Table from 'components/shared/Table';
+import { elementsOnAdminTable } from 'constants';
 import { getUserInfo } from 'api/apiRequests';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   },
   userNameText: {
     fontSize: 'large',
+  },
+  bookingsTable: {
+    minHeight: 400,
   },
 }));
 
@@ -98,15 +103,17 @@ const AccountPage = () => {
         </Grid>
       </div>
       <div>
-        <Typography variant="h4">
+        <Typography variant="h4" gutterBottom>
           My bookings
         </Typography>
-        <Table
-        rows={rows}
-        columns={columns}
-        // onPageChange={onPageChange}
-        // rowCount={totalUsersNumber}
-        // onAddClick={openCreateDialog}
+        <DataGrid 
+          className={classes.bookingsTable}
+          columns={columns}
+          rows={rows}
+          pageSize={elementsOnAdminTable}
+          checkboxSelection={false}
+          disableColumnMenu
+          disableSelectionOnClick
         />
       </div>
     </>

@@ -33,6 +33,38 @@ const getUserInfo = async () => {
     .catch(error => console.log(error));
 };
 
+const getFreeUsers = async () => {  
+  let token = store.getState().token;
+
+  return await API.get(`${usersEndPoint}/free`, bearerAuthorization(token.jwtToken))
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
+const getManagers = async (companyId) => {  
+  let token = store.getState().token;
+
+  return await API.get(`${usersEndPoint}/managers?companyId=${companyId}`, bearerAuthorization(token.jwtToken))
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
+const putUser = async (user) => {
+  let token = store.getState().token;
+  await API.put(`${usersEndPoint}/${user.id}`, user, bearerAuthorization(token.jwtToken));
+};
+
+const assignCompanyToUser = async (userId, companyId) => {
+  let token = store.getState().token;
+
+  return await API.post(
+    `${usersEndPoint}/${userId}/assignCompany?companyId=${companyId}`, {},
+    bearerAuthorization(token.jwtToken)
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
 const getAirplanes = async (offset, airplaneTypeFilter, companyFilter, modelFilter) => {
   return await API.get(`${allAirplanesEndPoint}`, {
     params: {
@@ -401,6 +433,17 @@ const postCompany = async (company) => {
     .catch(error => [null, error]);
 };
 
+const deleteCompany = async (companyId) => {
+  let token = store.getState().token;
+
+  return await API.delete(
+      `${companiesEndPoint}/${companyId}`,
+      bearerAuthorization(token.jwtToken)
+    )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
 const getCountries = async () => {
   return await API.get(`${countriesEndPoint}`)
     .then(response => [response.data, null])
@@ -409,6 +452,10 @@ const getCountries = async () => {
 
 export { 
   getUserInfo,
+  getFreeUsers,
+  getManagers,
+  putUser,
+  assignCompanyToUser,
   getAirplanes,
   deleteAirplane,
   getFreeAirplanes,
@@ -437,5 +484,6 @@ export {
   unblockPlace,
   getCompany,
   postCompany,
+  deleteCompany,
   getCountries
 }

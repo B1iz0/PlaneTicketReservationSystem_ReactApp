@@ -30,7 +30,7 @@ const getId = (token) => {
   } catch {
     return null;
   }
-}
+};
 
 const getCompanyId = (token) => {
   try {
@@ -38,7 +38,7 @@ const getCompanyId = (token) => {
   } catch {
     return null;
   }
-}
+};
 
 const setToken = async (token) => {
   localStorage.setItem('jwtToken', token.jwtToken);
@@ -52,7 +52,7 @@ const removeToken = () => {
   localStorage.removeItem('refreshToken');
   store.dispatch(removeJwtToken());
   store.dispatch(removeRefreshToken());
-}
+};
 
 const refreshCurrentToken = async (refreshToken) => {
   await API.post(`${usersEndPoint}/refresh-token`, {
@@ -67,4 +67,12 @@ const refreshCurrentToken = async (refreshToken) => {
     });
 };
 
-export { getEmail, getRole, getId, getCompanyId, refreshCurrentToken, setToken, removeToken };
+export {
+  getEmail,
+  getRole,
+  getId,
+  getCompanyId,
+  refreshCurrentToken,
+  setToken,
+  removeToken,
+};

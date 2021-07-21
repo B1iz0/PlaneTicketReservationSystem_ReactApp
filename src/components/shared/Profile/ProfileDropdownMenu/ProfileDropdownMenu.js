@@ -65,12 +65,12 @@ const ProfileDropdownMenu = ({ userEmail }) => {
   const handleMyProfileCLick = (event) => {
     handleClose(event);
     history.push('/account');
-  }
+  };
 
   const handleMyCompanyClick = (event) => {
     handleClose(event);
     history.push('/myCompany');
-  }
+  };
 
   function handleListKeyDown(event) {
     if (event.key === 'Tab') {
@@ -78,7 +78,6 @@ const ProfileDropdownMenu = ({ userEmail }) => {
       setOpen(false);
     }
   }
-
 
   const prevOpen = useRef(open);
 
@@ -124,7 +123,11 @@ const ProfileDropdownMenu = ({ userEmail }) => {
                   onKeyDown={handleListKeyDown}
                 >
                   <MenuItem onClick={handleMyProfileCLick}>My profile</MenuItem>
-                  {role === 'Admin' ? <MenuItem onClick={handleMyCompanyClick}>My company</MenuItem> : null}
+                  {role === 'Admin' ? (
+                    <MenuItem onClick={handleMyCompanyClick}>
+                      My company
+                    </MenuItem>
+                  ) : null}
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </MenuList>
               </ClickAwayListener>

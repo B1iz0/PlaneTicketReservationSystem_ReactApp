@@ -4,9 +4,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { getFilteredFlights, getFlightsCount } from 'api/apiRequests';
-import {
-  flightsOnPage,
-} from 'constants';
+import { flightsOnPage } from 'constants';
 
 import FlightsItem from '../FlightsItem';
 
@@ -28,12 +26,17 @@ const FlightsList = ({ departureCity, arrivalCity }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const flights = await getFilteredFlights(offset, flightsOnPage, departureCity, arrivalCity);
+      const flights = await getFilteredFlights(
+        offset,
+        flightsOnPage,
+        departureCity,
+        arrivalCity
+      );
       const flightsCount = await getFlightsCount(departureCity, arrivalCity);
 
       setFlights(flights);
       setPagesAmount(Math.ceil(flightsCount / flightsOnPage));
-    }
+    };
 
     fetchData();
   }, [departureCity, arrivalCity, page, offset]);

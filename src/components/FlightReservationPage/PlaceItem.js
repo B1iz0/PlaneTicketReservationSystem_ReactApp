@@ -13,19 +13,24 @@ const useStyles = makeStyles((theme) => ({
     height: 25,
     width: 25,
     minWidth: 0,
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
-const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRejection }) => {
+const PlaceItem = ({
+  selectedPlaces,
+  place,
+  handlePlaceSelection,
+  handlePlaceRejection,
+}) => {
   const classes = useStyles();
   const token = useSelector((state) => state.token);
   const userId = getId(token.jwtToken);
 
   const [selectedPlace, setSelectedPlace] = useState(() => {
     let isSelected = false;
-    
-    selectedPlaces.forEach(selectedPlace => {
+
+    selectedPlaces.forEach((selectedPlace) => {
       if (selectedPlace.id === place.id) {
         isSelected = true;
       }
@@ -38,7 +43,7 @@ const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRej
     return {
       ...place,
       isSelected: isSelected,
-    }
+    };
   });
 
   const handlePlaceClick = () => {
@@ -54,27 +59,27 @@ const PlaceItem = ({ selectedPlaces, place, handlePlaceSelection, handlePlaceRej
         isSelected: true,
       });
       handlePlaceSelection(place);
-    };
+    }
   };
 
   return (
     <>
-      {
-        place.bookingId || ((!place.isFree) && (!place.lastBlockedByUserId || (place.lastBlockedByUserId !== userId))) ? 
-        <IconButton
-          disabled
-          className={classes.placeButton}
-        >
+      {place.bookingId ||
+      (!place.isFree &&
+        (!place.lastBlockedByUserId ||
+          place.lastBlockedByUserId !== userId)) ? (
+        <IconButton disabled className={classes.placeButton}>
           <CloseIcon />
-        </IconButton> :
-        <Button 
-          variant="contained" 
+        </IconButton>
+      ) : (
+        <Button
+          variant="contained"
           color={!selectedPlace.isSelected ? 'primary' : 'default'}
-          key={place.id} 
+          key={place.id}
           className={classes.placeButton}
           onClick={handlePlaceClick}
         />
-      }
+      )}
     </>
   );
 };

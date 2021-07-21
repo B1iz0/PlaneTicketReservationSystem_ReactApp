@@ -1,2 +1,2 @@
-import FLightReservationPage from "./FlightReservationPage";
+import FLightReservationPage from './FlightReservationPage';
 export default FLightReservationPage;

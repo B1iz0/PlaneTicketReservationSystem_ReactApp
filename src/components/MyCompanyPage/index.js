@@ -1,2 +1,2 @@
-import MyCompanyPage from "./MyCompanyPage";
+import MyCompanyPage from './MyCompanyPage';
 export default MyCompanyPage;

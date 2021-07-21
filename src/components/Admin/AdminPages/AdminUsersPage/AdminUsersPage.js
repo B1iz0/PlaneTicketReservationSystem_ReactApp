@@ -7,9 +7,7 @@ import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import { getFilteredUsers, getFilteredUsersCount } from 'api/apiRequests';
-import {
-  elementsOnAdminTable,
-} from 'constants';
+import { elementsOnAdminTable } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
   usersGrid: {
@@ -47,12 +45,21 @@ const AdminUsersPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const users = await getFilteredUsers(offset, emailFilter, firstNameFilter, lastNameFilter);
-      const usersCount = await getFilteredUsersCount(emailFilter, firstNameFilter, lastNameFilter);
+      const users = await getFilteredUsers(
+        offset,
+        emailFilter,
+        firstNameFilter,
+        lastNameFilter
+      );
+      const usersCount = await getFilteredUsersCount(
+        emailFilter,
+        firstNameFilter,
+        lastNameFilter
+      );
 
-      setUsers(users)
+      setUsers(users);
       setTotalUsersNumber(usersCount);
-    }
+    };
 
     fetchData();
   }, [token, offset, emailFilter, firstNameFilter, lastNameFilter]);

@@ -33,7 +33,7 @@ const CompanyAirportsTable = ({ companyName }) => {
   const [airports, setAirports] = useState([]);
   const [airportsCount, setAirportsCount] = useState(0);
 
-  const rows = airports.map(value => ({
+  const rows = airports.map((value) => ({
     id: value.id,
     name: value.name,
     city: value.city.name,
@@ -48,18 +48,22 @@ const CompanyAirportsTable = ({ companyName }) => {
           airport: airportFilter,
           city: cityFilter,
           country: countryFilter,
-        }
-        const [airportsResponse, airportsError] = await getFilteredAirports(offset, filters);
+        };
+        const [airportsResponse, airportsError] = await getFilteredAirports(
+          offset,
+          filters
+        );
         if (airportsResponse) setAirports(airportsResponse);
         if (airportsError) {
           // Handle error.
-        };
-        const [airportsCount, airportsCountError] = await getFilteredAirpotCount(filters);
+        }
+        const [airportsCount, airportsCountError] =
+          await getFilteredAirpotCount(filters);
         if (airportsCount) setAirportsCount(airportsCount);
         if (airportsCountError) {
           // Handle error.
-        };
-      };
+        }
+      }
     };
 
     fetchData();
@@ -76,20 +80,18 @@ const CompanyAirportsTable = ({ companyName }) => {
     setOffset(page * elementsOnAdminTable);
   };
 
-  const handleAddClick = () => {
-
-  }
+  const handleAddClick = () => {};
 
   return (
     <>
       <div className={classes.airportsFilter}>
-        <Filter 
+        <Filter
           fields={['Airport name', 'City', 'Country']}
           disableOptions={true}
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>
-      <Table 
+      <Table
         rows={rows}
         columns={columns}
         onPageChange={onPageChange}

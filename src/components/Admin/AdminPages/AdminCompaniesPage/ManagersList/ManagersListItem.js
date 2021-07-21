@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { red } from '@material-ui/core/colors';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   gridItem: {
     display: 'flex',
     alignItems: 'center',
@@ -27,21 +27,25 @@ const ManagersListItem = ({ manager, handleDeleteManager }) => {
 
   return (
     <Grid item xs={12}>
-      <Paper variant='outlined'>
+      <Paper variant="outlined">
         <Grid container>
           <Grid item xs={3} className={classes.gridItem}>
-            <Typography variant='body1'>{manager?.email}</Typography>
+            <Typography variant="body1">{manager?.email}</Typography>
           </Grid>
           <Grid item xs={5} className={classes.gridItem}>
-            <Typography variant='body1'>{manager?.firstName} {manager?.lastName}</Typography>
+            <Typography variant="body1">
+              {manager?.firstName} {manager?.lastName}
+            </Typography>
           </Grid>
           <Grid item xs={3} className={classes.gridItem}>
-            <Typography variant='body1' noWrap>{manager?.phoneNumber}</Typography>
+            <Typography variant="body1" noWrap>
+              {manager?.phoneNumber}
+            </Typography>
           </Grid>
           <Grid item xs={1} className={classes.gridItem}>
-            <IconButton 
+            <IconButton
               className={classes.deleteButton}
-              onClick={() => handleDeleteButtonClick()}  
+              onClick={() => handleDeleteButtonClick()}
             >
               <HighlightOffIcon />
             </IconButton>

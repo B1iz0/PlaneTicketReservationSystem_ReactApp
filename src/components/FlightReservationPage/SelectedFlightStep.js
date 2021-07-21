@@ -13,10 +13,9 @@ const useStyles = makeStyles((theme) => ({
 const SelectedFlightStep = ({ selectedFlight }) => {
   const classes = useStyles();
 
-
   return (
     <Paper className={classes.selectedFlightPaper}>
-      <FlightsItemInfo flight={selectedFlight}/>
+      <FlightsItemInfo flight={selectedFlight} />
     </Paper>
   );
 };

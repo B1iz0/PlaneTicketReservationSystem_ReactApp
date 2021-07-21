@@ -15,7 +15,7 @@ export const customerInfoSlice = createSlice({
       value: '',
       isValid: true,
     },
-    phone: ''
+    phone: '',
   },
   reducers: {
     setFirstName: (state, action) => {

@@ -45,14 +45,10 @@ const TabPanel = (props) => {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
-}
+};
 
 const MyCompanyPage = () => {
   const classes = useStyles();
@@ -67,10 +63,10 @@ const MyCompanyPage = () => {
       const [companyResponse, error] = await getCompany(companyId);
       if (companyResponse) {
         setCompany(companyResponse);
-      };
+      }
       if (error) {
         // handle error
-      };
+      }
     };
 
     fetchData();
@@ -88,17 +84,15 @@ const MyCompanyPage = () => {
       <div className={classes.companyInfo}>
         <Grid container justify="center" spacing={2}>
           <Grid item lg={2}>
-            <Avatar alt='test' className={classes.largeAvatar}/>
+            <Avatar alt="test" className={classes.largeAvatar} />
           </Grid>
           <Grid item lg={6}>
-            <Typography variant="h3">
-              {company?.name}
-            </Typography>
+            <Typography variant="h3">{company?.name}</Typography>
           </Grid>
         </Grid>
       </div>
       <Paper elevation={4}>
-        <Paper variant='outlined'>
+        <Paper variant="outlined">
           <Tabs
             centered
             value={currentTab}
@@ -112,10 +106,10 @@ const MyCompanyPage = () => {
           </Tabs>
         </Paper>
         <TabPanel value={currentTab} index={0}>
-          <CompanyAirportsTable companyName={company?.name}/>
+          <CompanyAirportsTable companyName={company?.name} />
         </TabPanel>
         <TabPanel value={currentTab} index={1}>
-          <CompanyAirplanesTable companyName={company?.name}/>
+          <CompanyAirplanesTable companyName={company?.name} />
         </TabPanel>
       </Paper>
     </>

@@ -1,2 +1,2 @@
-import DeleteConfirmDialog from "./DeleteConfirmDialog";
+import DeleteConfirmDialog from './DeleteConfirmDialog';
 export default DeleteConfirmDialog;

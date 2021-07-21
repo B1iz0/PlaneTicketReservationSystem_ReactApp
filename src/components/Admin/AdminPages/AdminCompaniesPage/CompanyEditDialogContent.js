@@ -8,22 +8,28 @@ import Button from '@material-ui/core/Button';
 
 import { getCountries, putCompany } from 'api/apiRequests';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   countryNameField: {
     marginBottom: theme.spacing(2),
     minWidth: 300,
   },
 }));
 
-const CompanyEditDialogContent = ({ company, company: { name, country }, closeDialog }) => {
+const CompanyEditDialogContent = ({
+  company,
+  company: { name, country },
+  closeDialog,
+}) => {
   const classes = useStyles();
   const [countries, setCountries] = useState([]);
 
   const [currentCompanyName, setCurrentCompanyName] = useState(name);
   const [currentCompanyCountry, setCurrentCompanyCountry] = useState(country);
 
-  const [isCurrentCompanyNameValid, setIsCurrentCompanyNameValid] = useState(true);
-  const [isCurrentCompanyCountryValid, setIsCurrentCompanyCountryValid] = useState(true);
+  const [isCurrentCompanyNameValid, setIsCurrentCompanyNameValid] =
+    useState(true);
+  const [isCurrentCompanyCountryValid, setIsCurrentCompanyCountryValid] =
+    useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +52,7 @@ const CompanyEditDialogContent = ({ company, company: { name, country }, closeDi
     setCurrentCompanyCountry(country);
     setIsCurrentCompanyNameValid(true);
     setIsCurrentCompanyCountryValid(true);
-  }
+  };
 
   const handleSaveClick = async () => {
     let isValid = true;
@@ -67,57 +73,54 @@ const CompanyEditDialogContent = ({ company, company: { name, country }, closeDi
         name: currentCompanyName,
         countryId: currentCompanyCountry.id,
       };
-      const [updateResponse, updateError] = await putCompany(updateCompanyVersion);
+      const [updateResponse, updateError] = await putCompany(
+        updateCompanyVersion
+      );
       if (updateResponse) {
         // Handle response.
       }
       if (!updateError) {
         closeDialog();
-      };
-    };
+      }
+    }
   };
 
   return (
     <>
       <DialogContent>
-        <TextField 
+        <TextField
           className={classes.countryNameField}
           value={currentCompanyName}
           onChange={(event) => handleCompanyNameChange(event.target.value)}
           label="Company name"
-          variant='outlined'
+          variant="outlined"
           error={!isCurrentCompanyNameValid}
           helperText={!isCurrentCompanyNameValid && 'This field is required'}
         />
-        <Autocomplete 
+        <Autocomplete
           value={currentCompanyCountry}
           onChange={(event, newValue) => setCurrentCompanyCountry(newValue)}
           getOptionSelected={(option) => option.id === currentCompanyCountry.id}
           options={countries}
           getOptionLabel={(option) => option.name}
-          renderInput={(params) => 
-            <TextField 
-              error={!isCurrentCompanyCountryValid} 
-              helperText={!isCurrentCompanyCountryValid && 'This field is required'}
-              {...params} 
-              label="Country" 
-              variant="outlined" 
+          renderInput={(params) => (
+            <TextField
+              error={!isCurrentCompanyCountryValid}
+              helperText={
+                !isCurrentCompanyCountryValid && 'This field is required'
+              }
+              {...params}
+              label="Country"
+              variant="outlined"
             />
-          }
+          )}
         />
       </DialogContent>
       <DialogActions>
-        <Button
-          variant='outlined'
-          onClick={handleResetClick}
-        >
+        <Button variant="outlined" onClick={handleResetClick}>
           Reset
         </Button>
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={handleSaveClick}
-        >
+        <Button variant="contained" color="primary" onClick={handleSaveClick}>
           Save
         </Button>
       </DialogActions>

@@ -11,7 +11,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import { getAirplaneTypes, getAllCompanies, addAirplane } from 'api/apiRequests';
+import {
+  getAirplaneTypes,
+  getAllCompanies,
+  addAirplane,
+} from 'api/apiRequests';
 
 const useStyles = makeStyles((theme) => ({
   formField: {
@@ -46,20 +50,20 @@ const AirplaneCreateDialogContent = ({ closeDialog }) => {
 
       setAirplaneTypes(airplaneTypes);
       setCompanies(companies);
-    }
+    };
 
     fetchData();
   }, []);
 
   const handleSave = async () => {
     await addAirplane(
-        airplaneTypeId,
-        companyId,
-        model,
-        registrationNumber,
-        rows,
-        columns
-      );
+      airplaneTypeId,
+      companyId,
+      model,
+      registrationNumber,
+      rows,
+      columns
+    );
     closeDialog();
   };
 

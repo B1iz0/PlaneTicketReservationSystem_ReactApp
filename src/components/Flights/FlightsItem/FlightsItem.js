@@ -38,16 +38,16 @@ const FlightsItem = ({ flight }) => {
   const handleBookClick = () => {
     history.push({
       pathname: '/reservation',
-      state: { flight: flight }
+      state: { flight: flight },
     });
-  }
+  };
 
   return (
     <Grid item container>
       <Card className={classes.flightInfo} variant="outlined">
         <Grid container direction="column" spacing={2}>
           <hr className={classes.dividedLine}></hr>
-          <FlightsItemInfo flight={flight}/>
+          <FlightsItemInfo flight={flight} />
           <hr className={classes.dividedLine}></hr>
           <Grid item container>
             <Button

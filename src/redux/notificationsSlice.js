@@ -16,9 +16,7 @@ export const notificationsSlice = createSlice({
   },
 });
 
-export const {
-  setIsBookingCreationActive,
-  setIsCompanyCreationActive
-} = notificationsSlice.actions;
+export const { setIsBookingCreationActive, setIsCompanyCreationActive } =
+  notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

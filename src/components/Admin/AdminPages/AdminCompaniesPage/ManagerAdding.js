@@ -6,7 +6,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   managerAdding: {
     padding: theme.spacing(2),
   },
@@ -25,7 +25,7 @@ const ManagerAdding = ({ freeUsers, handleAddManager }) => {
     if (!newManager) {
       isValid = false;
       setIsNewManagerValid(false);
-    };
+    }
 
     if (isValid) {
       setNewManager(null);
@@ -35,7 +35,7 @@ const ManagerAdding = ({ freeUsers, handleAddManager }) => {
 
   return (
     <div className={classes.managerAdding}>
-      <Grid container spacing={2} justify='center' alignItems='center'>
+      <Grid container spacing={2} justify="center" alignItems="center">
         <Grid item xs={6}>
           <Autocomplete
             options={freeUsers}
@@ -44,20 +44,20 @@ const ManagerAdding = ({ freeUsers, handleAddManager }) => {
               setNewManager(newValue);
             }}
             getOptionLabel={(option) => option.email}
-            renderInput={(params) => 
-              <TextField 
+            renderInput={(params) => (
+              <TextField
                 error={!isNewManagerValid}
-                {...params} 
-                label="Combo box" 
-                variant="outlined" 
+                {...params}
+                label="Combo box"
+                variant="outlined"
               />
-            }
+            )}
           />
         </Grid>
         <Grid item xs={3}>
           <Button
-            variant='contained'
-            color='primary'
+            variant="contained"
+            color="primary"
             onClick={onAddClick}
             startIcon={<PersonAddIcon />}
           >

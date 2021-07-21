@@ -27,7 +27,14 @@ function PaperComponent(props) {
   );
 }
 
-const CustomDialog = ({ isOpened, closeDialog, DialogContent, title, maxWidth = 'sm', fullWidth = false }) => {
+const CustomDialog = ({
+  isOpened,
+  closeDialog,
+  DialogContent,
+  title,
+  maxWidth = 'sm',
+  fullWidth = false,
+}) => {
   const classes = useStyles();
 
   return (

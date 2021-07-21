@@ -52,7 +52,7 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
 
       setFreeAirplanes(freeAirplanes);
       setAirports(allAirports);
-    }
+    };
 
     fetchData();
   }, [token]);
@@ -68,7 +68,7 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
     setDepartureAirport(flightForEditing?.fromAirportName);
     setArrivalAirport(flightForEditing?.toAirportName);
   };
-  
+
   const saveFlight = async () => {
     let departureTimeWithoutTZ = departureDate;
     let hoursDiff =
@@ -90,7 +90,7 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
       toAirportId,
       departureTimeWithoutTZ,
       arrivalTimeWithoutTZ
-    )
+    );
   };
 
   const onSaveClick = async () => {

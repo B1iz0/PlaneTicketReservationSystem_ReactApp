@@ -10,9 +10,7 @@ import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import { getFilteredFlights, getFlightsCount } from 'api/apiRequests';
-import {
-  elementsOnAdminTable,
-} from 'constants';
+import { elementsOnAdminTable } from 'constants';
 
 import FlightInfoDialogContent from './FlightInfoDialogContent';
 import FlightEditDialogContent from './FlightEditDialogContent';
@@ -113,12 +111,20 @@ const AdminFlightsPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const flights = await getFilteredFlights(offset, elementsOnAdminTable, departureCityFilter, arrivalCityFilter);
-      const flightsCount = await getFlightsCount(departureCityFilter, arrivalCityFilter);
-    
+      const flights = await getFilteredFlights(
+        offset,
+        elementsOnAdminTable,
+        departureCityFilter,
+        arrivalCityFilter
+      );
+      const flightsCount = await getFlightsCount(
+        departureCityFilter,
+        arrivalCityFilter
+      );
+
       setFlights(flights);
       setTotalFlightsNumber(flightsCount);
-    }
+    };
 
     fetchData();
   }, [
@@ -127,7 +133,7 @@ const AdminFlightsPage = () => {
     departureCityFilter,
     arrivalCityFilter,
     isEditDialogOpened,
-    isCreateDialogOpened
+    isCreateDialogOpened,
   ]);
 
   const onFilterConfirmed = (values) => {
@@ -152,34 +158,30 @@ const AdminFlightsPage = () => {
 
   const closeCreateFlightDialog = () => {
     setIsCreateDialogOpened(false);
-  }
+  };
 
   return (
     <>
-      <CustomDialog 
+      <CustomDialog
         title="Create flight"
         isOpened={isCreateDialogOpened}
         DialogContent={
-          <FlightCreateDialogContent closeDialog={closeCreateFlightDialog}/>
+          <FlightCreateDialogContent closeDialog={closeCreateFlightDialog} />
         }
         closeDialog={closeCreateFlightDialog}
       />
       <CustomDialog
         title="More info"
         isOpened={isMoreInfoDialogOpened}
-        DialogContent={
-          <FlightInfoDialogContent
-          flightId={flightIdEdit}
-          />
-        }
+        DialogContent={<FlightInfoDialogContent flightId={flightIdEdit} />}
         closeDialog={() => setIsMoreInfoDialogOpened(false)}
       />
       <CustomDialog
         title="Edit"
         isOpened={isEditDialogOpened}
         DialogContent={
-          <FlightEditDialogContent 
-            flightForEditing={flightForEditing} 
+          <FlightEditDialogContent
+            flightForEditing={flightForEditing}
             closeDialog={() => setIsEditDialogOpened(false)}
           />
         }

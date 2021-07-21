@@ -23,7 +23,7 @@ const Table = ({ rows, columns, onPageChange, rowCount, onAddClick }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
     onPageChange(newPage);
-  }
+  };
 
   return (
     <DataGrid
@@ -38,8 +38,13 @@ const Table = ({ rows, columns, onPageChange, rowCount, onAddClick }) => {
       components={{
         Footer: () => {
           return (
-            <CustomFooter onAddClick={onAddClick} rowCount={rowCount} page={page} onPageChange={handlePageChange}/>
-          )
+            <CustomFooter
+              onAddClick={onAddClick}
+              rowCount={rowCount}
+              page={page}
+              onPageChange={handlePageChange}
+            />
+          );
         },
       }}
     />

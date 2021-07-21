@@ -34,7 +34,7 @@ const AccountPage = () => {
   const classes = useStyles();
 
   const [user, setUser] = useState();
-  const [rows, setRows] = useState([])
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -43,10 +43,10 @@ const AccountPage = () => {
     }
 
     fetchData();
-  }, [])
+  }, []);
 
   useEffect(() => {
-    let currentRows = user?.bookings.map(item => {
+    let currentRows = user?.bookings.map((item) => {
       return {
         id: item.id,
         flightNumber: item.flight.flightNumber,
@@ -55,18 +55,17 @@ const AccountPage = () => {
         arrivalAirport: item.flight.to.name,
         departureTime: item.flight.departureTime,
         arrivalTime: item.flight.arrivalTime,
-      }
-    })
+      };
+    });
 
     setRows(() => {
       if (currentRows) {
         return currentRows;
       } else {
-        return []
-      };
+        return [];
+      }
     });
-
-  }, [user])
+  }, [user]);
 
   const columns = [
     { field: 'flightNumber', headerName: 'Flight Number', width: 150 },
@@ -76,8 +75,8 @@ const AccountPage = () => {
     { field: 'departureTime', headerName: 'Departure time', width: 200 },
     { field: 'arrivalTime', headerName: 'Arrival time', width: 200 },
   ];
-  
-  return(
+
+  return (
     <>
       <Typography gutterBottom variant="h2">
         My profile
@@ -85,7 +84,7 @@ const AccountPage = () => {
       <div>
         <Grid container justify="center">
           <Grid item lg={2}>
-            <Avatar alt={user?.lastName} className={classes.largeAvatar}/>
+            <Avatar alt={user?.lastName} className={classes.largeAvatar} />
           </Grid>
           <Grid item lg={6} container>
             <Grid item lg={12} className={classes.userEmail}>
@@ -94,7 +93,7 @@ const AccountPage = () => {
               </Typography>
             </Grid>
             <Grid item lg={12} className={classes.userName}>
-            <Typography variant="overline" className={classes.userNameText}>
+              <Typography variant="overline" className={classes.userNameText}>
                 {user?.firstName} {user?.lastName}
               </Typography>
             </Grid>
@@ -105,7 +104,7 @@ const AccountPage = () => {
         <Typography variant="h4" gutterBottom>
           My bookings
         </Typography>
-        <DataGrid 
+        <DataGrid
           className={classes.bookingsTable}
           columns={columns}
           rows={rows}
@@ -116,7 +115,7 @@ const AccountPage = () => {
         />
       </div>
     </>
-  )
+  );
 };
 
 export default AccountPage;

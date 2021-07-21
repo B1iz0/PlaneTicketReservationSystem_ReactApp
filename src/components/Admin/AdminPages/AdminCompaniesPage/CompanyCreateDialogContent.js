@@ -10,11 +10,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 
 import { getCountries, postCompany } from 'api/apiRequests';
-import {
-  setIsCompanyCreationActive,
-} from 'reduxStore/notificationsSlice';
+import { setIsCompanyCreationActive } from 'reduxStore/notificationsSlice';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   inputField: {
     width: '100%',
   },
@@ -33,7 +31,7 @@ const CompanyCreateDialogContent = ({ closeDialog }) => {
 
   const [isErrorResponse, setIsErrorResponse] = useState(false);
   const [errorHelperText, setErrorHelperText] = useState('');
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const [countriesResponse, countriesError] = await getCountries();
@@ -77,7 +75,7 @@ const CompanyCreateDialogContent = ({ closeDialog }) => {
         setIsErrorResponse(true);
         setErrorHelperText(creationError.response.data.message);
       }
-    };
+    }
   };
 
   return (
@@ -85,48 +83,51 @@ const CompanyCreateDialogContent = ({ closeDialog }) => {
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField 
+            <TextField
               error={!isCompanyNameValid}
               helperText={!isCompanyNameValid && 'This field is required'}
               className={classes.inputField}
               value={companyName}
               onChange={(event) => setCompanyName(event.target.value)}
               required
-              variant='outlined'
-              label='Company name'
+              variant="outlined"
+              label="Company name"
             />
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete 
+            <Autocomplete
               options={countries}
               getOptionLabel={(option) => option.name}
               value={companyCountry}
               onChange={(event, newValue) => setCompanyCountry(newValue)}
-              renderInput={(params) => 
-                <TextField 
-                  error={!isCompanyCountryValid} 
-                  helperText={!isCompanyCountryValid && 'This field is required'} 
-                  required {...params} 
-                  label="Country" 
-                  variant="outlined" 
+              renderInput={(params) => (
+                <TextField
+                  error={!isCompanyCountryValid}
+                  helperText={
+                    !isCompanyCountryValid && 'This field is required'
+                  }
+                  required
+                  {...params}
+                  label="Country"
+                  variant="outlined"
                 />
-              }
+              )}
             />
           </Grid>
           <Grid item>
-            {isErrorResponse && <Typography variant='body1' color='error'>{errorHelperText}</Typography>}
+            {isErrorResponse && (
+              <Typography variant="body1" color="error">
+                {errorHelperText}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
+        <Button onClick={() => handleClearClick()}>Clear</Button>
         <Button
-          onClick={() => handleClearClick()}
-        >
-          Clear
-        </Button>
-        <Button
-          variant='contained'
-          color='primary'
+          variant="contained"
+          color="primary"
           onClick={() => handleCreateClick()}
         >
           Create

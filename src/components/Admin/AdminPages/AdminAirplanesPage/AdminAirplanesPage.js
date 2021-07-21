@@ -6,6 +6,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import red from '@material-ui/core/colors/red';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { 
   getAirplanes,
@@ -70,15 +71,21 @@ const AdminAirplanesPage = () => {
       renderCell: (row) => {
         return (
           <>
-            <IconButton color="primary" onClick={() => openEditInfoDialog()}>
-              <EditIcon />
-            </IconButton>
-            <IconButton color="primary" onClick={() => openMoreInfoDialog()}>
-              <InfoOutlinedIcon />
-            </IconButton>
-            <IconButton className={classes.deleteButton} onClick={() => openDeleteConfirmDialog(row.id)}>
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title='Edit'>
+              <IconButton color="primary" onClick={() => openEditInfoDialog()}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='More info'>
+              <IconButton color="primary" onClick={() => openMoreInfoDialog()}>
+                <InfoOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Delete'>
+              <IconButton className={classes.deleteButton} onClick={() => openDeleteConfirmDialog(row.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </>
         );
       },

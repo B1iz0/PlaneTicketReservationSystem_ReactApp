@@ -5,7 +5,6 @@ import Avatar from '@material-ui/core/Avatar';
 import { Grid } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 
-import Table from 'components/shared/Table';
 import { elementsOnAdminTable } from 'constants';
 import { getUserInfo } from 'api/apiRequests';
 

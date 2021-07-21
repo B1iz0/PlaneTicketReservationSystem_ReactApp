@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid } from '@material-ui/data-grid';
 
+import Table from 'components/shared/Table';
 import Filter from 'components/Filter';
 import { elementsOnAdminTable } from 'constants';
 import { getFilteredAirports, getFilteredAirpotCount } from 'api/apiRequests';
@@ -51,8 +51,14 @@ const CompanyAirportsTable = ({ companyName }) => {
         }
         const [airportsResponse, airportsError] = await getFilteredAirports(offset, filters);
         if (airportsResponse) setAirports(airportsResponse);
+        if (airportsError) {
+          // Handle error.
+        };
         const [airportsCount, airportsCountError] = await getFilteredAirpotCount(filters);
         if (airportsCount) setAirportsCount(airportsCount);
+        if (airportsCountError) {
+          // Handle error.
+        };
       };
     };
 
@@ -70,6 +76,10 @@ const CompanyAirportsTable = ({ companyName }) => {
     setOffset(page * elementsOnAdminTable);
   };
 
+  const handleAddClick = () => {
+
+  }
+
   return (
     <>
       <div className={classes.airportsFilter}>
@@ -79,17 +89,12 @@ const CompanyAirportsTable = ({ companyName }) => {
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>
-      <DataGrid 
-        className={classes.airportsTable}
-        columns={columns}
+      <Table 
         rows={rows}
+        columns={columns}
+        onPageChange={onPageChange}
         rowCount={airportsCount}
-        pageSize={elementsOnAdminTable}
-        checkboxSelection={false}
-        paginationMode="server"
-        onPageChange={(page) => onPageChange(page.page)}
-        disableColumnMenu
-        disableSelectionOnClick
+        onAddClick={handleAddClick}
       />
     </>
   );

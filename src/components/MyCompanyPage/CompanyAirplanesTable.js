@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid } from '@material-ui/data-grid';
 
+import Table from 'components/shared/Table';
 import Filter from 'components/Filter';
 import { elementsOnAdminTable } from 'constants';
 import { getAirplanes, getAirplanesCount } from 'api/apiRequests';
@@ -85,12 +85,8 @@ const CompanyAirplanesTable = ({ companyName }) => {
     setOffset(page * elementsOnAdminTable);
   };
 
-  const Test = () => {
-    return (
-      <>
-        Test
-      </>
-    )
+  const openAddPage = () => {
+
   }
 
   return (
@@ -102,20 +98,12 @@ const CompanyAirplanesTable = ({ companyName }) => {
             onFilterConfirmed={onFilterConfirmed}
           />
         </div>
-      <DataGrid 
-        className={classes.airplanesTable}
-        columns={columns}
+      <Table 
         rows={rows}
+        columns={columns}
+        onPageChange={onPageChange}
         rowCount={airplanesCount}
-        pageSize={elementsOnAdminTable}
-        checkboxSelection={false}
-        paginationMode="server"
-        onPageChange={(page) => onPageChange(page.page)}
-        disableColumnMenu
-        disableSelectionOnClick
-        components={{
-          
-        }}
+        onAddClick={openAddPage}
       />
     </>
   );

@@ -36,8 +36,11 @@ const CompanyCreateDialogContent = ({ closeDialog }) => {
   
   useEffect(() => {
     const fetchData = async () => {
-      const [countriesResponse, error] = await getCountries();
+      const [countriesResponse, countriesError] = await getCountries();
       if (countriesResponse) setCountries(countriesResponse);
+      if (countriesError) {
+        // Handle error.
+      }
     };
 
     fetchData();

@@ -23,7 +23,7 @@ const FLightReservationPage = () => {
     }
 
     fetchData();
-  }, []);
+  }, [location.state?.flight.id]);
 
   const handleBackToFlights = () => {
     history.push('/');

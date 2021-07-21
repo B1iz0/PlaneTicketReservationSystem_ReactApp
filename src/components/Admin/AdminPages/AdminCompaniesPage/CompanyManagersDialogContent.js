@@ -15,11 +15,17 @@ const CompanyManagersDialogContent = ({ companyId }) => {
       const [freeUsersResponse, freeUsersError] = await getFreeUsers();
       const [managersResponse, managersError] = await getManagers(companyId);
       if (freeUsersResponse) setFreeUsers(freeUsersResponse);
+      if (freeUsersError) {
+        // Handle error.
+      };
       if (managersResponse) setManagers(managersResponse);
+      if (managersError) {
+        // Handle error.
+      };
     };
 
     fetchData();
-  }, []);
+  }, [companyId]);
 
   const handleAddManager = async (newManager) => {
     await assignCompanyToUser(newManager.id, companyId);
@@ -27,7 +33,7 @@ const CompanyManagersDialogContent = ({ companyId }) => {
     setFreeUsers(() => {
       let newFreeUsers = [];
       freeUsers.forEach(user => {
-        if (user.id != newManager.id) {
+        if (user.id !== newManager.id) {
           newFreeUsers.push(user);
         };
       });
@@ -48,7 +54,7 @@ const CompanyManagersDialogContent = ({ companyId }) => {
     setManagers(() => {
       let newManagers = [];
       managers.forEach(user => {
-        if (user.id != manager.id) {
+        if (user.id !== manager.id) {
           newManagers.push(user);
         };
       });

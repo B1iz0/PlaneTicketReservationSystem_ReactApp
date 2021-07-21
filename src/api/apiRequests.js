@@ -433,6 +433,21 @@ const postCompany = async (company) => {
     .catch(error => [null, error]);
 };
 
+const putCompany = async (company) => {
+  let token = store.getState().token;
+
+  return await API.put(
+    `${companiesEndPoint}/${company.id}`,
+    {
+      name: company.name,
+      countryId: company.countryId,
+    },
+    bearerAuthorization(token.jwtToken),
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
 const deleteCompany = async (companyId) => {
   let token = store.getState().token;
 
@@ -484,6 +499,7 @@ export {
   unblockPlace,
   getCompany,
   postCompany,
+  putCompany,
   deleteCompany,
   getCountries
 }

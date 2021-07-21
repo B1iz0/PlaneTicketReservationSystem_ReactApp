@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
+import { Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import { Grid } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -59,7 +59,6 @@ const MyCompanyPage = () => {
   const token = useSelector((state) => state.token);
 
   const [company, setCompany] = useState(null);
-  const [errorGettingCompany, setErrorGettingCompany] = useState(null);
   const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
@@ -70,7 +69,7 @@ const MyCompanyPage = () => {
         setCompany(companyResponse);
       };
       if (error) {
-        setErrorGettingCompany(error);
+        // handle error
       };
     };
 
@@ -98,12 +97,8 @@ const MyCompanyPage = () => {
           </Grid>
         </Grid>
       </div>
-      <Paper
-        elevation={4}
-      >
-        <Paper
-          variant='outlined'
-        >
+      <Paper elevation={4}>
+        <Paper variant='outlined'>
           <Tabs
             centered
             value={currentTab}
@@ -114,7 +109,6 @@ const MyCompanyPage = () => {
           >
             <Tab label="Airports" />
             <Tab label="Airplanes" />
-            <Tab label="Flights" />
           </Tabs>
         </Paper>
         <TabPanel value={currentTab} index={0}>
@@ -122,9 +116,6 @@ const MyCompanyPage = () => {
         </TabPanel>
         <TabPanel value={currentTab} index={1}>
           <CompanyAirplanesTable companyName={company?.name}/>
-        </TabPanel>
-        <TabPanel value={currentTab} index={2}>
-          {/* <DataGrid /> */}
         </TabPanel>
       </Paper>
     </>

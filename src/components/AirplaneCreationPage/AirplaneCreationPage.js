@@ -69,7 +69,7 @@ const AirplaneCreationPage = () => {
   };
 
   const handleBackToAdminTable = () => {
-    history.push('/admin/airplanes');
+    history.goBack();
   };
 
   return (

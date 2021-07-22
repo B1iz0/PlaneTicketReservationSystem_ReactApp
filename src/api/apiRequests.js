@@ -22,6 +22,7 @@ import {
   pricesEndPoint,
   bookingsEndPoint,
   countriesEndPoint,
+  allCtitesEndPoint,
 } from 'constants';
 
 const getUserInfo = async () => {
@@ -332,6 +333,38 @@ const getFilteredAirpotCount = async (filters) => {
     .catch((error) => [null, error]);
 };
 
+const postAirport = async (airport) => {
+  let token = store.getState().token;
+
+  return await API.post(
+    `${airportsEndPoint}`,
+    {
+      name: airport.name,
+      cityId: airport.cityId,
+      companyId: airport.companyId,
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
+const putAirport = async (airport) => {
+  let token = store.getState().token;
+
+  return await API.put(
+    `${airportsEndPoint}/${airport.id}`,
+    {
+      name: airport.name,
+      cityId: airport.cityId,
+      companyId: airport.companyId,
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
 const getFilteredUsers = async (
   offset,
   emailFilter,
@@ -433,6 +466,12 @@ const unblockPlace = async (placeId) => {
   await API.put(`${placesEndPoint}/${placeId}/unblock`);
 };
 
+const getCompanies = async () => {
+  return await API.get(`${companiesEndPoint}/all`)
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
 const getCompany = async (companyId) => {
   let token = store.getState().token;
 
@@ -491,6 +530,12 @@ const getCountries = async () => {
     .catch((error) => [null, error]);
 };
 
+const getCities = async () => {
+  return await API.get(`${allCtitesEndPoint}`)
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
 export {
   getUserInfo,
   getFreeUsers,
@@ -514,6 +559,8 @@ export {
   getAllAirports,
   getFilteredAirports,
   getFilteredAirpotCount,
+  postAirport,
+  putAirport,
   getFilteredUsers,
   getFilteredUsersCount,
   getPlaceTypes,
@@ -523,9 +570,11 @@ export {
   postBooking,
   blockPlace,
   unblockPlace,
+  getCompanies,
   getCompany,
   postCompany,
   putCompany,
   deleteCompany,
   getCountries,
+  getCities,
 };

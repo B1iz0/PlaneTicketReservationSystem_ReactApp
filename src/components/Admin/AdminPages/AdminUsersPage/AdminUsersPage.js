@@ -27,6 +27,7 @@ const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
   const [totalUsersNumber, setTotalUsersNumber] = useState(0);
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [emailFilter, setEmailFilter] = useState('');
   const [firstNameFilter, setFirstNameFilter] = useState('');
@@ -69,9 +70,11 @@ const AdminUsersPage = () => {
     setFirstNameFilter(values[1]);
     setLastNameFilter(values[2]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
@@ -99,6 +102,7 @@ const AdminUsersPage = () => {
         />
       </div>
       <Table
+        page={page}
         rows={users}
         columns={columns}
         onPageChange={onPageChange}

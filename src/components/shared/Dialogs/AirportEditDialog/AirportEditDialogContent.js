@@ -1,26 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-import { getCities, getCompanies, postAirport } from 'api/apiRequests';
+import { getCities, getCompanies, putAirport } from 'api/apiRequests';
 
-const useStyles = makeStyles(() => ({}));
-
-const AirportCreateDialogContent = ({ company, closeDialog }) => {
-  const classes = useStyles();
-
+const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
   const [cities, setCities] = useState([]);
   const [companies, setCompanies] = useState([]);
 
-  const [airportName, setAirportName] = useState('');
-  const [airportCity, setAirportCity] = useState(null);
-  const [airportCompany, setAirportCompany] = useState(null);
+  const [airportName, setAirportName] = useState(airport.name);
+  const [airportCity, setAirportCity] = useState(airport?.city);
+  const [airportCompany, setAirportCompany] = useState(airport?.company);
 
   const [isAirportNameValid, setIsAirportNameValid] = useState(true);
   const [isAirportCityValid, setIsAirportCityValid] = useState(true);
@@ -40,13 +35,15 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
     fetchData();
   }, []);
 
-  const handleClearClick = () => {
-    setAirportName('');
-    setAirportCity(null);
-    setAirportCompany(null);
+  const handleResetClick = () => {
+    setAirportName(airport.name);
+    setAirportCity(airport?.city);
+    setAirportCompany(airport?.company);
+    setIsAirportNameValid(true);
+    setIsAirportCityValid(true)
   };
 
-  const handleCreateClick = async () => {
+  const handleSaveClick = async () => {
     let isValid = true;
     setIsRequestError(false);
     setRequestErrorMessage('');
@@ -61,7 +58,8 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
     } else setIsAirportCityValid(true)
 
     if (isValid) {
-      const [createdAirport, airportError] = await postAirport({
+      const [updatedAirport, airportError] = await putAirport({
+        id: airport.id,
         name: airportName,
         cityId: airportCity.id,
         companyId: company?.id || airportCompany.id,
@@ -97,6 +95,7 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
               onChange={(event, newValue) => setAirportCity(newValue)}
               options={cities}
               getOptionLabel={(option) => option.name}
+              getOptionSelected={(option) => option.id === airportCity.id}
               renderInput={(params) => 
                 <TextField 
                   {...params}
@@ -122,6 +121,7 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
                 onChange={(event, newValue) => setAirportCompany(newValue)}
                 options={companies}
                 getOptionLabel={(option) => option.name}
+                getOptionSelected={(option) => option.id === airportCompany.id}
                 renderInput={(params) => 
                   <TextField 
                     {...params}
@@ -140,15 +140,15 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={handleClearClick}>
-          Clear
+        <Button variant="outlined" onClick={handleResetClick}>
+          Reset
         </Button>
-        <Button variant="contained" color="primary" onClick={handleCreateClick}>
-          Create
+        <Button variant="contained" color="primary" onClick={handleSaveClick}>
+          Save
         </Button>
       </DialogActions>
     </>
   );
 };
 
-export default AirportCreateDialogContent;
+export default AirportEditDialogContent;

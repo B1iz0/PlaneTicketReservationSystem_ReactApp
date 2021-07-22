@@ -45,6 +45,7 @@ const AdminCompaniesPage = () => {
   const [companies, setCompanies] = useState([]);
   const [totalCompaniesNumber, setTotalCompaniesNumber] = useState(0);
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [companyNameFilter, setCompanyNameFilter] = useState('');
   const [countryNameFilter, setCountryNameFilter] = useState('');
@@ -139,9 +140,11 @@ const AdminCompaniesPage = () => {
     setCompanyNameFilter(values[0]);
     setCountryNameFilter(values[1]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
@@ -220,6 +223,7 @@ const AdminCompaniesPage = () => {
         />
       </div>
       <Table
+        page={page}
         rows={rows}
         columns={columns}
         onPageChange={onPageChange}

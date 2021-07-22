@@ -1,2 +1,2 @@
-import AirportCreateDialog from "./AirportCreateDialog";
+import AirportCreateDialog from './AirportCreateDialog';
 export default AirportCreateDialog;

@@ -106,7 +106,7 @@ const MyCompanyPage = () => {
           </Tabs>
         </Paper>
         <TabPanel value={currentTab} index={0}>
-          <CompanyAirportsTable companyName={company?.name} />
+          <CompanyAirportsTable company={company} />
         </TabPanel>
         <TabPanel value={currentTab} index={1}>
           <CompanyAirplanesTable companyName={company?.name} />

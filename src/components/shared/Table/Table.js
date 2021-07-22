@@ -16,12 +16,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Table = ({ rows, columns, onPageChange, rowCount, onAddClick }) => {
+const Table = ({ page, rows, columns, onPageChange, rowCount, onAddClick }) => {
   const classes = useStyles();
-  const [page, setPage] = useState(0);
 
   const handlePageChange = (event, newPage) => {
-    setPage(newPage);
     onPageChange(newPage);
   };
 

@@ -34,6 +34,7 @@ const AdminFlightsPage = () => {
   const [flights, setFlights] = useState([]);
   const [totalFlightsNumber, setTotalFlightsNumber] = useState(0);
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [departureCityFilter, setDepartureCityFilter] = useState('');
   const [arrivalCityFilter, setArrivalCityFilter] = useState('');
@@ -140,9 +141,11 @@ const AdminFlightsPage = () => {
     setDepartureCityFilter(values[0]);
     setArrivalCityFilter(values[1]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
@@ -196,6 +199,7 @@ const AdminFlightsPage = () => {
         />
       </div>
       <Table
+        page={page}
         rows={rows}
         columns={columns}
         onPageChange={onPageChange}

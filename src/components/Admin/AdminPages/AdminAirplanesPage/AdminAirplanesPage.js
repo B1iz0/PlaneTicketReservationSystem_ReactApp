@@ -32,6 +32,7 @@ const AdminAirplanesPage = () => {
   const [airplanesCount, setAirplanesCount] = useState(0);
   const [airplaneIdToDelete, setAirplaneIdToDelete] = useState();
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
 
   const [airplaneTypeFilter, setAirplaneTypeFilter] = useState('');
@@ -137,9 +138,11 @@ const AdminAirplanesPage = () => {
     setCompanyFilter(values[1]);
     setModelFilter(values[2]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
@@ -202,7 +205,8 @@ const AdminAirplanesPage = () => {
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>
-      <Table
+      <Table  
+        page={page}
         rows={rows}
         columns={columns}
         onPageChange={onPageChange}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 
 import Table from 'components/shared/Table';
 import Filter from 'components/Filter';
@@ -36,7 +37,9 @@ const columns = [
 
 const CompanyAirplanesTable = ({ companyName }) => {
   const classes = useStyles();
+  let history = useHistory();
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [modelFilter, setModelFilter] = useState('');
   const [airplaneTypeFilter, setAirplaneTypeFilter] = useState('');
@@ -83,13 +86,17 @@ const CompanyAirplanesTable = ({ companyName }) => {
     setAirplaneTypeFilter(values[0]);
     setModelFilter(values[1]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
-  const openAddPage = () => {};
+  const openAddPage = () => {
+    history.push('/admin/airplanes/creation');
+  };
 
   return (
     <>
@@ -101,6 +108,7 @@ const CompanyAirplanesTable = ({ companyName }) => {
         />
       </div>
       <Table
+        page={page}
         rows={rows}
         columns={columns}
         onPageChange={onPageChange}

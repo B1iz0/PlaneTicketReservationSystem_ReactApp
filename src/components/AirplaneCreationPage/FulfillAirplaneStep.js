@@ -21,14 +21,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FulfillAirplaneStep = ({ airplane: { id, rows, columns }, handleNext }) => {
+const FulfillAirplaneStep = ({
+  airplane: { id, rows, columns },
+  handleNext,
+}) => {
   const classes = useStyles();
 
   const [placeTypes, setPlaceTypes] = useState([]);
 
   const handleFulfillAirplane = async () => {
     let isValid = true;
-    const newPlaceTypes = [ ...placeTypes ];
+    const newPlaceTypes = [...placeTypes];
     newPlaceTypes.forEach((placeType, index) => {
       let isValidValue = true;
       if (!placeType) {
@@ -60,24 +63,24 @@ const FulfillAirplaneStep = ({ airplane: { id, rows, columns }, handleNext }) =>
     });
 
     setPlaceTypes(newPlaceTypes);
-    
+
     if (isValid) {
-      const requestPlaces = placeTypes.map(value => {
+      const requestPlaces = placeTypes.map((value) => {
         return {
           placeTypeId: value.id,
           placeTypeName: value.name,
           placeAmount: parseInt(value.amount, 10),
         };
       });
-      
+
       await postPlacesList({
         airplaneId: id,
         places: requestPlaces,
       });
-      
+
       handleNext();
     }
-  }
+  };
 
   const handleAddPlaceType = (newValue) => {
     const updatePlaceTypes = [
@@ -92,52 +95,52 @@ const FulfillAirplaneStep = ({ airplane: { id, rows, columns }, handleNext }) =>
     ];
 
     setPlaceTypes(updatePlaceTypes);
-  }
+  };
 
   const handleChangeSomePlaceType = (key, newValue) => {
-    const updatePlaceTypes = [ ...placeTypes ];
+    const updatePlaceTypes = [...placeTypes];
     updatePlaceTypes[key] = newValue;
 
     setPlaceTypes(updatePlaceTypes);
-  }
+  };
 
   const handleChangeAmountOfPlaces = (key, newValue) => {
-    const updatePlaceTypes = [ ...placeTypes ];
+    const updatePlaceTypes = [...placeTypes];
     updatePlaceTypes[key].amount = newValue;
 
     setPlaceTypes(updatePlaceTypes);
-  }
+  };
 
   return (
     <div>
       <Grid container spacing={2}>
-        {
-          placeTypes.map((value, key) => {
-            return (
-              <Grid key={key} item container lg={12} spacing={1}>
-                <Grid item lg={6}>
-                  <AirplaneTypesAutocomplete 
-                    placeType={value}
-                    index={key}
-                    handleChange={handleChangeSomePlaceType}
-                    className={classes.textField}
-                  />
-                </Grid>
-                <Grid item lg={6}>
-                  <TextField 
-                    required
-                    error={ value ? !value.isAmountValid : false }
-                    className={classes.textField}
-                    onChange={(event) => handleChangeAmountOfPlaces(key, event.target.value)}
-                    variant="outlined"
-                    label="Amount of such places"
-                    type="number"
-                  />
-                </Grid>
+        {placeTypes.map((value, key) => {
+          return (
+            <Grid key={key} item container lg={12} spacing={1}>
+              <Grid item lg={6}>
+                <AirplaneTypesAutocomplete
+                  placeType={value}
+                  index={key}
+                  handleChange={handleChangeSomePlaceType}
+                  className={classes.textField}
+                />
               </Grid>
-            )
-          })
-        }
+              <Grid item lg={6}>
+                <TextField
+                  required
+                  error={value ? !value.isAmountValid : false}
+                  className={classes.textField}
+                  onChange={(event) =>
+                    handleChangeAmountOfPlaces(key, event.target.value)
+                  }
+                  variant="outlined"
+                  label="Amount of such places"
+                  type="number"
+                />
+              </Grid>
+            </Grid>
+          );
+        })}
       </Grid>
       <Button
         variant="outlined"

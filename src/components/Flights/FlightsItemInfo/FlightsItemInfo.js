@@ -17,7 +17,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FlightsItemInfo = ({ flight: { airplane, from, to, arrivalTime, departureTime } }) => {
+const FlightsItemInfo = ({
+  flight: { airplane, from, to, arrivalTime, departureTime },
+}) => {
   const classes = useStyles();
 
   return (

@@ -47,6 +47,7 @@ const Filter = ({
                 />
               ) : (
                 <Autocomplete
+                  freeSolo
                   id={`filter${key}`}
                   options={fieldsOptions[key]}
                   getOptionLabel={(option) => option.name}

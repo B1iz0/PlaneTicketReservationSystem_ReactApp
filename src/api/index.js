@@ -10,40 +10,49 @@ const instanse = axios.create({
   responseType: 'json',
 });
 
-instanse.interceptors.request.use((config) => {
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+instanse.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-instanse.interceptors.response.use((response) => {
-  return response;
-}, (error) => {
-  const originalRequest = error.config;
+instanse.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const originalRequest = error.config;
 
-  if (originalRequest.url === `${usersEndPoint}/refresh-token`) {
-    removeToken();
-    window.location.href = '/SignIn';
-  };
+    if (originalRequest.url === `${usersEndPoint}/refresh-token`) {
+      removeToken();
+      window.location.href = '/SignIn';
+    }
 
-  if (error.response.status === 401 && !originalRequest._retry) {
-    originalRequest._retry = true;
-    return refreshCurrentToken(store.getState().token.refreshToken)
-    .then(() => {
-      originalRequest.headers.Authorization = `Bearer ${store.getState().token.jwtToken}`;
-      return axios(originalRequest);
-    });
-  };
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      return refreshCurrentToken(store.getState().token.refreshToken).then(
+        () => {
+          originalRequest.headers.Authorization = `Bearer ${
+            store.getState().token.jwtToken
+          }`;
+          return axios(originalRequest);
+        }
+      );
+    }
 
-  return Promise.reject(error);
-});
+    return Promise.reject(error);
+  }
+);
 
 const bearerAuthorization = (jwtToken) => {
   return {
     headers: {
-      'Authorization': `Bearer ${jwtToken}`,
-    }
-  }
+      Authorization: `Bearer ${jwtToken}`,
+    },
+  };
 };
 
 export { bearerAuthorization };

@@ -13,35 +13,42 @@ import PricesCreationStep from './PricesCreationStep';
 
 const getSteps = () => {
   return ['Create airplane', 'Fulfill created airplane', 'Create prices'];
-}
+};
 
-const getStepContent = (step, handleNext, handleBackToAdminTable, createdAirplane, createdAirplaneId, handleAirplaneCreation) => {
+const getStepContent = (
+  step,
+  handleNext,
+  handleBackToAdminTable,
+  createdAirplane,
+  createdAirplaneId,
+  handleAirplaneCreation
+) => {
   switch (step) {
     case 0:
       return (
-        <AirplaneCreationStep 
-          handleNext={handleNext} 
+        <AirplaneCreationStep
+          handleNext={handleNext}
           handleAirplaneCreation={handleAirplaneCreation}
         />
       );
-    case 1: 
+    case 1:
       return (
-        <FulfillAirplaneStep 
+        <FulfillAirplaneStep
           airplane={createdAirplane}
           handleNext={handleNext}
         />
       );
     case 2:
       return (
-        <PricesCreationStep 
-          airplaneId={createdAirplaneId} 
+        <PricesCreationStep
+          airplaneId={createdAirplaneId}
           handleBackToAdminTable={handleBackToAdminTable}
         />
       );
     default:
-      return (<></>);
+      return <></>;
   }
-}
+};
 
 const AirplaneCreationPage = () => {
   let history = useHistory();
@@ -62,25 +69,32 @@ const AirplaneCreationPage = () => {
   };
 
   const handleBackToAdminTable = () => {
-    history.push('/admin/airplanes');
-  }
+    history.goBack();
+  };
 
   return (
     <>
       <Button
-        variant="outlined" 
+        variant="outlined"
         color="inherit"
         onClick={handleBackToAdminTable}
         startIcon={<ArrowBackIosIcon />}
       >
         Back
       </Button>
-      <Stepper activeStep={activeStep} orientation='vertical'>
+      <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((label, index) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              {getStepContent(index, handleNext, handleBackToAdminTable, createdAirplane, createdAirplaneId, handleAirplaneCreation)}
+              {getStepContent(
+                index,
+                handleNext,
+                handleBackToAdminTable,
+                createdAirplane,
+                createdAirplaneId,
+                handleAirplaneCreation
+              )}
             </StepContent>
           </Step>
         ))}

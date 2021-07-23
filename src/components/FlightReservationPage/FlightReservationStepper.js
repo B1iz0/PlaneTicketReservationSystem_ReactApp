@@ -11,14 +11,12 @@ import Typography from '@material-ui/core/Typography';
 
 import { postBooking, blockPlace, unblockPlace } from 'api/apiRequests';
 import { getId } from 'services/token-service';
-import { 
+import {
   setFirstNameValid,
   setLastNameValid,
   setEmailValid,
 } from 'reduxStore/customerInfoSlice';
-import {
-  setIsBookingCreationActive,
-} from 'reduxStore/notificationsSlice';
+import { setIsBookingCreationActive } from 'reduxStore/notificationsSlice';
 
 import SelectedFlightStep from './SelectedFlightStep';
 import PlaceSelectionStep from './PlaceSelectionStep';
@@ -41,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   errorMessage: {
     padding: theme.spacing(1),
-  }
+  },
 }));
 
 const selectedFlightStepTitle = 'Selected flight';
@@ -50,8 +48,13 @@ const contactDetailsStepTitle = 'Contact details';
 const finalPriceStepTitle = 'Final price';
 
 const getSteps = () => {
-  return [selectedFlightStepTitle, placeSelectionStepTitle, contactDetailsStepTitle, finalPriceStepTitle];
-}
+  return [
+    selectedFlightStepTitle,
+    placeSelectionStepTitle,
+    contactDetailsStepTitle,
+    finalPriceStepTitle,
+  ];
+};
 
 const FlightReservationStepper = ({ flight }) => {
   const classes = useStyles();
@@ -65,14 +68,17 @@ const FlightReservationStepper = ({ flight }) => {
   const [placesTotalPrice, setPlacesTotalPrice] = useState(0);
   const [selectedPlaces, setSelectedPlaces] = useState(() => {
     let places = [];
-    flight?.airplane?.places?.forEach(place => {
-      if (!place.isFree && !place.bookingId && place.lastBlockedByUserId === getId(token.jwtToken)) {
-        places = [
-          ...places,
-          place
-        ];
-        setPlacesTotalPrice(() => placesTotalPrice + getPlacePrice(place, flight.airplane.prices));
-      };
+    flight?.airplane?.places?.forEach((place) => {
+      if (
+        !place.isFree &&
+        !place.bookingId &&
+        place.lastBlockedByUserId === getId(token.jwtToken)
+      ) {
+        places = [...places, place];
+        setPlacesTotalPrice(
+          () => placesTotalPrice + getPlacePrice(place, flight.airplane.prices)
+        );
+      }
     });
     return places;
   });
@@ -86,16 +92,19 @@ const FlightReservationStepper = ({ flight }) => {
 
   const handleBaggageWeightChange = (event) => {
     if (event.target.value > flight.freeBaggageLimitInKilograms) {
-      setBaggageTotalPrice(Math.ceil(event.target.value - flight.freeBaggageLimitInKilograms) * flight.overweightPrice);
+      setBaggageTotalPrice(
+        Math.ceil(event.target.value - flight.freeBaggageLimitInKilograms) *
+          flight.overweightPrice
+      );
     } else {
       setBaggageTotalPrice(0);
-    };
+    }
     if (event.target.value) {
       setBaggageWeight(event.target.value);
     } else {
       setBaggageWeight(0);
     }
-  }
+  };
 
   const handleBaggageChecked = (event) => {
     setIsBaggageServiceChecked(event.target.checked);
@@ -104,34 +113,38 @@ const FlightReservationStepper = ({ flight }) => {
   const getPlacePrice = (place, prices) => {
     for (let i = 0; i < prices.length; i++) {
       if (place.placeType === prices[i].placeType) return prices[i].ticketPrice;
-    };
+    }
     return 0;
   };
 
   const handlePlaceSelection = (place) => {
     blockPlace(place.id, getId(token.jwtToken));
-    setPlacesTotalPrice(() => placesTotalPrice + getPlacePrice(place, flight.airplane.prices));
-    setSelectedPlaces([
-      ...selectedPlaces,
-      place
-    ]);
-  }
+    setPlacesTotalPrice(
+      () => placesTotalPrice + getPlacePrice(place, flight.airplane.prices)
+    );
+    setSelectedPlaces([...selectedPlaces, place]);
+  };
 
   const handlePlaceRejection = (place) => {
     unblockPlace(place.id);
-    const newSelectedPlaces = selectedPlaces.filter((value) => 
-      value.id !== place.id
+    const newSelectedPlaces = selectedPlaces.filter(
+      (value) => value.id !== place.id
     );
-    setPlacesTotalPrice(() => placesTotalPrice - getPlacePrice(place, flight.airplane.prices));
+    setPlacesTotalPrice(
+      () => placesTotalPrice - getPlacePrice(place, flight.airplane.prices)
+    );
     setSelectedPlaces(newSelectedPlaces);
-  }
+  };
 
   const handleNext = async () => {
     if (steps[activeStep] === placeSelectionStepTitle) {
       if (selectedPlaces.length === 0) {
         setIsReservationValid(false);
         setErrorHelperText('You have to choose places in airplane');
-      } else if (baggageWeight < 0 || baggageWeight > flight?.airplane?.onePersonBaggageLimitInKilograms) {
+      } else if (
+        baggageWeight < 0 ||
+        baggageWeight > flight?.airplane?.onePersonBaggageLimitInKilograms
+      ) {
         setIsReservationValid(false);
         setErrorHelperText('You have to enter correct baggage weight');
       } else {
@@ -154,10 +167,10 @@ const FlightReservationStepper = ({ flight }) => {
         isCustomInfoValid = false;
       }
       if (isCustomInfoValid) {
-          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
     } else {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
 
@@ -166,19 +179,21 @@ const FlightReservationStepper = ({ flight }) => {
   };
 
   const handleFinish = async () => {
-    const placesId = selectedPlaces.map(value => value.id);
+    const placesId = selectedPlaces.map((value) => value.id);
     const [createdBookingId, error] = await postBooking({
       flightId: flight.id,
       userId: getId(token.jwtToken),
       placesId: placesId,
-      baggageWeightInKilograms: isBaggageServiceChecked ? parseFloat(baggageWeight) : 0,
+      baggageWeightInKilograms: isBaggageServiceChecked
+        ? parseFloat(baggageWeight)
+        : 0,
       customerFirstName: customerInfo.firstName.value,
       customerLastName: customerInfo.lastName.value,
       customerEmail: customerInfo.email.value,
       customerPhone: customerInfo.phone,
       placesTotalPrice: placesTotalPrice,
       baggageTotalPrice: baggageTotalPrice,
-    })
+    });
     if (createdBookingId) {
       dispatch(setIsBookingCreationActive(true));
       history.goBack();
@@ -186,22 +201,18 @@ const FlightReservationStepper = ({ flight }) => {
       setIsReservationValid(false);
       setErrorHelperText(error.response?.data?.message);
     }
-  }
+  };
 
   const getStepContent = (step) => {
     switch (step) {
       case 0:
-        return (
-          <SelectedFlightStep 
-            selectedFlight={flight}
-          />
-        );
+        return <SelectedFlightStep selectedFlight={flight} />;
       case 1:
         return (
-          <PlaceSelectionStep 
+          <PlaceSelectionStep
             selectedPlaces={selectedPlaces}
-            selectedFlight={flight} 
-            handlePlaceSelection={handlePlaceSelection} 
+            selectedFlight={flight}
+            handlePlaceSelection={handlePlaceSelection}
             handlePlaceRejection={handlePlaceRejection}
             isBaggageServiceChecked={isBaggageServiceChecked}
             handleBaggageChecked={handleBaggageChecked}
@@ -210,12 +221,10 @@ const FlightReservationStepper = ({ flight }) => {
           />
         );
       case 2:
+        return <ContactDetailsStep />;
+      case 3:
         return (
-          <ContactDetailsStep />
-        );
-      case 3: 
-        return (
-          <FinalPriceStep 
+          <FinalPriceStep
             placesTotalPrice={placesTotalPrice}
             baggageTotalPrice={baggageTotalPrice}
             flight={flight}
@@ -226,8 +235,8 @@ const FlightReservationStepper = ({ flight }) => {
       default:
         return 'Unknown step';
     }
-  }
-  
+  };
+
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -236,7 +245,15 @@ const FlightReservationStepper = ({ flight }) => {
             <StepLabel>{label}</StepLabel>
             <StepContent>
               {getStepContent(index)}
-              {!isReservationValid && <Typography className={classes.errorMessage} variant='h6' color='error'>{errorHelperText}</Typography>}
+              {!isReservationValid && (
+                <Typography
+                  className={classes.errorMessage}
+                  variant="h6"
+                  color="error"
+                >
+                  {errorHelperText}
+                </Typography>
+              )}
               <div className={classes.actionsContainer}>
                 <div>
                   <Button
@@ -246,8 +263,7 @@ const FlightReservationStepper = ({ flight }) => {
                   >
                     Back
                   </Button>
-                  { 
-                    activeStep === steps.length - 1 ? 
+                  {activeStep === steps.length - 1 ? (
                     <Button
                       variant="contained"
                       color="primary"
@@ -255,7 +271,8 @@ const FlightReservationStepper = ({ flight }) => {
                       className={classes.button}
                     >
                       Finish
-                    </Button> : 
+                    </Button>
+                  ) : (
                     <Button
                       variant="contained"
                       color="primary"
@@ -264,7 +281,7 @@ const FlightReservationStepper = ({ flight }) => {
                     >
                       Next
                     </Button>
-                    }
+                  )}
                 </div>
               </div>
             </StepContent>
@@ -273,6 +290,6 @@ const FlightReservationStepper = ({ flight }) => {
       </Stepper>
     </div>
   );
-}
+};
 
 export default FlightReservationStepper;

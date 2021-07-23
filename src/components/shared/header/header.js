@@ -41,9 +41,9 @@ const Header = () => {
   return (
     <AppBar color="default" className={classes.appBar}>
       <Toolbar>
-        <Link 
-          variant="h5" 
-          href="/" 
+        <Link
+          variant="h5"
+          href="/"
           color="inherit"
           underline="none"
           className={classes.title}

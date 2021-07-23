@@ -1,2 +1,2 @@
-import AirplaneCreationPage from "./AirplaneCreationPage";
+import AirplaneCreationPage from './AirplaneCreationPage';
 export default AirplaneCreationPage;

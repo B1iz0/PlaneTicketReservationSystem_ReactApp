@@ -1,7 +1,7 @@
 import API, { bearerAuthorization } from 'api';
 import store from 'reduxStore/store';
 
-import { 
+import {
   elementsOnAdminTable,
   allAirplanesEndPoint,
   freeAirplanesEndPoint,
@@ -13,24 +13,79 @@ import {
   flightsEndPoint,
   flightsCountEndPoint,
   allAirportsEndPoint,
+  airportsEndPoint,
+  airportsCountEndPoint,
   usersEndPoint,
   usersCountEndPoint,
   placeTypesEndPoint,
   placesEndPoint,
   pricesEndPoint,
   bookingsEndPoint,
+  countriesEndPoint,
+  allCtitesEndPoint,
 } from 'constants';
 
 const getUserInfo = async () => {
   let token = store.getState().token;
 
-  return await API.get(`${usersEndPoint}/myself`, bearerAuthorization(token.jwtToken))
-    .then(response => response.data)
-    .then(data => data)
-    .catch(error => console.log(error));
+  return await API.get(
+    `${usersEndPoint}/myself`,
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => response.data)
+    .then((data) => data)
+    .catch((error) => console.log(error));
 };
 
-const getAirplanes = async (offset, airplaneTypeFilter, companyFilter, modelFilter) => {
+const getFreeUsers = async () => {
+  let token = store.getState().token;
+
+  return await API.get(
+    `${usersEndPoint}/free`,
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const getManagers = async (companyId) => {
+  let token = store.getState().token;
+
+  return await API.get(
+    `${usersEndPoint}/managers?companyId=${companyId}`,
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const putUser = async (user) => {
+  let token = store.getState().token;
+  await API.put(
+    `${usersEndPoint}/${user.id}`,
+    user,
+    bearerAuthorization(token.jwtToken)
+  );
+};
+
+const assignCompanyToUser = async (userId, companyId) => {
+  let token = store.getState().token;
+
+  return await API.post(
+    `${usersEndPoint}/${userId}/assignCompany?companyId=${companyId}`,
+    {},
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const getAirplanes = async (
+  offset,
+  airplaneTypeFilter,
+  companyFilter,
+  modelFilter
+) => {
   return await API.get(`${allAirplanesEndPoint}`, {
     params: {
       offset: offset,
@@ -49,12 +104,12 @@ const deleteAirplane = async (airplaneId) => {
   let token = store.getState().token;
 
   return await API.delete(
-      `${allAirplanesEndPoint}/${airplaneId}`,
-      bearerAuthorization(token.jwtToken)
-    )
-    .then(response => [response, null])
-    .catch(error => [null, error]);
-}
+    `${allAirplanesEndPoint}/${airplaneId}`,
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response, null])
+    .catch((error) => [null, error]);
+};
 
 const getFreeAirplanes = async () => {
   return await API.get(`${freeAirplanesEndPoint}`)
@@ -63,7 +118,11 @@ const getFreeAirplanes = async () => {
     .catch((error) => console.log(error));
 };
 
-const getAirplanesCount = async (airplaneTypeFilter, companyFilter, modelFilter) => {
+const getAirplanesCount = async (
+  airplaneTypeFilter,
+  companyFilter,
+  modelFilter
+) => {
   return await API.get(`${allAirplanesCountEndPoint}`, {
     params: {
       airplaneType: airplaneTypeFilter,
@@ -101,7 +160,7 @@ const getFilteredCompanies = async (
       limit: elementsOnAdminTable,
       companyName: companyNameFilter,
       countryName: countryNameFilter,
-    }
+    },
   })
     .then((response) => response.data)
     .then((data) => data)
@@ -113,7 +172,7 @@ const getCompaniesCount = async (companyNameFilter, countryNameFilter) => {
     params: {
       companyName: companyNameFilter,
       countryName: countryNameFilter,
-    }
+    },
   })
     .then((response) => response.data)
     .then((data) => data)
@@ -141,20 +200,26 @@ const addAirplane = async (
       rows: parseInt(rows, 10),
       columns: parseInt(columns, 10),
       baggageCapacityInKilograms: parseFloat(baggageCapacity, 10),
-    }, 
-    bearerAuthorization(token.jwtToken))
-      .then(response => [response.data, null])
-      .catch((error) => [null, error]);
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
 };
 
-const getFilteredFlights = async (offset, limit, departureCityFilter, arrivalCityFilter) => {
+const getFilteredFlights = async (
+  offset,
+  limit,
+  departureCityFilter,
+  arrivalCityFilter
+) => {
   return await API.get(`${flightsEndPoint}`, {
     params: {
       offset: offset,
       limit: limit,
       departureCity: departureCityFilter,
       arrivalCity: arrivalCityFilter,
-    }
+    },
   })
     .then((response) => response.data)
     .then((data) => data)
@@ -166,7 +231,7 @@ const getFlightsCount = async (departureCityFilter, arrivalCityFilter) => {
     params: {
       departureCity: departureCityFilter,
       arrivalCity: arrivalCityFilter,
-    }
+    },
   })
     .then((response) => response.data)
     .then((data) => data)
@@ -188,25 +253,25 @@ const postFlight = async (
   departureTimeWithoutTZ,
   arrivalTimeWithoutTZ,
   freeBaggageLimit,
-  overweightPrice,
+  overweightPrice
 ) => {
   let token = store.getState().token;
 
   await API.post(
     `${flightsEndPoint}`,
     {
-        airplaneId: airplaneId,
-        flightNumber: flightNumber,
-        fromId: departureAirportId,
-        toId: arrivalAirportId,
-        departureTime: `${departureTimeWithoutTZ.toJSON()}`,
-        arrivalTime: `${arrivalTimeWithoutTZ.toJSON()}`,
-        freeBaggageLimitInKilograms: parseFloat(freeBaggageLimit),
-        overweightPrice: parseFloat(overweightPrice),
+      airplaneId: airplaneId,
+      flightNumber: flightNumber,
+      fromId: departureAirportId,
+      toId: arrivalAirportId,
+      departureTime: `${departureTimeWithoutTZ.toJSON()}`,
+      arrivalTime: `${arrivalTimeWithoutTZ.toJSON()}`,
+      freeBaggageLimitInKilograms: parseFloat(freeBaggageLimit),
+      overweightPrice: parseFloat(overweightPrice),
     },
-    bearerAuthorization(token.jwtToken))
-      .catch((error) => console.log(error));
-} 
+    bearerAuthorization(token.jwtToken)
+  ).catch((error) => console.log(error));
+};
 
 const putFlight = async (
   flightId,
@@ -229,9 +294,9 @@ const putFlight = async (
       departureTime: `${departureTimeWithoutTZ.toJSON()}`,
       arrivalTime: `${arrivalTimeWithoutTZ.toJSON()}`,
     },
-    bearerAuthorization(token.jwtToken))
-      .catch((error) => console.log(error));
-}
+    bearerAuthorization(token.jwtToken)
+  ).catch((error) => console.log(error));
+};
 
 const getAllAirports = async () => {
   return await API.get(`${allAirportsEndPoint}`)
@@ -239,6 +304,66 @@ const getAllAirports = async () => {
     .then((airports) => airports)
     .catch((error) => console.log(error));
 };
+
+const getFilteredAirports = async (offset, filters) => {
+  return await API.get(`${airportsEndPoint}`, {
+    params: {
+      company: filters.company,
+      airportName: filters.airport,
+      city: filters.city,
+      country: filters.country,
+      offset: offset,
+      limit: elementsOnAdminTable,
+    },
+  })
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const getFilteredAirpotCount = async (filters) => {
+  return await API.get(`${airportsCountEndPoint}`, {
+    params: {
+      company: filters.company,
+      airportName: filters.airport,
+      city: filters.city,
+      country: filters.country,
+    },
+  })
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const postAirport = async (airport) => {
+  let token = store.getState().token;
+
+  return await API.post(
+    `${airportsEndPoint}`,
+    {
+      name: airport.name,
+      cityId: airport.cityId,
+      companyId: airport.companyId,
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
+const putAirport = async (airport) => {
+  let token = store.getState().token;
+
+  return await API.put(
+    `${airportsEndPoint}/${airport.id}`,
+    {
+      name: airport.name,
+      cityId: airport.cityId,
+      companyId: airport.companyId,
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
 
 const getFilteredUsers = async (
   offset,
@@ -287,25 +412,24 @@ const getFilteredUsersCount = async (
 
 const getPlaceTypes = async () => {
   return await API.get(`${placeTypesEndPoint}`)
-    .then(response => response.data)
-    .catch(error => console.log(error));
-}
+    .then((response) => response.data)
+    .catch((error) => console.log(error));
+};
 
 const postPlacesList = async (requestModel) => {
   let token = store.getState().token;
 
   await API.post(
-      `${placesEndPoint}`, 
-      requestModel,
-      bearerAuthorization(token.jwtToken)
-    )
-      .catch(error => console.log(error));
+    `${placesEndPoint}`,
+    requestModel,
+    bearerAuthorization(token.jwtToken)
+  ).catch((error) => console.log(error));
 };
 
 const getAirplanePlacePrices = async (airplaneId) => {
   return await API.get(`${pricesEndPoint}/${airplaneId}`)
-    .then(response => response.data)
-    .catch(error => console.log(error));
+    .then((response) => response.data)
+    .catch((error) => console.log(error));
 };
 
 const putAirplanePrices = async (prices) => {
@@ -315,8 +439,7 @@ const putAirplanePrices = async (prices) => {
     `${pricesEndPoint}`,
     prices,
     bearerAuthorization(token.jwtToken)
-  )
-    .catch(error => console.log(error));
+  ).catch((error) => console.log(error));
 };
 
 const postBooking = async (booking) => {
@@ -327,13 +450,15 @@ const postBooking = async (booking) => {
     booking,
     bearerAuthorization(token.jwtToken)
   )
-    .then(response => [response.data, null])
-    .catch(error => [null, error]);
-}
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
 
 const blockPlace = async (placeId, userId) => {
   await API.put(
-    `${placesEndPoint}/${placeId}/block?blockingByUserId=${userId ? userId : ''}`,
+    `${placesEndPoint}/${placeId}/block?blockingByUserId=${
+      userId ? userId : ''
+    }`
   );
 };
 
@@ -341,8 +466,82 @@ const unblockPlace = async (placeId) => {
   await API.put(`${placesEndPoint}/${placeId}/unblock`);
 };
 
-export { 
+const getCompanies = async () => {
+  return await API.get(`${companiesEndPoint}/all`)
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+};
+
+const getCompany = async (companyId) => {
+  let token = store.getState().token;
+
+  return await API.get(
+    `${companiesEndPoint}/${companyId}`,
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const postCompany = async (company) => {
+  let token = store.getState().token;
+
+  return await API.post(
+    `${companiesEndPoint}`,
+    {
+      name: company.name,
+      countryId: company.countryId,
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const putCompany = async (company) => {
+  let token = store.getState().token;
+
+  return await API.put(
+    `${companiesEndPoint}/${company.id}`,
+    {
+      name: company.name,
+      countryId: company.countryId,
+    },
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const deleteCompany = async (companyId) => {
+  let token = store.getState().token;
+
+  return await API.delete(
+    `${companiesEndPoint}/${companyId}`,
+    bearerAuthorization(token.jwtToken)
+  )
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const getCountries = async () => {
+  return await API.get(`${countriesEndPoint}`)
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
+
+const getCities = async () => {
+  return await API.get(`${allCtitesEndPoint}`)
+    .then(response => [response.data, null])
+    .catch(error => [null, error]);
+}
+
+export {
   getUserInfo,
+  getFreeUsers,
+  getManagers,
+  putUser,
+  assignCompanyToUser,
   getAirplanes,
   deleteAirplane,
   getFreeAirplanes,
@@ -358,6 +557,10 @@ export {
   postFlight,
   putFlight,
   getAllAirports,
+  getFilteredAirports,
+  getFilteredAirpotCount,
+  postAirport,
+  putAirport,
   getFilteredUsers,
   getFilteredUsersCount,
   getPlaceTypes,
@@ -365,6 +568,13 @@ export {
   getAirplanePlacePrices,
   putAirplanePrices,
   postBooking,
-  blockPlace, 
+  blockPlace,
   unblockPlace,
-}
+  getCompanies,
+  getCompany,
+  postCompany,
+  putCompany,
+  deleteCompany,
+  getCountries,
+  getCities,
+};

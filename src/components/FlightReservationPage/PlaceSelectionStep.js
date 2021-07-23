@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     height: 25,
     width: 25,
     minWidth: 0,
-    padding: 0
+    padding: 0,
   },
 }));
 
@@ -27,36 +27,35 @@ const columns = [
   { field: 'placeType', headerName: 'Place type', flex: 1 },
   { field: 'row', headerName: 'Place row', flex: 1 },
   { field: 'column', headerName: 'Place column', flex: 1 },
-  { 
-    field: 'price', 
-    headerName: 'Price', 
+  {
+    field: 'price',
+    headerName: 'Price',
     flex: 1,
     valueFormatter: (params) => {
       return `${params.value} $`;
-    }
+    },
   },
-]
+];
 
-const PlaceSelectionStep = (
-  { 
-    selectedPlaces, 
-    selectedFlight, 
-    handlePlaceSelection, 
-    handlePlaceRejection, 
-    isBaggageServiceChecked, 
-    handleBaggageChecked,
-    baggageWeight,
-    handleBaggageWeightChange
-  }) => {
+const PlaceSelectionStep = ({
+  selectedPlaces,
+  selectedFlight,
+  handlePlaceSelection,
+  handlePlaceRejection,
+  isBaggageServiceChecked,
+  handleBaggageChecked,
+  baggageWeight,
+  handleBaggageWeightChange,
+}) => {
   const classes = useStyles();
 
-  const dataGridRows = selectedPlaces.map(value => {
+  const dataGridRows = selectedPlaces.map((value) => {
     let ticketPrice;
 
-    selectedFlight.airplane.prices.forEach(price => {
+    selectedFlight.airplane.prices.forEach((price) => {
       if (price.placeType === value.placeType) {
         ticketPrice = price.ticketPrice;
-      };
+      }
     });
 
     return {
@@ -65,8 +64,8 @@ const PlaceSelectionStep = (
       row: value.row,
       column: value.column,
       price: ticketPrice,
-    }
-  })
+    };
+  });
 
   return (
     <Paper className={classes.placeSelectionPapper}>
@@ -74,32 +73,30 @@ const PlaceSelectionStep = (
         <Grid item>
           <Paper>
             <div className={classes.placesSection}>
-              {selectedFlight.airplane.places.map(value => {
+              {selectedFlight.airplane.places.map((value) => {
                 return (
                   <>
-                    <PlaceItem 
+                    <PlaceItem
                       selectedPlaces={selectedPlaces}
-                      key={value.id} 
-                      place={value} 
+                      key={value.id}
+                      place={value}
                       handlePlaceSelection={handlePlaceSelection}
                       handlePlaceRejection={handlePlaceRejection}
                     />
-                    {value.column === selectedFlight.airplane.columns - 1 ? <br/> : null}
+                    {value.column === selectedFlight.airplane.columns - 1 ? (
+                      <br />
+                    ) : null}
                   </>
-                )
+                );
               })}
             </div>
           </Paper>
         </Grid>
         <Grid item lg={8}>
-          <DataGrid 
-            rows={dataGridRows} 
-            columns={columns} 
-            disableColumnMenu
-          />
+          <DataGrid rows={dataGridRows} columns={columns} disableColumnMenu />
         </Grid>
         <Grid item lg={9}>
-          <BaggageRegistration 
+          <BaggageRegistration
             selectedFlight={selectedFlight}
             isBaggageServiceChecked={isBaggageServiceChecked}
             handleBaggageChecked={handleBaggageChecked}

@@ -6,20 +6,18 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import red from '@material-ui/core/colors/red';
+import Tooltip from '@material-ui/core/Tooltip';
 
-import { 
+import {
   getAirplanes,
   deleteAirplane,
-  getAirplanesCount
+  getAirplanesCount,
 } from 'api/apiRequests';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
 import DeleteConfirmDialog from 'components/shared/DeleteConfirmDialog';
 import Filter from 'components/Filter';
-import {
-  elementsOnAdminTable,
-} from 'constants';
-
+import { elementsOnAdminTable } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
   deleteButton: {
@@ -34,6 +32,7 @@ const AdminAirplanesPage = () => {
   const [airplanesCount, setAirplanesCount] = useState(0);
   const [airplaneIdToDelete, setAirplaneIdToDelete] = useState();
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
 
   const [airplaneTypeFilter, setAirplaneTypeFilter] = useState('');
@@ -42,7 +41,8 @@ const AdminAirplanesPage = () => {
 
   const [isEditDialogOpened, setIsEditDialogOpened] = useState(false);
   const [isMoreInfoDialogOpened, setIsMoreInfoDialogOpened] = useState(false);
-  const [isDeleteConfirmDialogOpened, setIsDeleteConfirmDialogOpened] = useState(false);
+  const [isDeleteConfirmDialogOpened, setIsDeleteConfirmDialogOpened] =
+    useState(false);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
@@ -54,31 +54,40 @@ const AdminAirplanesPage = () => {
       headerName: 'Registration number',
       width: 200,
     },
-    { 
+    {
       field: 'baggageCapacity',
       headerName: 'Baggage capacity',
       width: 200,
       type: 'number',
       valueFormatter: (params) => {
         return `${params.value} Kg`;
-      }
+      },
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 1,
+      width: 200,
       renderCell: (row) => {
         return (
           <>
-            <IconButton color="primary" onClick={() => openEditInfoDialog()}>
-              <EditIcon />
-            </IconButton>
-            <IconButton color="primary" onClick={() => openMoreInfoDialog()}>
-              <InfoOutlinedIcon />
-            </IconButton>
-            <IconButton className={classes.deleteButton} onClick={() => openDeleteConfirmDialog(row.id)}>
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title="Edit">
+              <IconButton color="primary" onClick={() => openEditInfoDialog()}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="More info">
+              <IconButton color="primary" onClick={() => openMoreInfoDialog()}>
+                <InfoOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton
+                className={classes.deleteButton}
+                onClick={() => openDeleteConfirmDialog(row.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </>
         );
       },
@@ -98,24 +107,42 @@ const AdminAirplanesPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const airplanes = await getAirplanes(offset, airplaneTypeFilter, companyFilter, modelFilter);
-      const airplanesCount = await getAirplanesCount(airplaneTypeFilter, companyFilter, modelFilter);
+      const airplanes = await getAirplanes(
+        offset,
+        airplaneTypeFilter,
+        companyFilter,
+        modelFilter
+      );
+      const airplanesCount = await getAirplanesCount(
+        airplaneTypeFilter,
+        companyFilter,
+        modelFilter
+      );
 
       setAirplanes(airplanes);
       setAirplanesCount(airplanesCount);
-    }
+    };
 
     fetchData();
-  }, [airplaneTypeFilter, companyFilter, modelFilter, offset, isDeleteConfirmDialogOpened, isEditDialogOpened]);
+  }, [
+    airplaneTypeFilter,
+    companyFilter,
+    modelFilter,
+    offset,
+    isDeleteConfirmDialogOpened,
+    isEditDialogOpened,
+  ]);
 
   const onFilterConfirmed = (values) => {
     setAirplaneTypeFilter(values[0]);
     setCompanyFilter(values[1]);
     setModelFilter(values[2]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
@@ -142,12 +169,12 @@ const AdminAirplanesPage = () => {
 
   const handleDeleteRejection = () => {
     setIsDeleteConfirmDialogOpened(false);
-  }
+  };
 
   const handleDeleteConfirmation = async () => {
     await deleteAirplane(airplaneIdToDelete);
     setIsDeleteConfirmDialogOpened(false);
-  }
+  };
 
   const openAddPage = () => {
     history.push('/admin/airplanes/creation');
@@ -155,7 +182,7 @@ const AdminAirplanesPage = () => {
 
   return (
     <>
-      <DeleteConfirmDialog 
+      <DeleteConfirmDialog
         isOpened={isDeleteConfirmDialogOpened}
         handleConfirmation={handleDeleteConfirmation}
         handleRejection={handleDeleteRejection}
@@ -178,7 +205,8 @@ const AdminAirplanesPage = () => {
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>
-      <Table
+      <Table  
+        page={page}
         rows={rows}
         columns={columns}
         onPageChange={onPageChange}

@@ -1,2 +1,2 @@
-import FlightsItemInfo from "./FlightsItemInfo";
+import FlightsItemInfo from './FlightsItemInfo';
 export default FlightsItemInfo;

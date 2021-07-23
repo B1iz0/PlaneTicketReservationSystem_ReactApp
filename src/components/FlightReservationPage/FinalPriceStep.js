@@ -12,40 +12,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FinalPriceStep = ({ placesTotalPrice, baggageTotalPrice, flight, flight: {
-  airplane: { prices }, freeBaggageLimitInKilograms, overweightPrice
-}, places, baggageWeight }) => {
+const FinalPriceStep = ({
+  placesTotalPrice,
+  baggageTotalPrice,
+  flight,
+  flight: {
+    airplane: { prices },
+    freeBaggageLimitInKilograms,
+    overweightPrice,
+  },
+  places,
+  baggageWeight,
+}) => {
   const classes = useStyles();
 
-  const [uniquePlacesInfo] = useState(() => getUniquePlacesInfo(places, prices));
-      
+  const [uniquePlacesInfo] = useState(() =>
+    getUniquePlacesInfo(places, prices)
+  );
+
   return (
-    <Paper 
-      className={classes.finalPricePaper}
-    >
+    <Paper className={classes.finalPricePaper}>
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <Typography variant='h4'>Total price: {placesTotalPrice + baggageTotalPrice || 0} $</Typography>
+          <Typography variant="h4">
+            Total price: {placesTotalPrice + baggageTotalPrice || 0} $
+          </Typography>
         </Grid>
         <Grid item xs={6}>
-          <Paper variant='outlined' className={classes.finalPricePaper}>
-            <Typography variant='h6'>Places: {placesTotalPrice} $</Typography>
-            <hr/>
-            {uniquePlacesInfo.map(value => {
+          <Paper variant="outlined" className={classes.finalPricePaper}>
+            <Typography variant="h6">Places: {placesTotalPrice} $</Typography>
+            <hr />
+            {uniquePlacesInfo.map((value) => {
               return (
-                <Typography key={value.placeType}>{value.amount} x {value.placeType}: {value.totalPrice} $ ({value.onePlacePrice} $ per 1 place)</Typography>
-              )
+                <Typography key={value.placeType}>
+                  {value.amount} x {value.placeType}: {value.totalPrice} $ (
+                  {value.onePlacePrice} $ per 1 place)
+                </Typography>
+              );
             })}
           </Paper>
         </Grid>
         <Grid item xs={6}>
-          <Paper variant='outlined' className={classes.finalPricePaper}>
-            <Typography variant='h6'>Baggage: {baggageTotalPrice} $</Typography>
-            <hr/>
-            <Typography>Your baggage: {baggageWeight} Kg (Free limit: {freeBaggageLimitInKilograms} Kg)</Typography>
-            {baggageWeight > freeBaggageLimitInKilograms && <Typography>Overweight: {baggageWeight - freeBaggageLimitInKilograms} Kg</Typography>}
-            <Typography>Overweight price: {baggageWeight > freeBaggageLimitInKilograms ? (baggageWeight - freeBaggageLimitInKilograms) * overweightPrice : 0} $ ({overweightPrice} $ per 1 Kg)</Typography>
-          </Paper> 
+          <Paper variant="outlined" className={classes.finalPricePaper}>
+            <Typography variant="h6">Baggage: {baggageTotalPrice} $</Typography>
+            <hr />
+            <Typography>
+              Your baggage: {baggageWeight} Kg (Free limit:{' '}
+              {freeBaggageLimitInKilograms} Kg)
+            </Typography>
+            {baggageWeight > freeBaggageLimitInKilograms && (
+              <Typography>
+                Overweight: {baggageWeight - freeBaggageLimitInKilograms} Kg
+              </Typography>
+            )}
+            <Typography>
+              Overweight price:{' '}
+              {baggageWeight > freeBaggageLimitInKilograms
+                ? (baggageWeight - freeBaggageLimitInKilograms) *
+                  overweightPrice
+                : 0}{' '}
+              $ ({overweightPrice} $ per 1 Kg)
+            </Typography>
+          </Paper>
         </Grid>
       </Grid>
     </Paper>

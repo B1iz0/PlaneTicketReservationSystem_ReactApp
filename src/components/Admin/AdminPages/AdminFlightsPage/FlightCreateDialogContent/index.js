@@ -1,2 +1,2 @@
-import FlightCreateDialogContent from "./FlightCreateDialogContent";
+import FlightCreateDialogContent from './FlightCreateDialogContent';
 export default FlightCreateDialogContent;

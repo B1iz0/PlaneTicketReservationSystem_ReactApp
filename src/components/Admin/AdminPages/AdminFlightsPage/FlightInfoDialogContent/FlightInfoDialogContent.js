@@ -31,7 +31,7 @@ const FlightInfoDialogContent = ({ flightId }) => {
       const flight = await getFlight(flightId);
 
       setFlight(flight);
-    }
+    };
 
     fetchData();
   }, [token, flightId]);
@@ -45,38 +45,22 @@ const FlightInfoDialogContent = ({ flightId }) => {
           </Typography>
         </Grid>
         <Grid item lg={12}>
-          <Typography 
-            component="h1" 
-            variant="h5"
-            align="center"
-          >
+          <Typography component="h1" variant="h5" align="center">
             Airplane ({flight?.airplane.model})
           </Typography>
         </Grid>
         <Grid item lg={12}>
-          <Typography 
-            variant="overline"
-            display="block" 
-            align="center"
-          >
+          <Typography variant="overline" display="block" align="center">
             Registration number: {flight?.airplane.registrationNumber}
           </Typography>
         </Grid>
         <Grid item lg={12}>
-          <Typography 
-            variant="overline"
-            display="block" 
-            align="center"
-          >
+          <Typography variant="overline" display="block" align="center">
             Airplane type: {flight?.airplane.airplaneType.typeName}
           </Typography>
         </Grid>
         <Grid item lg={12}>
-          <Typography 
-            variant="overline"
-            display="block" 
-            align="center"
-          >
+          <Typography variant="overline" display="block" align="center">
             Company: {flight?.airplane.company.name}
           </Typography>
         </Grid>
@@ -85,43 +69,27 @@ const FlightInfoDialogContent = ({ flightId }) => {
         </Grid>
         <Grid item container direction="column" lg={5} justify="center">
           <Grid item>
-            <Typography 
-              variant="overline" 
-              display="block" 
-              align="center"
-            >
+            <Typography variant="overline" display="block" align="center">
               {flight?.from.name} ({flight?.from.city.name})
             </Typography>
           </Grid>
           <Grid item>
-            <Typography 
-              variant="overline" 
-              display="block" 
-              align="center"
-            >
+            <Typography variant="overline" display="block" align="center">
               {flight?.departureTime}
             </Typography>
           </Grid>
         </Grid>
         <Grid item lg={2}>
-          <FlightIcon className={classes.airplaneIcon}/>
+          <FlightIcon className={classes.airplaneIcon} />
         </Grid>
         <Grid item container direction="column" lg={5} justify="center">
           <Grid item>
-            <Typography 
-              variant="overline" 
-              display="block" 
-              align="center"
-            >
+            <Typography variant="overline" display="block" align="center">
               {flight?.to.name} ({flight?.to.city.name})
             </Typography>
           </Grid>
           <Grid item>
-            <Typography 
-              variant="overline" 
-              display="block" 
-              align="center"
-            >
+            <Typography variant="overline" display="block" align="center">
               {flight?.arrivalTime}
             </Typography>
           </Grid>

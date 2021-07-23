@@ -7,9 +7,7 @@ import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import { getFilteredUsers, getFilteredUsersCount } from 'api/apiRequests';
-import {
-  elementsOnAdminTable,
-} from 'constants';
+import { elementsOnAdminTable } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
   usersGrid: {
@@ -29,6 +27,7 @@ const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
   const [totalUsersNumber, setTotalUsersNumber] = useState(0);
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [emailFilter, setEmailFilter] = useState('');
   const [firstNameFilter, setFirstNameFilter] = useState('');
@@ -47,12 +46,21 @@ const AdminUsersPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const users = await getFilteredUsers(offset, emailFilter, firstNameFilter, lastNameFilter);
-      const usersCount = await getFilteredUsersCount(emailFilter, firstNameFilter, lastNameFilter);
+      const users = await getFilteredUsers(
+        offset,
+        emailFilter,
+        firstNameFilter,
+        lastNameFilter
+      );
+      const usersCount = await getFilteredUsersCount(
+        emailFilter,
+        firstNameFilter,
+        lastNameFilter
+      );
 
-      setUsers(users)
+      setUsers(users);
       setTotalUsersNumber(usersCount);
-    }
+    };
 
     fetchData();
   }, [token, offset, emailFilter, firstNameFilter, lastNameFilter]);
@@ -62,9 +70,11 @@ const AdminUsersPage = () => {
     setFirstNameFilter(values[1]);
     setLastNameFilter(values[2]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
@@ -92,6 +102,7 @@ const AdminUsersPage = () => {
         />
       </div>
       <Table
+        page={page}
         rows={users}
         columns={columns}
         onPageChange={onPageChange}

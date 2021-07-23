@@ -6,7 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete, {
+  createFilterOptions,
+} from '@material-ui/lab/Autocomplete';
 
 import { getPlaceTypes } from 'api/apiRequests';
 
@@ -27,7 +29,7 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
       const placeTypes = await getPlaceTypes();
 
       setPlaceTypes(placeTypes);
-    }
+    };
 
     fetchData();
   }, []);
@@ -38,7 +40,7 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
     });
 
     setIsDialogOpen(false);
-  }
+  };
 
   const handleTypeSubmitCreation = (event) => {
     event.preventDefault();
@@ -50,11 +52,11 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
     handleChange(index, prevType);
 
     handleClose();
-  }
+  };
 
   return (
     <div>
-      <Autocomplete 
+      <Autocomplete
         value={selectedPlaceType}
         onChange={(event, newValue) => {
           if (typeof newValue === 'string') {
@@ -78,7 +80,7 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
                 amount: '',
                 isTypeValid: true,
                 isAmountValid: true,
-              }
+              };
             }
             prevType.id = newValue?.id;
             prevType.name = newValue?.name;
@@ -113,16 +115,20 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
         renderOption={(option) => option.name}
         freeSolo
         renderInput={(params) => (
-          <TextField 
-            {...params} 
-            label="Place type" 
-            variant="outlined" 
+          <TextField
+            {...params}
+            label="Place type"
+            variant="outlined"
             required
-            error={ placeType ? !placeType.isTypeValid : false }
+            error={placeType ? !placeType.isTypeValid : false}
           />
         )}
       />
-      <Dialog open={isDialogOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <form onSubmit={handleTypeSubmitCreation}>
           <DialogTitle id="form-dialog-title">Add a new place type</DialogTitle>
           <DialogContent>
@@ -134,7 +140,12 @@ const AirplaneTypesAutocomplete = ({ placeType, index, handleChange }) => {
               margin="dense"
               id="name"
               value={dialogValue.placeTypeName}
-              onChange={(event) => setDialogValue({ ...dialogValue, placeTypeName: event.target.value })}
+              onChange={(event) =>
+                setDialogValue({
+                  ...dialogValue,
+                  placeTypeName: event.target.value,
+                })
+              }
               label="Type name"
               type="text"
             />

@@ -10,9 +10,7 @@ import CustomDialog from 'components/shared/CustomDialog';
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import { getFilteredFlights, getFlightsCount } from 'api/apiRequests';
-import {
-  elementsOnAdminTable,
-} from 'constants';
+import { elementsOnAdminTable } from 'constants';
 
 import FlightInfoDialogContent from './FlightInfoDialogContent';
 import FlightEditDialogContent from './FlightEditDialogContent';
@@ -36,6 +34,7 @@ const AdminFlightsPage = () => {
   const [flights, setFlights] = useState([]);
   const [totalFlightsNumber, setTotalFlightsNumber] = useState(0);
 
+  const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [departureCityFilter, setDepartureCityFilter] = useState('');
   const [arrivalCityFilter, setArrivalCityFilter] = useState('');
@@ -113,12 +112,20 @@ const AdminFlightsPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const flights = await getFilteredFlights(offset, elementsOnAdminTable, departureCityFilter, arrivalCityFilter);
-      const flightsCount = await getFlightsCount(departureCityFilter, arrivalCityFilter);
-    
+      const flights = await getFilteredFlights(
+        offset,
+        elementsOnAdminTable,
+        departureCityFilter,
+        arrivalCityFilter
+      );
+      const flightsCount = await getFlightsCount(
+        departureCityFilter,
+        arrivalCityFilter
+      );
+
       setFlights(flights);
       setTotalFlightsNumber(flightsCount);
-    }
+    };
 
     fetchData();
   }, [
@@ -127,16 +134,18 @@ const AdminFlightsPage = () => {
     departureCityFilter,
     arrivalCityFilter,
     isEditDialogOpened,
-    isCreateDialogOpened
+    isCreateDialogOpened,
   ]);
 
   const onFilterConfirmed = (values) => {
     setDepartureCityFilter(values[0]);
     setArrivalCityFilter(values[1]);
     setOffset(0);
+    setPage(0);
   };
 
   const onPageChange = (page) => {
+    setPage(page);
     setOffset(page * elementsOnAdminTable);
   };
 
@@ -152,34 +161,30 @@ const AdminFlightsPage = () => {
 
   const closeCreateFlightDialog = () => {
     setIsCreateDialogOpened(false);
-  }
+  };
 
   return (
     <>
-      <CustomDialog 
+      <CustomDialog
         title="Create flight"
         isOpened={isCreateDialogOpened}
         DialogContent={
-          <FlightCreateDialogContent closeDialog={closeCreateFlightDialog}/>
+          <FlightCreateDialogContent closeDialog={closeCreateFlightDialog} />
         }
         closeDialog={closeCreateFlightDialog}
       />
       <CustomDialog
         title="More info"
         isOpened={isMoreInfoDialogOpened}
-        DialogContent={
-          <FlightInfoDialogContent
-          flightId={flightIdEdit}
-          />
-        }
+        DialogContent={<FlightInfoDialogContent flightId={flightIdEdit} />}
         closeDialog={() => setIsMoreInfoDialogOpened(false)}
       />
       <CustomDialog
         title="Edit"
         isOpened={isEditDialogOpened}
         DialogContent={
-          <FlightEditDialogContent 
-            flightForEditing={flightForEditing} 
+          <FlightEditDialogContent
+            flightForEditing={flightForEditing}
             closeDialog={() => setIsEditDialogOpened(false)}
           />
         }
@@ -194,6 +199,7 @@ const AdminFlightsPage = () => {
         />
       </div>
       <Table
+        page={page}
         rows={rows}
         columns={columns}
         onPageChange={onPageChange}

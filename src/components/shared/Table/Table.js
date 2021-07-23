@@ -1,10 +1,9 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
+import React, { useState } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { makeStyles } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 import { elementsOnAdminTable } from 'constants';
+import CustomFooter from './CustomFooter';
 
 const useStyles = makeStyles((theme) => ({
   tableHeader: {
@@ -12,43 +11,39 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
   },
   grid: {
-    height: '500px',
+    minHeight: 400,
     width: '100%',
   },
 }));
 
-const Table = ({ rows, columns, onPageChange, rowCount, onAddClick }) => {
+const Table = ({ page, rows, columns, onPageChange, rowCount, onAddClick }) => {
   const classes = useStyles();
 
-  function CustomHeader() {
-    return (
-      <div className={classes.tableHeader}>
-        <Button
-          variant="outlined"
-          color="primary"
-          startIcon={<AddCircleIcon />}
-          onClick={onAddClick}
-        >
-          add new
-        </Button>
-      </div>
-    );
-  }
+  const handlePageChange = (event, newPage) => {
+    onPageChange(newPage);
+  };
 
   return (
     <DataGrid
       rows={rows}
       columns={columns}
-      onPageChange={(page) => onPageChange(page.page)}
       rowCount={rowCount}
       pageSize={elementsOnAdminTable}
-      paginationMode="server"
       checkboxSelection={false}
       disableColumnMenu={true}
       disableSelectionOnClick={true}
       className={classes.grid}
       components={{
-        Header: CustomHeader,
+        Footer: () => {
+          return (
+            <CustomFooter
+              onAddClick={onAddClick}
+              rowCount={rowCount}
+              page={page}
+              onPageChange={handlePageChange}
+            />
+          );
+        },
       }}
     />
   );

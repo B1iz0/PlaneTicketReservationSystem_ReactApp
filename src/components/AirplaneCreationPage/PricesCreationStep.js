@@ -20,15 +20,15 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   { field: 'placeType', headerName: 'Place type', flex: 1 },
-  { 
-    field: 'ticketPrice', 
-    headerName: 'Price', 
+  {
+    field: 'ticketPrice',
+    headerName: 'Price',
     flex: 1,
     type: 'number',
     editable: true,
     valueFormatter: (params) => {
       return `${params.value} $`;
-    }
+    },
   },
 ];
 
@@ -41,25 +41,25 @@ const PricesCreationStep = ({ airplaneId, handleBackToAdminTable }) => {
       const newPrices = await getAirplanePlacePrices(airplaneId);
 
       setPrices(newPrices);
-    }
+    };
 
     fetchData();
   }, [airplaneId]);
 
   const handleCellEdit = (row) => {
     const newPrices = prices;
-    for (let i = 0; i < newPrices.length; i++){
-      if (newPrices[i].id === row.id){
+    for (let i = 0; i < newPrices.length; i++) {
+      if (newPrices[i].id === row.id) {
         newPrices[i].ticketPrice = row.props.value;
         break;
       }
     }
 
     setPrices(newPrices);
-  }
+  };
 
   const handlePricesSave = async () => {
-    const pricesForUpdate = prices.map(value => {
+    const pricesForUpdate = prices.map((value) => {
       return {
         id: value.id,
         airplaneId: value.airplaneId,
@@ -70,14 +70,14 @@ const PricesCreationStep = ({ airplaneId, handleBackToAdminTable }) => {
 
     await putAirplanePrices(pricesForUpdate);
     handleBackToAdminTable();
-  }
+  };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid 
-        rows={prices} 
-        columns={columns} 
-        pageSize={5} 
+      <DataGrid
+        rows={prices}
+        columns={columns}
+        pageSize={5}
         disableColumnMenu
         onEditCellChange={handleCellEdit}
       />

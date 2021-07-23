@@ -9,7 +9,12 @@ import Filter from 'components/Filter';
 import AirportCreateDialog from 'components/shared/Dialogs/AirportCreateDialog';
 import AirportEditDialog from 'components/shared/Dialogs/AirportEditDialog';
 import { elementsOnAdminTable } from 'constants';
-import { getFilteredAirports, getFilteredAirpotCount } from 'api/apiRequests';
+import { 
+  getFilteredAirports, 
+  getFilteredAirpotCount,
+  getCities,
+  getCountries,
+} from 'api/apiRequests';
 
 const useStyles = makeStyles((theme) => ({
   airportsTable: {
@@ -23,10 +28,12 @@ const useStyles = makeStyles((theme) => ({
 
 const CompanyAirportsTable = ({ company }) => {
   const classes = useStyles();
+
+  const [cities, setCities] = useState([]);
+  const [countries, setCountries] = useState([]);
   
   const [offset, setOffset] = useState(0);
   const [page, setPage] = useState(0);
-  
   const [airportFilter, setAirportFilter] = useState('');
   const [cityFilter, setCityFilter] = useState('');
   const [countryFilter, setCountryFilter] = useState('');
@@ -98,6 +105,10 @@ const CompanyAirportsTable = ({ company }) => {
           setAirportsCount(airportsCountResponse);
         }
       }
+      const [citiesResponse, citiesError] = await getCities();
+      if (citiesResponse) setCities(citiesResponse);
+      const [countriesResponse, countriesError] = await getCountries();
+      if (countriesResponse) setCountries(countriesResponse);
     };
 
     fetchData();
@@ -126,7 +137,7 @@ const CompanyAirportsTable = ({ company }) => {
       <div className={classes.airportsFilter}>
         <Filter
           fields={['Airport name', 'City', 'Country']}
-          disableOptions={true}
+          fieldsOptions={[[], cities, countries]}
           onFilterConfirmed={onFilterConfirmed}
         />
       </div>

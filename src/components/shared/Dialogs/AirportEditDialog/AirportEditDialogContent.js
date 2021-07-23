@@ -28,8 +28,10 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
       const [citiesResponse, citiesError] = await getCities();
       if (citiesResponse) setCities(citiesResponse);
 
-      const [companiesResponse, companiesError] = await getCompanies();
-      if (companiesResponse) setCompanies(companiesResponse);
+      if (!company) {
+        const [companiesResponse, companiesError] = await getCompanies();
+        if (companiesResponse) setCompanies(companiesResponse);
+      };
     };
 
     fetchData();
@@ -48,30 +50,35 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
     setIsRequestError(false);
     setRequestErrorMessage('');
 
-    if (!airportName) {
-      setIsAirportNameValid(false);
-      isValid = false;
-    } else setIsAirportNameValid(true)
-    if (!airportCity) {
-      setIsAirportCityValid(false);
-      isValid = false;
-    } else setIsAirportCityValid(true)
-
-    if (isValid) {
-      const [updatedAirport, airportError] = await putAirport({
-        id: airport.id,
-        name: airportName,
-        cityId: airportCity.id,
-        companyId: company?.id || airportCompany.id,
-      });
-
-      if (airportError) {
-        setIsRequestError(true);
-        setRequestErrorMessage(airportError.response?.data?.message);
-      } else {
-        closeDialog();
-      }
-    }
+    if (airportName !== airport?.name
+      || airportCity?.id !== airport?.city?.id
+      || airportCompany?.id !== airport?.company?.id) 
+    {
+      if (!airportName) {
+        setIsAirportNameValid(false);
+        isValid = false;
+      } else setIsAirportNameValid(true);
+      if (!airportCity) {
+        setIsAirportCityValid(false);
+        isValid = false;
+      } else setIsAirportCityValid(true);
+  
+      if (isValid) {
+        const [updatedAirport, airportError] = await putAirport({
+          id: airport.id,
+          name: airportName,
+          cityId: airportCity.id,
+          companyId: company?.id || airportCompany.id,
+        });
+  
+        if (airportError) {
+          setIsRequestError(true);
+          setRequestErrorMessage(airportError.response?.data?.message);
+        } else {
+          closeDialog();
+        };
+      };
+    } else closeDialog();
   };
 
   return (

@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme) => ({
   deleteButton: {
     color: red[500],
   },
+  tableHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2)
+  },
 }));
 
 const AdminAirplanesPage = () => {
@@ -70,16 +75,6 @@ const AdminAirplanesPage = () => {
       renderCell: (row) => {
         return (
           <>
-            <Tooltip title="Edit">
-              <IconButton color="primary" onClick={() => openEditInfoDialog()}>
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="More info">
-              <IconButton color="primary" onClick={() => openMoreInfoDialog()}>
-                <InfoOutlinedIcon />
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Delete">
               <IconButton
                 className={classes.deleteButton}
@@ -197,7 +192,7 @@ const AdminAirplanesPage = () => {
         isOpened={isMoreInfoDialogOpened}
         closeDialog={closeMoreInfoDialog}
       />
-      <div>
+      <div className={classes.tableHeader}> 
         <Typography variant="h3">Airplanes</Typography>
         <Filter
           fields={['Airplane type', 'Company name', 'Airplane model']}

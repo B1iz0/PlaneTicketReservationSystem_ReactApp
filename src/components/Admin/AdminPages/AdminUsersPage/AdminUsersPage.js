@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
-import CustomDialog from 'components/shared/CustomDialog';
+import UserCreateDialog from 'components/shared/Dialogs/UserCreateDialog/UserCreateDialog';
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import { getFilteredUsers, getFilteredUsersCount } from 'api/apiRequests';
@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: theme.spacing(2)
   },
 }));
 
@@ -63,7 +64,7 @@ const AdminUsersPage = () => {
     };
 
     fetchData();
-  }, [token, offset, emailFilter, firstNameFilter, lastNameFilter]);
+  }, [token, offset, emailFilter, firstNameFilter, lastNameFilter, isCreateDialogOpened]);
 
   const onFilterConfirmed = (values) => {
     setEmailFilter(values[0]);
@@ -88,8 +89,7 @@ const AdminUsersPage = () => {
 
   return (
     <>
-      <CustomDialog
-        title="Add user"
+      <UserCreateDialog 
         isOpened={isCreateDialogOpened}
         closeDialog={closeCreateDialog}
       />

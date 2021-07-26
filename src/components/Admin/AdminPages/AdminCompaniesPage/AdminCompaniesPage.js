@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: theme.spacing(2)
   },
   deleteButton: {
     color: red[500],

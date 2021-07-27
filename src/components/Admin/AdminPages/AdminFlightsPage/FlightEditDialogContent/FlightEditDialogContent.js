@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import {
   Button,
   FormControl,
   Grid,
+  OutlinedInput,
   Input,
   InputLabel,
   MenuItem,
   Select,
   TextField,
+  ThemeProvider,
 } from '@material-ui/core';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 import { getFreeAirplanes, getAllAirports, putFlight } from 'api/apiRequests';
 
+const useStyles = makeStyles((theme) => ({
+  dialogContent: {
+    padding: theme.spacing(3)
+  },
+}));
+
 const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
+  const classes = useStyles();
   const token = useSelector((state) => state.token);
 
   const [freeAirplanes, setFreeAirplanes] = useState([]);
@@ -114,24 +125,26 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
   };
 
   return (
-    <DialogContent>
-      <form>
-        <Grid container direction="column" spacing={1}>
-          <Grid item>
+    <>
+      <DialogContent className={classes.dialogContent}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <TextField
+              fullWidth
               required
+              variant='outlined'
               label="Flight number"
               value={flightNumber}
               onChange={(event) => setFlightNumber(event.target.value)}
             />
           </Grid>
-          <Grid item>
-            <FormControl>
+          <Grid item xs={12}>
+            <FormControl fullWidth variant='outlined'>
               <InputLabel>Airplane</InputLabel>
               <Select
                 value={airplane}
                 onChange={onAirplaneChange}
-                input={<Input />}
+                input={<OutlinedInput label='Airplane'/>}
               >
                 <MenuItem value={flightForEditing?.airplaneModel}>
                   {flightForEditing?.airplaneModel}
@@ -148,13 +161,13 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item>
-            <FormControl>
+          <Grid item xs={12}>
+            <FormControl fullWidth variant='outlined'>
               <InputLabel>Departure airport</InputLabel>
               <Select
                 value={departureAirport}
                 onChange={onDepartureAirportChange}
-                input={<Input />}
+                input={<OutlinedInput label='Departure airport'/>}
               >
                 <MenuItem value={flightForEditing?.fromAirportName}>
                   {flightForEditing?.fromAirportName}
@@ -171,13 +184,13 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item>
-            <FormControl>
+          <Grid item xs={12}>
+            <FormControl fullWidth variant='outlined'>
               <InputLabel>Arrival airport</InputLabel>
               <Select
                 value={arrivalAirport}
                 onChange={onArrivalAirportChange}
-                input={<Input />}
+                input={<OutlinedInput label='Arrival airport'/>}
               >
                 <MenuItem value={flightForEditing?.toAirportName}>
                   {flightForEditing?.toAirportName}
@@ -194,18 +207,24 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item>
+          <Grid item xs={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DateTimePicker
+              <DateTimePicker 
+                label='Departure time'
+                inputVariant='outlined'
+                fullWidth
                 variant="inline"
                 value={departureDate}
                 onChange={(value) => setDepartureDate(value)}
               />
             </MuiPickersUtilsProvider>
           </Grid>
-          <Grid item>
+          <Grid item xs={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <DateTimePicker
+                label='Arrival time'
+                inputVariant='outlined'
+                fullWidth
                 variant="inline"
                 value={arrivalDate}
                 onChange={(value) => setArrivalDate(value)}
@@ -213,6 +232,8 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
             </MuiPickersUtilsProvider>
           </Grid>
         </Grid>
+      </DialogContent>
+      <DialogActions>
         <Button variant="outlined" onClick={onResetClick}>
           Reset
         </Button>
@@ -224,8 +245,8 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
         >
           Save
         </Button>
-      </form>
-    </DialogContent>
+      </DialogActions>
+    </>
   );
 };
 

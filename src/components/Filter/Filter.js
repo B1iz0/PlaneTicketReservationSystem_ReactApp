@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -18,13 +18,18 @@ const Filter = ({
   fields,
   fieldsOptions,
   onFilterConfirmed,
+  onSearchClick,
   disableOptions = false,
 }) => {
   const classes = useStyles();
   const [selectedValues, setSelectedValues] = useState(fields.map(() => ''));
 
-  const searchClickHandle = () => {
+  useEffect(() => {
     onFilterConfirmed(selectedValues);
+  }, [selectedValues]);
+
+  const searchClickHandle = () => {
+    onSearchClick();
   };
 
   return (
@@ -50,7 +55,7 @@ const Filter = ({
                   freeSolo
                   id={`filter${key}`}
                   options={fieldsOptions[key]}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) => option.name || option}
                   className={classes.field}
                   inputValue={selectedValues[key]}
                   onInputChange={(event, newInputValue) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import EditIcon from '@material-ui/icons/Edit';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { IconButton } from '@material-ui/core';
@@ -66,30 +67,29 @@ const AdminFlightsPage = () => {
     { field: 'departureTime', headerName: 'Departure time', width: 200 },
     { field: 'arrivalTime', headerName: 'Arrival time', width: 200 },
     {
-      field: 'edit',
-      headerName: 'Edit',
+      field: 'actions',
+      headerName: 'Actions',
+      width: 200,
       renderCell: (row) => {
         return (
-          <IconButton
-            onClick={() => openEditInfoDialog(row.row)}
-            color="primary"
-          >
-            <EditIcon />
-          </IconButton>
-        );
-      },
-    },
-    {
-      field: 'info',
-      headerName: 'More info',
-      renderCell: (row) => {
-        return (
-          <IconButton
-            color="primary"
-            onClick={() => openMoreInfoDialog(row.id)}
-          >
-            <InfoOutlinedIcon className={classes.moreInfoIcon} />
-          </IconButton>
+          <>
+          <Tooltip title='Edit'>
+            <IconButton
+              onClick={() => openEditInfoDialog(row.row)}
+              color="primary"
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='More info'>
+            <IconButton
+              color="primary"
+              onClick={() => openMoreInfoDialog(row.id)}
+            >
+              <InfoOutlinedIcon className={classes.moreInfoIcon} />
+            </IconButton>
+          </Tooltip>
+          </>
         );
       },
     },
@@ -181,7 +181,7 @@ const AdminFlightsPage = () => {
         closeDialog={() => setIsMoreInfoDialogOpened(false)}
       />
       <CustomDialog
-        title="Edit"
+        title="Edit flight"
         isOpened={isEditDialogOpened}
         DialogContent={
           <FlightEditDialogContent

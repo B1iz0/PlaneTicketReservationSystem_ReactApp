@@ -41,7 +41,7 @@ const AdminUsersPage = () => {
     { field: 'email', headerName: 'Email', width: 150 },
     { field: 'firstName', headerName: 'First name', width: 150 },
     { field: 'lastName', headerName: 'Last name', width: 150 },
-    { field: 'roleId', headerName: 'Role ID', width: 150 },
+    { field: 'roleName', headerName: 'Role', width: 150 },
     { field: 'phoneNumber', headerName: 'Phone number', width: 200 },
   ];
 

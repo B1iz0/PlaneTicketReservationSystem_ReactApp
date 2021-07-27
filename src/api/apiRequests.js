@@ -259,6 +259,21 @@ const getFlight = async (flightId) => {
     .catch((error) => console.log(error));
 };
 
+const getFLightHints = async (filter) => {
+  return await API.get(
+    `${flightsEndPoint}/hints`,
+    {
+      params: {
+        departureCity: filter.departureCity,
+        arrivalCity: filter.arrivalCity,
+        departureTime: null, 
+        arrivalTime: null,
+      }
+    },
+  )
+    .then(response => response.data);
+};
+
 const postFlight = async (
   airplaneId,
   flightNumber,
@@ -569,6 +584,7 @@ export {
   getFilteredFlights,
   getFlightsCount,
   getFlight,
+  getFLightHints,
   postFlight,
   putFlight,
   getAllAirports,

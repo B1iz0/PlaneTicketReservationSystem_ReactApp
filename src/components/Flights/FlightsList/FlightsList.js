@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Filter from 'components/Filter';
 import { getFilteredFlights, getFlightsCount, getFLightHints } from 'api/apiRequests';
+import { getFlightSearchHints } from 'api/searchHintsRequests';
 import { flightsOnPage } from 'constants';
 
 import FlightsItem from '../FlightsItem';
@@ -32,58 +33,7 @@ const FlightsList = () => {
   const [departureCityHints, setDepartureCityHints] = useState([]);
   const [arrivalCityHints, setArrivalCityHints] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const flights = await getFilteredFlights(
-        offset,
-        flightsOnPage,
-        departureCity,
-        arrivalCity
-      );
-      const flightsCount = await getFlightsCount(departureCity, arrivalCity);
-
-      setFlights(flights);
-      setPagesAmount(Math.ceil(flightsCount / flightsOnPage));
-    };
-
-    fetchData();
-  }, [page, offset]);
-
-  useEffect(() => {
-    const fetchHints = async () => {
-      const hints = await getFLightHints({
-        departureCity: departureCity,
-        arrivalCity: arrivalCity,
-      });
-      const departureCities = hints.map(value => value.departureCity);
-      const arrivalCities = hints.map(value => value.arrivalCity);
-      setDepartureCityHints([...new Set(departureCities)]);
-      setArrivalCityHints([...new Set(arrivalCities)]);
-    };
-
-    if (departureCity || arrivalCity) {
-      timer = setTimeout(() => fetchHints(), 500);
-      // fetchHints();
-    };
-  }, [departureCity, arrivalCity]);
-
-  const handlePageChange = (event, value) => {
-    console.log(value);
-    setOffset((value - 1) * flightsOnPage);
-    setPage(value);
-  };
-
-  const onFilterChange = (values) => {
-    clearTimeout(timer);
-    setDepartureCity(values[0]);
-    setArrivalCity(values[1]);
-    if (!values[0] && !values[1]){
-      setDepartureCityHints([]);
-      setArrivalCityHints([]);
-    };
-  };
-
-  const onSearchClick = async () => {
+  const fetchFlights = async () => {
     const flights = await getFilteredFlights(
       offset,
       flightsOnPage,
@@ -94,6 +44,44 @@ const FlightsList = () => {
 
     setFlights(flights);
     setPagesAmount(Math.ceil(flightsCount / flightsOnPage));
+  };
+
+  const fetchHints = async () => {
+    const hints = await getFlightSearchHints({
+      departureCity: departureCity,
+      arrivalCity: arrivalCity,
+    });
+    const departureCities = hints.map(value => value.departureCity);
+    const arrivalCities = hints.map(value => value.arrivalCity);
+    setDepartureCityHints([...new Set(departureCities)]);
+    setArrivalCityHints([...new Set(arrivalCities)]);
+  };
+
+  useEffect(() => {
+    fetchFlights();
+  }, [page, offset, departureCity, arrivalCity]);
+
+  const handlePageChange = (event, value) => {
+    setOffset((value - 1) * flightsOnPage);
+    setPage(value);
+  };
+
+  const onFilterChange = (values) => {
+    clearTimeout(timer);
+    if (!values[0] && !values[1]){
+      setDepartureCityHints([]);
+      setArrivalCityHints([]);
+    };
+    if (values[0] || values[1]) {
+      timer = setTimeout(() => fetchHints(), 500);
+    };
+  };
+
+  const onSearchClick = (values) => {
+    setDepartureCity(values[0]);
+    setArrivalCity(values[1]);
+    setPage(0);
+    setOffset(0);
   }
 
   return (

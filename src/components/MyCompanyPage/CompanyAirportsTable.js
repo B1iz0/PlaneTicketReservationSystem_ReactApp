@@ -12,9 +12,8 @@ import { elementsOnAdminTable } from 'constants';
 import { 
   getFilteredAirports, 
   getFilteredAirpotCount,
-  getCities,
-  getCountries,
 } from 'api/apiRequests';
+import { getAirportSearchHints } from 'api/searchHintsRequests';
 
 const useStyles = makeStyles((theme) => ({
   airportsTable: {
@@ -28,9 +27,11 @@ const useStyles = makeStyles((theme) => ({
 
 const CompanyAirportsTable = ({ company }) => {
   const classes = useStyles();
+  let timer = null;
 
-  const [cities, setCities] = useState([]);
-  const [countries, setCountries] = useState([]);
+  const [airportNameHints, setAirportNameHints] = useState([]);
+  const [cityNameHints, setCityNameHints] = useState([]);
+  const [countryNameHints, setCountryNameHints] = useState([]);
   
   const [offset, setOffset] = useState(0);
   const [page, setPage] = useState(0);
@@ -80,46 +81,69 @@ const CompanyAirportsTable = ({ company }) => {
     company: value.company,
   }));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (company?.name) {
-        const filters = {
-          company: company.name,
-          airport: airportFilter,
-          city: cityFilter,
-          country: countryFilter,
-        };
-        const [airportsResponse, airportsError] = await getFilteredAirports(
-          offset,
-          filters
-        );
-        if (airportsResponse) setAirports(airportsResponse);
-        if (airportsError) {
-          // Handle error.
-        }
-        const [airportsCountResponse, airportsCountError] =
-          await getFilteredAirpotCount(filters);
-        if (airportsCountError) {
-          // Handle error.
-        } else {
-          setAirportsCount(airportsCountResponse);
-        }
+  const fetchAirports = async () => {
+    if (company?.name) {
+      const filters = {
+        company: company.name,
+        airport: airportFilter,
+        city: cityFilter,
+        country: countryFilter,
+      };
+      const [airportsResponse, airportsError] = await getFilteredAirports(
+        offset,
+        filters
+      );
+      if (airportsResponse) setAirports(airportsResponse);
+      if (airportsError) {
+        // Handle error.
       }
-      const [citiesResponse, citiesError] = await getCities();
-      if (citiesResponse) setCities(citiesResponse);
-      const [countriesResponse, countriesError] = await getCountries();
-      if (countriesResponse) setCountries(countriesResponse);
+      const [airportsCountResponse, airportsCountError] =
+        await getFilteredAirpotCount(filters);
+      if (airportsCountError) {
+        // Handle error.
+      } else {
+        setAirportsCount(airportsCountResponse);
+      }
     };
+  };
 
-    fetchData();
-  }, [company, offset, airportFilter, cityFilter, countryFilter, isAirportCreateDialogOpened, isAirportEditDialogOpened]);
+  const fetchHints = async () => {
+    const hints = await getAirportSearchHints({
+      companyName: company?.name,
+      airportName: airportFilter,
+      cityName: cityFilter,
+      countryName: countryFilter,
+    });
+    const airportNames = hints.map(value => value.airportName);
+    const cityNames = hints.map(value => value.cityName);
+    const countryNames = hints.map(value => value.countryName);
+    setAirportNameHints([...new Set(airportNames)]);
+    setCityNameHints([...new Set(cityNames)]);
+    setCountryNameHints([...new Set(countryNames)]);
+  };
+
+  useEffect(() => {
+    fetchAirports();
+  }, [company, page, offset, airportFilter, cityFilter, countryFilter, isAirportCreateDialogOpened, isAirportEditDialogOpened]);
 
   const onFilterConfirmed = (values) => {
+    clearTimeout(timer);
+    if (!values[0] && !values[1] && !values[2]) {
+      setAirportNameHints([]);
+      setCityNameHints([]);
+      setCountryNameHints([]);
+    };
+    if (values[0] || values[1] || values[2]) {
+      timer = setTimeout(() => fetchHints(), 500);
+    };
+  };
+
+  const onSearchClick = (values) => {
     setAirportFilter(values[0]);
     setCityFilter(values[1]);
     setCountryFilter(values[2]);
-    setOffset(0);
     setPage(0);
+    setOffset(0);
   };
 
   const onPageChange = (page) => {
@@ -137,8 +161,9 @@ const CompanyAirportsTable = ({ company }) => {
       <div className={classes.airportsFilter}>
         <Filter
           fields={['Airport name', 'City', 'Country']}
-          fieldsOptions={[[], cities, countries]}
+          fieldsOptions={[airportNameHints, cityNameHints, countryNameHints]}
           onFilterConfirmed={onFilterConfirmed}
+          onSearchClick={onSearchClick}
         />
       </div>
       <AirportCreateDialog 

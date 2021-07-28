@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
@@ -13,6 +11,7 @@ import {
   deleteAirplane,
   getAirplanesCount,
 } from 'api/apiRequests';
+import { getAirplaneSearchHints } from 'api/searchHintsRequests';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
 import DeleteConfirmDialog from 'components/shared/DeleteConfirmDialog';
@@ -32,10 +31,15 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminAirplanesPage = () => {
   const classes = useStyles();
+  let timer = null;
   let history = useHistory();
   const [airplanes, setAirplanes] = useState([]);
   const [airplanesCount, setAirplanesCount] = useState(0);
   const [airplaneIdToDelete, setAirplaneIdToDelete] = useState();
+
+  const [airplaneTypeHints, setAirplaneTypeHints] = useState([]);
+  const [companyNameHints, setCompanyNameHints] = useState([]);
+  const [modelHints, setModelHints] = useState([]);
 
   const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
@@ -100,40 +104,66 @@ const AdminAirplanesPage = () => {
     };
   });
 
+  const fetchAirplanes = async () => {
+    const airplanes = await getAirplanes(
+      offset,
+      airplaneTypeFilter,
+      companyFilter,
+      modelFilter
+    );
+    const airplanesCount = await getAirplanesCount(
+      airplaneTypeFilter,
+      companyFilter,
+      modelFilter
+    );
+
+    setAirplanes(airplanes);
+    setAirplanesCount(airplanesCount);
+  };
+
+  const fetchHints = async () => {
+    const hints = await getAirplaneSearchHints({
+      airplaneType: airplaneTypeFilter,
+      companyName: companyFilter,
+      model: modelFilter,
+    });
+    const airplaneTypes = hints.map(value => value.airplaneType);
+    const companyNames = hints.map(value => value.companyName);
+    const models = hints.map(value => value.model);
+    setAirplaneTypeHints([...new Set(airplaneTypes)]);
+    setCompanyNameHints([...new Set(companyNames)]);
+    setModelHints([...new Set(models)]);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const airplanes = await getAirplanes(
-        offset,
-        airplaneTypeFilter,
-        companyFilter,
-        modelFilter
-      );
-      const airplanesCount = await getAirplanesCount(
-        airplaneTypeFilter,
-        companyFilter,
-        modelFilter
-      );
-
-      setAirplanes(airplanes);
-      setAirplanesCount(airplanesCount);
-    };
-
-    fetchData();
+    fetchAirplanes();
   }, [
+    offset,
     airplaneTypeFilter,
     companyFilter,
     modelFilter,
-    offset,
     isDeleteConfirmDialogOpened,
     isEditDialogOpened,
   ]);
 
-  const onFilterConfirmed = (values) => {
+  const onFilterChange = (values) => {
+    clearTimeout(timer);
+    if (!values[0] && !values[1] && !values[2]) {
+      setAirplaneTypeHints([]);
+      setCompanyNameHints([]);
+      setModelHints([]);
+    };
+    if (values[0] || values[1] || values[2]) {
+      timer = setTimeout(() => fetchHints(), 500);
+    };
+  };
+
+  const onSearchClick = (values) => {
     setAirplaneTypeFilter(values[0]);
     setCompanyFilter(values[1]);
     setModelFilter(values[2]);
-    setOffset(0);
     setPage(0);
+    setOffset(0);
   };
 
   const onPageChange = (page) => {
@@ -196,8 +226,9 @@ const AdminAirplanesPage = () => {
         <Typography variant="h3">Airplanes</Typography>
         <Filter
           fields={['Airplane type', 'Company name', 'Airplane model']}
-          disableOptions={true}
-          onFilterConfirmed={onFilterConfirmed}
+          fieldsOptions={[airplaneTypeHints, companyNameHints, modelHints]}
+          onFilterConfirmed={onFilterChange}
+          onSearchClick={onSearchClick}
         />
       </div>
       <Table  

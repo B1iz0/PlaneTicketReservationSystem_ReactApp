@@ -105,7 +105,7 @@ const getAirplanes = async (
       offset: offset,
       limit: elementsOnAdminTable,
       airplaneType: airplaneTypeFilter,
-      company: companyFilter,
+      companyName: companyFilter,
       model: modelFilter,
     },
   })
@@ -259,21 +259,6 @@ const getFlight = async (flightId) => {
     .catch((error) => console.log(error));
 };
 
-const getFLightHints = async (filter) => {
-  return await API.get(
-    `${flightsEndPoint}/hints`,
-    {
-      params: {
-        departureCity: filter.departureCity,
-        arrivalCity: filter.arrivalCity,
-        departureTime: null, 
-        arrivalTime: null,
-      }
-    },
-  )
-    .then(response => response.data);
-};
-
 const postFlight = async (
   airplaneId,
   flightNumber,
@@ -337,10 +322,10 @@ const getAllAirports = async () => {
 const getFilteredAirports = async (offset, filters) => {
   return await API.get(`${airportsEndPoint}`, {
     params: {
-      company: filters.company,
+      companyName: filters.company,
       airportName: filters.airport,
-      city: filters.city,
-      country: filters.country,
+      cityName: filters.city,
+      countryName: filters.country,
       offset: offset,
       limit: elementsOnAdminTable,
     },
@@ -352,10 +337,10 @@ const getFilteredAirports = async (offset, filters) => {
 const getFilteredAirpotCount = async (filters) => {
   return await API.get(`${airportsCountEndPoint}`, {
     params: {
-      company: filters.company,
+      companyName: filters.company,
       airportName: filters.airport,
-      city: filters.city,
-      country: filters.country,
+      cityName: filters.city,
+      countryName: filters.country,
     },
   })
     .then((response) => [response.data, null])
@@ -584,7 +569,6 @@ export {
   getFilteredFlights,
   getFlightsCount,
   getFlight,
-  getFLightHints,
   postFlight,
   putFlight,
   getAllAirports,

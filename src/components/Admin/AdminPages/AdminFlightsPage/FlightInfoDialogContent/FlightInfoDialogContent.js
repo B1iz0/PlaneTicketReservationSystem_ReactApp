@@ -6,6 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import FlightIcon from '@material-ui/icons/Flight';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { getFlight } from 'api/apiRequests';
 import PriceTable from 'components/shared/PriceTable';
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   airplaneIcon: {
     alignSelf: 'center',
     transform: 'rotate(90deg)',
+  },
+  loading: {
+    margin: theme.spacing(5),
   },
 }));
 
@@ -43,63 +47,67 @@ const FlightInfoDialogContent = ({ flightId }) => {
   return (
     <DialogContent className={classes.infoDialog}>
       <Paper variant='outlined' className={classes.infoPaper}>
-        <Grid container spacing={1}>
-          <Grid item lg={12} className={classes.flightTitle}>
-            <Typography component="h1" variant="h3" align="center">
-              Flight: {flight?.flightNumber}
-            </Typography>
-          </Grid>
-          <Grid item lg={12}>
-            <Typography component="h1" variant="h5" align="center">
-              Airplane ({flight?.airplane.model})
-            </Typography>
-          </Grid>
-          <Grid item lg={12}>
-            <Typography variant="overline" display="block" align="center">
-              Registration number: {flight?.airplane.registrationNumber}
-            </Typography>
-          </Grid>
-          <Grid item lg={12}>
-            <Typography variant="overline" display="block" align="center">
-              Airplane type: {flight?.airplane.airplaneType.typeName}
-            </Typography>
-          </Grid>
-          <Grid item lg={12}>
-            <Typography variant="overline" display="block" align="center">
-              Company: {flight?.airplane.company.name}
-            </Typography>
-          </Grid>
-          <Grid item lg={12}>
-            <PriceTable prices={flight?.airplane.prices} />
-          </Grid>
-          <Grid item container direction="column" lg={5} justify="center">
-            <Grid item>
-              <Typography variant="overline" display="block" align="center">
-                {flight?.from.name} ({flight?.from.city.name})
+        {
+          flight ? 
+          <Grid container spacing={1}>
+            <Grid item lg={12} className={classes.flightTitle}>
+              <Typography component="h1" variant="h3" align="center">
+                Flight: {flight?.flightNumber}
               </Typography>
             </Grid>
-            <Grid item>
-              <Typography variant="overline" display="block" align="center">
-                {flight?.departureTime}
+            <Grid item lg={12}>
+              <Typography component="h1" variant="h5" align="center">
+                Airplane ({flight?.airplane.model})
               </Typography>
             </Grid>
-          </Grid>
-          <Grid item lg={2}>
-            <FlightIcon className={classes.airplaneIcon} />
-          </Grid>
-          <Grid item container direction="column" lg={5} justify="center">
-            <Grid item>
+            <Grid item lg={12}>
               <Typography variant="overline" display="block" align="center">
-                {flight?.to.name} ({flight?.to.city.name})
+                Registration number: {flight?.airplane.registrationNumber}
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid item lg={12}>
               <Typography variant="overline" display="block" align="center">
-                {flight?.arrivalTime}
+                Airplane type: {flight?.airplane.airplaneType.typeName}
               </Typography>
             </Grid>
-          </Grid>
-        </Grid>
+            <Grid item lg={12}>
+              <Typography variant="overline" display="block" align="center">
+                Company: {flight?.airplane.company.name}
+              </Typography>
+            </Grid>
+            <Grid item lg={12}>
+              <PriceTable prices={flight?.airplane.prices} />
+            </Grid>
+            <Grid item container direction="column" lg={5} justify="center">
+              <Grid item>
+                <Typography variant="overline" display="block" align="center">
+                  {flight?.from.name} ({flight?.from.city.name})
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="overline" display="block" align="center">
+                  {flight?.departureTime}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item lg={2}>
+              <FlightIcon className={classes.airplaneIcon} />
+            </Grid>
+            <Grid item container direction="column" lg={5} justify="center">
+              <Grid item>
+                <Typography variant="overline" display="block" align="center">
+                  {flight?.to.name} ({flight?.to.city.name})
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="overline" display="block" align="center">
+                  {flight?.arrivalTime}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid> : 
+          <CircularProgress className={classes.loading}/>
+        }
       </Paper>
     </DialogContent>
   );

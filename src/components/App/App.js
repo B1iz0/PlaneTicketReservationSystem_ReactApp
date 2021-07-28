@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import { Container } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
 import AdminPanel from 'components/Admin/AdminPanel';
@@ -18,8 +19,13 @@ import AirplaneCreationPage from 'components/AirplaneCreationPage';
 import FLightReservationPage from 'components/FlightReservationPage';
 import Notifications from 'components/Notifications';
 import { getRole } from 'services/token-service';
-import AdminAirplanesPage from '../Admin/AdminPages/AdminAirplanesPage/AdminAirplanesPage';
-import { Container } from '@material-ui/core';
+import AdminAirplanesPage from 'components/Admin/AdminPages/AdminAirplanesPage/AdminAirplanesPage';
+import {
+  AdminApp,
+  Admin, 
+  User
+} from 'constants/appRoles';
+import CustomRoute from 'components/CustomRoute';
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -32,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
   },
   toolBar: theme.mixins.toolbar,
 }));
+
+const AdminAppOpportunities = [AdminApp];
+const AdminOpportunities = [AdminApp, Admin];
+const UserOportunities = [AdminApp, Admin, User]
 
 function App() {
   const token = useSelector((state) => state.token);
@@ -49,7 +59,7 @@ function App() {
         <Header />
         <main className={classes.main}>
           <div className={classes.mainPage}>
-            {role === 'AdminApp' ? <AdminPanel /> : <></>}
+            {role === AdminApp ? <AdminPanel /> : <></>}
             <Container>
               <div className={classes.toolBar}></div>
               <Switch>
@@ -59,27 +69,48 @@ function App() {
                 <Route path="/SignUp">
                   <SignUp />
                 </Route>
-                <Route path="/admin/users">
+                <CustomRoute 
+                  path="/admin/users"
+                  requiredRoles={AdminAppOpportunities}
+                >
                   <AdminUsersPage />
-                </Route>
-                <Route path="/admin/companies">
+                </CustomRoute>
+                <CustomRoute 
+                  path="/admin/companies"
+                  requiredRoles={AdminAppOpportunities}
+                >
                   <AdminCompaniesPage />
-                </Route>
-                <Route path="/admin/airplanes/creation">
+                </CustomRoute>
+                <CustomRoute 
+                  path="/admin/airplanes/creation"
+                  requiredRoles={AdminAppOpportunities}
+                >
                   <AirplaneCreationPage />
-                </Route>
-                <Route path="/admin/airplanes">
+                </CustomRoute>
+                <CustomRoute 
+                  path="/admin/airplanes"
+                  requiredRoles={AdminAppOpportunities}
+                >
                   <AdminAirplanesPage />
-                </Route>
-                <Route path="/admin/flights">
+                </CustomRoute>
+                <CustomRoute 
+                  path="/admin/flights"
+                  requiredRoles={AdminAppOpportunities}
+                >
                   <AdminFlightsPage />
-                </Route>
-                <Route path="/account">
+                </CustomRoute>
+                <CustomRoute 
+                  path="/account"
+                  requiredRoles={UserOportunities}
+                >
                   <AccountPage />
-                </Route>
-                <Route path="/myCompany">
+                </CustomRoute>
+                <CustomRoute 
+                  path="/myCompany"
+                  requiredRoles={AdminOpportunities}
+                >
                   <MyCompanyPage />
-                </Route>
+                </CustomRoute>
                 <Route path="/reservation">
                   <FLightReservationPage />
                 </Route>

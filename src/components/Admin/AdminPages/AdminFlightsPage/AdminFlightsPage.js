@@ -16,6 +16,7 @@ import { elementsOnAdminTable } from 'constants';
 import FlightInfoDialogContent from './FlightInfoDialogContent';
 import FlightEditDialogContent from './FlightEditDialogContent';
 import FlightCreateDialogContent from './FlightCreateDialogContent';
+import { getFlightSearchHints } from 'api/searchHintsRequests';
 
 const useStyles = makeStyles((theme) => ({
   flightsGrid: {
@@ -31,7 +32,11 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminFlightsPage = () => {
   const classes = useStyles();
+  let timer = null;
   const token = useSelector((state) => state.token);
+
+  const [departureCityHints, setDepartureCityHints] = useState([]);
+  const [arrivalCityHints, setArrivalCityHints] = useState([]);
 
   const [flights, setFlights] = useState([]);
   const [totalFlightsNumber, setTotalFlightsNumber] = useState(0);
@@ -111,24 +116,35 @@ const AdminFlightsPage = () => {
     };
   });
 
+  const fetchFlights = async () => {
+    const flights = await getFilteredFlights(
+      offset,
+      elementsOnAdminTable,
+      departureCityFilter,
+      arrivalCityFilter
+    );
+    const flightsCount = await getFlightsCount(
+      departureCityFilter,
+      arrivalCityFilter
+    );
+
+    setFlights(flights);
+    setTotalFlightsNumber(flightsCount);
+  };
+
+  const fetchHints = async () => {
+    const hints = await getFlightSearchHints({
+      departureCity: departureCityFilter,
+      arrivalCity: arrivalCityFilter,
+    });
+    const departureCities = hints.map(value => value.departureCity);
+    const arrivalCities = hints.map(value => value.arrivalCity);
+    setDepartureCityHints([...new Set(departureCities)]);
+    setArrivalCityHints([...new Set(arrivalCities)]);
+  };
+  
   useEffect(() => {
-    const fetchData = async () => {
-      const flights = await getFilteredFlights(
-        offset,
-        elementsOnAdminTable,
-        departureCityFilter,
-        arrivalCityFilter
-      );
-      const flightsCount = await getFlightsCount(
-        departureCityFilter,
-        arrivalCityFilter
-      );
-
-      setFlights(flights);
-      setTotalFlightsNumber(flightsCount);
-    };
-
-    fetchData();
+    fetchFlights();
   }, [
     token,
     offset,
@@ -138,11 +154,22 @@ const AdminFlightsPage = () => {
     isCreateDialogOpened,
   ]);
 
-  const onFilterConfirmed = (values) => {
+  const onFilterChange = (values) => {
+    clearTimeout(timer);
+    if (!values[0] && !values[1]) {
+      setDepartureCityHints([]);
+      setArrivalCityHints([]);
+    };
+    if (values[0] || values[1]) {
+      timer = setTimeout(() => fetchHints(), 500);
+    };
+  };
+
+  const onSearchClick = (values) => {
     setDepartureCityFilter(values[0]);
     setArrivalCityFilter(values[1]);
-    setOffset(0);
     setPage(0);
+    setOffset(0);
   };
 
   const onPageChange = (page) => {
@@ -195,8 +222,9 @@ const AdminFlightsPage = () => {
         <Typography variant="h3">Flights</Typography>
         <Filter
           fields={['Departure city', 'Arrival city']}
-          disableOptions={true}
-          onFilterConfirmed={onFilterConfirmed}
+          fieldsOptions={[departureCityHints, arrivalCityHints]}
+          onFilterConfirmed={onFilterChange}
+          onSearchClick={onSearchClick}
         />
       </div>
       <Table

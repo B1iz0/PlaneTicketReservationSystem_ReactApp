@@ -10,6 +10,7 @@ import Table from 'components/shared/Table';
 import Filter from 'components/Filter';
 import { elementsOnAdminTable } from 'constants';
 import { getAirplanes, getAirplanesCount } from 'api/apiRequests';
+import { getAirplaneSearchHints } from 'api/searchHintsRequests';
 
 const useStyles = makeStyles((theme) => ({
   airplanesTable: {
@@ -23,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
 const CompanyAirplanesTable = ({ companyName }) => {
   const classes = useStyles();
   let history = useHistory();
+  let timer = null;
+
+  const [airplaneTypeHints, setAirplaneTypeHints] = useState([]);
+  const [modelHints, setModelHints] = useState([]);
   
   const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
@@ -79,38 +84,61 @@ const CompanyAirplanesTable = ({ companyName }) => {
     baggageCapacity: value.baggageCapacityInKilograms,
   }));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (companyName) {
-        const filters = {
-          company: companyName,
-          airplaneType: airplaneTypeFilter,
-          model: modelFilter,
-        };
-        const airplanesResponse = await getAirplanes(
-          offset,
-          filters.airplaneType,
-          filters.company,
-          filters.model
-        );
-        if (airplanesResponse) setAirplanes(airplanesResponse);
-        const airplanesCount = await getAirplanesCount(
-          filters.airplaneType,
-          filters.company,
-          filters.model
-        );
-        if (airplanesCount) setAirplanesCount(airplanesCount);
-      }
-    };
+  const fetchAirplanes = async () => {
+    if (companyName) {
+      const filters = {
+        company: companyName,
+        airplaneType: airplaneTypeFilter,
+        model: modelFilter,
+      };
+      const airplanesResponse = await getAirplanes(
+        offset,
+        filters.airplaneType,
+        filters.company,
+        filters.model
+      );
+      if (airplanesResponse) setAirplanes(airplanesResponse);
+      const airplanesCount = await getAirplanesCount(
+        filters.airplaneType,
+        filters.company,
+        filters.model
+      );
+      if (airplanesCount) setAirplanesCount(airplanesCount);
+    }
+  };
 
-    fetchData();
-  }, [companyName, offset, modelFilter, airplaneTypeFilter]);
+  const fetchHints = async () => {
+    const hints = await getAirplaneSearchHints({
+      airplaneType: airplaneTypeFilter,
+      companyName: companyName,
+      model: modelFilter,
+    });
+    const airplaneTypes = hints.map(value => value.airplaneType);
+    const models = hints.map(value => value.model);
+    setAirplaneTypeHints([...new Set(airplaneTypes)]);
+    setModelHints([...new Set(models)]);
+  };
+
+  useEffect(() => {
+    fetchAirplanes();
+  }, [companyName, offset, page, airplaneTypeFilter, modelFilter]);
 
   const onFilterConfirmed = (values) => {
+    clearTimeout(timer);
+    if (!values[0] && !values[1]) {
+      setAirplaneTypeHints([]);
+      setModelHints([]);
+    };
+    if (values[0] || values[1]) {
+      timer = setTimeout(() => fetchHints(), 500);
+    };
+  };
+
+  const onSearchClick = (values) => {
     setAirplaneTypeFilter(values[0]);
     setModelFilter(values[1]);
-    setOffset(0);
     setPage(0);
+    setOffset(0);
   };
 
   const onPageChange = (page) => {
@@ -132,8 +160,9 @@ const CompanyAirplanesTable = ({ companyName }) => {
       <div className={classes.airplanesFilter}>
         <Filter
           fields={['Airplane type', 'Model']}
-          disableOptions={true}
+          fieldsOptions={[airplaneTypeHints, modelHints]}
           onFilterConfirmed={onFilterConfirmed}
+          onSearchClick={onSearchClick}
         />
       </div>
       <PlacesPriceDialog 

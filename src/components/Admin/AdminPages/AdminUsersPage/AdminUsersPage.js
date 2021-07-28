@@ -7,6 +7,7 @@ import UserCreateDialog from 'components/shared/Dialogs/UserCreateDialog/UserCre
 import Filter from 'components/Filter';
 import Table from 'components/shared/Table';
 import { getFilteredUsers, getFilteredUsersCount } from 'api/apiRequests';
+import { getUserSearchHints } from 'api/searchHintsRequests';
 import { elementsOnAdminTable } from 'constants';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,11 +23,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AdminUsersPage = () => {
+  let timer = null;
   const classes = useStyles();
   const token = useSelector((state) => state.token);
 
   const [users, setUsers] = useState([]);
   const [totalUsersNumber, setTotalUsersNumber] = useState(0);
+
+  const [emailHints, setEmailHints] = useState([]);
+  const [firstNameHints, setFirstNameHints] = useState([]);
+  const [lastNameHints, setLastNameHints] = useState([]);
 
   const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
@@ -45,34 +51,60 @@ const AdminUsersPage = () => {
     { field: 'phoneNumber', headerName: 'Phone number', width: 200 },
   ];
 
+  const fetchUsers = async () => {
+    const users = await getFilteredUsers(
+      offset,
+      emailFilter,
+      firstNameFilter,
+      lastNameFilter
+    );
+    const usersCount = await getFilteredUsersCount(
+      emailFilter,
+      firstNameFilter,
+      lastNameFilter
+    );
+
+    setUsers(users);
+    setTotalUsersNumber(usersCount);
+  };
+
+  const fetchHints = async () => {
+    const hints = await getUserSearchHints({
+      email: emailFilter,
+      firstName: firstNameFilter,
+      lastName: lastNameFilter,
+    });
+    const emails = hints.map(value => value.email);
+    const firstNames = hints.map(value => value.firstName);
+    const lastNames = hints.map(value => value.lastName);
+    setEmailHints([...new Set(emails)]);
+    setFirstNameHints([...new Set(firstNames)]);
+    setLastNameHints([...new Set(lastNames)]);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const users = await getFilteredUsers(
-        offset,
-        emailFilter,
-        firstNameFilter,
-        lastNameFilter
-      );
-      const usersCount = await getFilteredUsersCount(
-        emailFilter,
-        firstNameFilter,
-        lastNameFilter
-      );
-
-      setUsers(users);
-      setTotalUsersNumber(usersCount);
-    };
-
-    fetchData();
+    fetchUsers();
   }, [token, offset, emailFilter, firstNameFilter, lastNameFilter, isCreateDialogOpened]);
 
-  const onFilterConfirmed = (values) => {
+  const onFilterChange = (values) => {
+    clearTimeout(timer);
+    if (!values[0] && !values[1] && !values[2]) {
+      setEmailHints([]);
+      setFirstNameHints([]);
+      setLastNameHints([]);
+    };
+    if (values[0] || values[1] || values[2]) {
+      timer = setTimeout(() => fetchHints(), 500);
+    };
+  };
+
+  const onSearchClick = (values) => {
     setEmailFilter(values[0]);
     setFirstNameFilter(values[1]);
     setLastNameFilter(values[2]);
-    setOffset(0);
     setPage(0);
-  };
+    setOffset(0);
+  }
 
   const onPageChange = (page) => {
     setPage(page);
@@ -97,8 +129,9 @@ const AdminUsersPage = () => {
         <Typography variant="h3">Users</Typography>
         <Filter
           fields={['Email', 'First name', 'Last name']}
-          disableOptions={true}
-          onFilterConfirmed={onFilterConfirmed}
+          fieldsOptions={[emailHints, firstNameHints, lastNameHints]}
+          onFilterConfirmed={onFilterChange}
+          onSearchClick={onSearchClick}
         />
       </div>
       <Table

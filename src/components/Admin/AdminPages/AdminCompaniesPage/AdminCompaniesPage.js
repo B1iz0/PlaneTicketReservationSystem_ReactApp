@@ -18,11 +18,13 @@ import {
   getCompaniesCount,
   deleteCompany,
 } from 'api/apiRequests';
+import { getCompanySearchHints } from 'api/searchHintsRequests';
 import { elementsOnAdminTable } from 'constants';
 
 import CompanyEditDialogContent from './CompanyEditDialogContent';
 import CompanyCreateDialogContent from './CompanyCreateDialogContent';
 import CompanyManagersDialogContent from './CompanyManagersDialogContent';
+import { filter } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   companiesGrid: {
@@ -42,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
 const AdminCompaniesPage = () => {
   const classes = useStyles();
   const token = useSelector((state) => state.token);
+  let timer = null;
+
+  const [companyHints, setCompanyHints] = useState([]);
+  const [countryHints, setCountryHints] = useState([]);
 
   const [companies, setCompanies] = useState([]);
   const [totalCompaniesNumber, setTotalCompaniesNumber] = useState(0);
@@ -110,38 +116,60 @@ const AdminCompaniesPage = () => {
     };
   });
 
+  const fetchCompanies = async () => {
+    const companies = await getFilteredCompanies(
+      offset,
+      companyNameFilter,
+      countryNameFilter
+    );
+    const companiesCount = await getCompaniesCount(
+      companyNameFilter,
+      countryNameFilter
+    );
+
+    setCompanies(companies);
+    setTotalCompaniesNumber(companiesCount);
+  }
+
+  const fetchHints = async () => {
+    const hints = await getCompanySearchHints({
+      companyName: companyNameFilter,
+      countryName: countryNameFilter,
+    });
+    const companies = hints.map(value => value.companyName);
+    const countries = hints.map(value => value.countryName);
+    setCompanyHints([...new Set(companies)]);
+    setCountryHints([...new Set(countries)]);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const companies = await getFilteredCompanies(
-        offset,
-        companyNameFilter,
-        countryNameFilter
-      );
-      const companiesCount = await getCompaniesCount(
-        companyNameFilter,
-        countryNameFilter
-      );
-
-      setCompanies(companies);
-      setTotalCompaniesNumber(companiesCount);
-    };
-
-    fetchData();
+    fetchCompanies();
   }, [
     token,
     offset,
-    companyNameFilter,
+    companyNameFilter, 
     countryNameFilter,
     isEditDialogOpened,
     isCreateDialogOpened,
     isDeleteConfirmDialogOpened,
   ]);
 
-  const onFilterConfirmed = (values) => {
+  const onFilterChange = (values) => {
+    clearTimeout(timer);
+    if (!values[0] && !values[1]) {
+      setCompanyHints([]);
+      setCountryHints([]);
+    };
+    if (values[0] || values[1]) {
+      timer = setTimeout(() => fetchHints(), 500);
+    };
+  };
+
+  const onSearchClick = (values) => {
     setCompanyNameFilter(values[0]);
     setCountryNameFilter(values[1]);
-    setOffset(0);
     setPage(0);
+    setOffset(0);
   };
 
   const onPageChange = (page) => {
@@ -219,8 +247,9 @@ const AdminCompaniesPage = () => {
         <Typography variant="h3">Companies</Typography>
         <Filter
           fields={['Company name', 'Country']}
-          disableOptions={true}
-          onFilterConfirmed={onFilterConfirmed}
+          fieldsOptions={[companyHints, countryHints]}
+          onFilterConfirmed={onFilterChange}
+          onSearchClick={onSearchClick}
         />
       </div>
       <Table

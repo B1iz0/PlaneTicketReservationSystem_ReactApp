@@ -9,7 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 
-import { getCountries, postCompany } from 'api/apiRequests';
+import { getCountries } from 'api/locationRequests';
+import { postCompany } from 'api/companyRequests';
 import { setIsCompanyCreationActive } from 'reduxStore/notificationsSlice';
 
 const useStyles = makeStyles((theme) => ({

@@ -15,7 +15,9 @@ import { makeStyles } from '@material-ui/styles';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import { getFreeAirplanes, getAllAirports, postFlight } from 'api/apiRequests';
+import { getAllAirports } from 'api/airportRequests';
+import { postFlight } from 'api/flightRequests';
+import { getFreeAirplanes } from 'api/airplaneRequests';
 
 const useStyles = makeStyles((theme) => ({
   formField: {

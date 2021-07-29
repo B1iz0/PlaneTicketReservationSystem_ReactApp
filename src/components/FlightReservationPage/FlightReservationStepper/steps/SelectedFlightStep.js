@@ -2,7 +2,7 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 
-import FlightsItemInfo from 'components/Flights/FlightsItemInfo';
+import FlightsItemInfo from 'components/FlightsPage/FlightsItemInfo';
 
 const useStyles = makeStyles((theme) => ({
   selectedFlightPaper: {

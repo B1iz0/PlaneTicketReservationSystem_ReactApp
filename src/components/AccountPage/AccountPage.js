@@ -6,7 +6,7 @@ import { Grid } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 
 import { elementsOnAdminTable } from 'constants';
-import { getUserInfo } from 'api/apiRequests';
+import { getUserInfo } from 'api/userRequests';
 
 const useStyles = makeStyles((theme) => ({
   largeAvatar: {

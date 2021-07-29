@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 
 import { setIsBookingCreationActive } from 'reduxStore/notificationsSlice';
 
-import Alert from './Alert';
+import Alert from 'shared/Alert';
 
 const BookingCreationNotification = () => {
   const notifications = useSelector((state) => state.notifications);

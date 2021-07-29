@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 
 import AirplaneTypesAutocomplete from './AirplaneTypesAutocomplete';
-import { postPlacesList } from 'api/apiRequests';
+import { postPlacesList } from 'api/placeRequests';
 
 const useStyles = makeStyles((theme) => ({
   button: {

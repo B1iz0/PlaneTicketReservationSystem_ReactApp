@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FlightsList from '../FlightsList';
+import FlightsList from './FlightsList';
 
 const FlightsPage = () => {
   return (

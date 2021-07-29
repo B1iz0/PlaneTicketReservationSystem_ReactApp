@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
 import UserCreateDialog from 'components/shared/Dialogs/UserCreateDialog/UserCreateDialog';
-import Filter from 'components/Filter';
+import Filter from 'shared/Filter';
 import Table from 'components/shared/Table';
-import { getFilteredUsers, getFilteredUsersCount } from 'api/apiRequests';
+import { getFilteredUsers, getFilteredUsersCount } from 'api/userRequests';
 import { getUserSearchHints } from 'api/searchHintsRequests';
 import { elementsOnAdminTable } from 'constants';
 

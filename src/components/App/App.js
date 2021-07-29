@@ -11,7 +11,7 @@ import SignIn from 'components/Authorization/SignIn';
 import SignUp from 'components/Authorization/SignUp';
 import AccountPage from 'components/AccountPage';
 import MyCompanyPage from 'components/MyCompanyPage';
-import FlightsPage from 'components/Flights/FlightsPage';
+import FlightsPage from 'components/FlightsPage';
 import AdminUsersPage from 'components/Admin/AdminPages/AdminUsersPage';
 import AdminCompaniesPage from 'components/Admin/AdminPages/AdminCompaniesPage';
 import AdminFlightsPage from 'components/Admin/AdminPages/AdminFlightsPage';
@@ -25,7 +25,7 @@ import {
   Admin, 
   User
 } from 'constants/appRoles';
-import CustomRoute from 'components/CustomRoute';
+import CustomRoute from 'shared/CustomRoute';
 
 const useStyles = makeStyles((theme) => ({
   main: {

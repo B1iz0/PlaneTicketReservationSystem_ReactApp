@@ -10,7 +10,7 @@ import Autocomplete, {
   createFilterOptions,
 } from '@material-ui/lab/Autocomplete';
 
-import { getPlaceTypes } from 'api/apiRequests';
+import { getPlaceTypes } from 'api/placeRequests';
 
 const filter = createFilterOptions();
 

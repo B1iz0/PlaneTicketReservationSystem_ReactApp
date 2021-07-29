@@ -8,7 +8,7 @@ import { Typography } from '@material-ui/core';
 import FlightIcon from '@material-ui/icons/Flight';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { getFlight } from 'api/apiRequests';
+import { getFlight } from 'api/flightRequests';
 import PriceTable from 'components/shared/PriceTable';
 
 const useStyles = makeStyles((theme) => ({

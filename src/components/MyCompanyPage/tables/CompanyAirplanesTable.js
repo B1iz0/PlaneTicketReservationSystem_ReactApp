@@ -7,9 +7,9 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
 import PlacesPriceDialog from 'components/shared/Dialogs/PlacesPriceDialog';
 import Table from 'components/shared/Table';
-import Filter from 'components/Filter';
+import Filter from 'shared/Filter';
 import { elementsOnAdminTable } from 'constants';
-import { getAirplanes, getAirplanesCount } from 'api/apiRequests';
+import { getAirplanes, getAirplanesCount } from 'api/airplaneRequests';
 import { getAirplaneSearchHints } from 'api/searchHintsRequests';
 
 const useStyles = makeStyles((theme) => ({

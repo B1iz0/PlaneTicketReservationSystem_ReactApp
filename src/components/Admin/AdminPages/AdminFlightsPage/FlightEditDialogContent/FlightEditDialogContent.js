@@ -16,7 +16,9 @@ import {
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import { getFreeAirplanes, getAllAirports, putFlight } from 'api/apiRequests';
+import { getAllAirports } from 'api/airportRequests';
+import { putFlight } from 'api/flightRequests';
+import { getFreeAirplanes } from 'api/airplaneRequests';
 
 const useStyles = makeStyles((theme) => ({
   dialogContent: {

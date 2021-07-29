@@ -8,9 +8,9 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { IconButton } from '@material-ui/core';
 
 import CustomDialog from 'components/shared/CustomDialog';
-import Filter from 'components/Filter';
+import Filter from 'shared/Filter';
 import Table from 'components/shared/Table';
-import { getFilteredFlights, getFlightsCount } from 'api/apiRequests';
+import { getFilteredFlights, getFlightsCount } from 'api/flightRequests';
 import { elementsOnAdminTable } from 'constants';
 
 import FlightInfoDialogContent from './FlightInfoDialogContent';

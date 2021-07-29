@@ -7,7 +7,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-import { getCities, getCompanies, putAirport } from 'api/apiRequests';
+import { getCities } from 'api/locationRequests';
+import { putAirport } from 'api/airportRequests';
+import { getCompanies } from 'api/companyRequests';
 
 const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
   const [cities, setCities] = useState([]);
@@ -25,17 +27,17 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [citiesResponse, citiesError] = await getCities();
+      const [citiesResponse] = await getCities();
       if (citiesResponse) setCities(citiesResponse);
 
       if (!company) {
-        const [companiesResponse, companiesError] = await getCompanies();
+        const [companiesResponse] = await getCompanies();
         if (companiesResponse) setCompanies(companiesResponse);
       };
     };
 
     fetchData();
-  }, []);
+  }, [company]);
 
   const handleResetClick = () => {
     setAirportName(airport.name);

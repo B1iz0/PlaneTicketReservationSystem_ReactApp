@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { useHistory } from 'react-router-dom';
 
-import FlightsItemInfo from '../FlightsItemInfo';
+import FlightsItemInfo from './FlightsItemInfo';
 
 const useStyles = makeStyles((theme) => ({
   flightInfo: {

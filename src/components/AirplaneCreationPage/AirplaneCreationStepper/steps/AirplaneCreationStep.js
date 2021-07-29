@@ -11,11 +11,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import {
-  getAirplaneTypes,
-  getAllCompanies,
-  addAirplane,
-} from 'api/apiRequests';
+import { getAirplaneTypes, addAirplane } from 'api/airplaneRequests';
+import { getAllCompanies } from 'api/companyRequests';
 
 const useStyles = makeStyles((theme) => ({
   formField: {

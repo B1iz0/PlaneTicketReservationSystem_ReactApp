@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
 
-import { getAirplanePlacePrices, putAirplanePrices } from 'api/apiRequests';
+import { getAirplanePlacePrices, putAirplanePrices } from 'api/priceRequests';
 
 const useStyles = makeStyles((theme) => ({
   button: {

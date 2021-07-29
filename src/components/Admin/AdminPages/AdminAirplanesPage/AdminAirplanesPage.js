@@ -10,12 +10,12 @@ import {
   getAirplanes,
   deleteAirplane,
   getAirplanesCount,
-} from 'api/apiRequests';
+} from 'api/airplaneRequests';
 import { getAirplaneSearchHints } from 'api/searchHintsRequests';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
 import DeleteConfirmDialog from 'components/shared/DeleteConfirmDialog';
-import Filter from 'components/Filter';
+import Filter from 'shared/Filter';
 import { elementsOnAdminTable } from 'constants';
 
 const useStyles = makeStyles((theme) => ({

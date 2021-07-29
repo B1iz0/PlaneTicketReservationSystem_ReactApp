@@ -9,7 +9,8 @@ import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import { postBooking, blockPlace, unblockPlace } from 'api/apiRequests';
+import { postBooking } from 'api/bookingRequests';
+import { blockPlace, unblockPlace } from 'api/placeRequests';
 import { getId } from 'services/token-service';
 import {
   setFirstNameValid,
@@ -18,10 +19,10 @@ import {
 } from 'reduxStore/customerInfoSlice';
 import { setIsBookingCreationActive } from 'reduxStore/notificationsSlice';
 
-import SelectedFlightStep from './SelectedFlightStep';
-import PlaceSelectionStep from './PlaceSelectionStep';
-import ContactDetailsStep from './ContactDetailsStep';
-import FinalPriceStep from './FinalPriceStep';
+import SelectedFlightStep from './steps/SelectedFlightStep';
+import PlaceSelectionStep from './steps/PlaceSelectionStep';
+import ContactDetailsStep from './steps/ContactDetailsStep';
+import FinalPriceStep from './steps/FinalPriceStep';
 
 const useStyles = makeStyles((theme) => ({
   root: {

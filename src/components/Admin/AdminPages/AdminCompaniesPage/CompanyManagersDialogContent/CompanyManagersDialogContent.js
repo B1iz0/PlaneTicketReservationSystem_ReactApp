@@ -5,7 +5,7 @@ import {
   getManagers,
   getFreeUsers,
   assignCompanyToUser,
-} from 'api/apiRequests';
+} from 'api/userRequests';
 
 import ManagersList from './ManagersList';
 import ManagerAdding from './ManagerAdding';

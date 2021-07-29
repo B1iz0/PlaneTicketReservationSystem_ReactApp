@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import { getAirplanePlacePrices, putAirplanePrices } from 'api/apiRequests';
+import { getAirplanePlacePrices, putAirplanePrices } from 'api/priceRequests';
 import PlacesPriceEditableTable from 'components/shared/PlacesPriceEditableTable';
 
 const useStyles = makeStyles((theme) => ({

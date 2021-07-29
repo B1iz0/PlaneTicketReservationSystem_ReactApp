@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { setIsCompanyCreationActive } from 'reduxStore/notificationsSlice';
 
-import Alert from './Alert';
+import Alert from 'shared/Alert';
 
 const CompanyCreationNotification = () => {
   const notifications = useSelector((state) => state.notifications);

@@ -9,7 +9,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import red from '@material-ui/core/colors/red';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import Filter from 'components/Filter';
+import Filter from 'shared/Filter';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
 import DeleteConfirmDialog from 'components/shared/DeleteConfirmDialog';
@@ -17,7 +17,7 @@ import {
   getFilteredCompanies,
   getCompaniesCount,
   deleteCompany,
-} from 'api/apiRequests';
+} from 'api/companyRequests';
 import { getCompanySearchHints } from 'api/searchHintsRequests';
 import { elementsOnAdminTable } from 'constants';
 

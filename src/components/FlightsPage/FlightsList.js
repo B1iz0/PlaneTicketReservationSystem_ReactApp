@@ -3,12 +3,12 @@ import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Filter from 'components/Filter';
-import { getFilteredFlights, getFlightsCount, getFLightHints } from 'api/apiRequests';
+import Filter from 'shared/Filter';
+import { getFilteredFlights, getFlightsCount } from 'api/flightRequests';
 import { getFlightSearchHints } from 'api/searchHintsRequests';
 import { flightsOnPage } from 'constants';
 
-import FlightsItem from '../FlightsItem';
+import FlightsItem from './FlightsItem';
 
 const useStyles = makeStyles((theme) => ({
   flightList: {

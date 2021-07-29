@@ -5,14 +5,14 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 
 import Table from 'components/shared/Table';
-import Filter from 'components/Filter';
+import Filter from 'shared/Filter';
 import AirportCreateDialog from 'components/shared/Dialogs/AirportCreateDialog';
 import AirportEditDialog from 'components/shared/Dialogs/AirportEditDialog';
 import { elementsOnAdminTable } from 'constants';
 import { 
   getFilteredAirports, 
-  getFilteredAirpotCount,
-} from 'api/apiRequests';
+  getFilteredAirportsCount,
+} from 'api/airportRequests';
 import { getAirportSearchHints } from 'api/searchHintsRequests';
 
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +98,7 @@ const CompanyAirportsTable = ({ company }) => {
         // Handle error.
       }
       const [airportsCountResponse, airportsCountError] =
-        await getFilteredAirpotCount(filters);
+        await getFilteredAirportsCount(filters);
       if (airportsCountError) {
         // Handle error.
       } else {

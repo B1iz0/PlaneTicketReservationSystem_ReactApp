@@ -10,10 +10,10 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
 import { getCompanyId } from 'services/token-service';
-import { getCompany } from 'api/apiRequests';
+import { getCompany } from 'api/companyRequests';
 
-import CompanyAirportsTable from './CompanyAirportsTable';
-import CompanyAirplanesTable from './CompanyAirplanesTable';
+import CompanyAirportsTable from './tables/CompanyAirportsTable';
+import CompanyAirplanesTable from './tables/CompanyAirplanesTable';
 
 const useStyles = makeStyles((theme) => ({
   companyInfo: {

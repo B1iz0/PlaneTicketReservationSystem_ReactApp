@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { getFlight } from 'api/apiRequests';
+import { getFlight } from 'api/flightRequests';
 
 import FlightReservationStepper from './FlightReservationStepper';
 

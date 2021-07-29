@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 
-import ProfileDropdownMenu from './ProfileDropdownMenu/';
+import ProfileDropdownMenu from './ProfileDropdownMenu';
 
 const Profile = ({ userEmail }) => {
   return userEmail ? (

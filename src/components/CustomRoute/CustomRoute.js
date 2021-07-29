@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Route, Redirect } from 'react-router-dom';
+import React from 'react';
+import { Route, Redirect } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
 import { getRole } from 'services/token-service';
 
-const CustomRoute = ({ children, requiredRoles }) => {
+const CustomRoute = ({ path, children, requiredRoles }) => {
   const token = useSelector((state) => state.token);
-  const [role, setRole] = useState('');
-
-  useEffect(() => {
-    setRole(getRole(token.jwtToken));
-  }, [token.jwtToken]);
+  const role = getRole(token.jwtToken);
 
   return (
-    <Route>
-      {requiredRoles.includes(role) ?
+    <Route path={path}>
+      {
+        requiredRoles.includes(role) ?
         children : 
         <Redirect to='/'/>
       }

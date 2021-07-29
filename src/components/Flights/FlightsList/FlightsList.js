@@ -42,7 +42,7 @@ const FlightsList = () => {
     );
     const flightsCount = await getFlightsCount(departureCity, arrivalCity);
 
-    setFlights(flights);
+    if (flights) setFlights(flights);
     setPagesAmount(Math.ceil(flightsCount / flightsOnPage));
   };
 

@@ -54,77 +54,75 @@ function App() {
   }, [token.jwtToken]);
 
   return (
-    <>
-      <Router>
-        <Header />
-        <main className={classes.main}>
-          <div className={classes.mainPage}>
-            {role === AdminApp ? <AdminPanel /> : <></>}
-            <Container>
-              <div className={classes.toolBar}></div>
-              <Switch>
-                <Route path="/SignIn">
-                  <SignIn />
-                </Route>
-                <Route path="/SignUp">
-                  <SignUp />
-                </Route>
-                <CustomRoute 
-                  path="/admin/users"
-                  requiredRoles={AdminAppOpportunities}
-                >
-                  <AdminUsersPage />
-                </CustomRoute>
-                <CustomRoute 
-                  path="/admin/companies"
-                  requiredRoles={AdminAppOpportunities}
-                >
-                  <AdminCompaniesPage />
-                </CustomRoute>
-                <CustomRoute 
-                  path="/admin/airplanes/creation"
-                  requiredRoles={AdminAppOpportunities}
-                >
-                  <AirplaneCreationPage />
-                </CustomRoute>
-                <CustomRoute 
-                  path="/admin/airplanes"
-                  requiredRoles={AdminAppOpportunities}
-                >
-                  <AdminAirplanesPage />
-                </CustomRoute>
-                <CustomRoute 
-                  path="/admin/flights"
-                  requiredRoles={AdminAppOpportunities}
-                >
-                  <AdminFlightsPage />
-                </CustomRoute>
-                <CustomRoute 
-                  path="/account"
-                  requiredRoles={UserOportunities}
-                >
-                  <AccountPage />
-                </CustomRoute>
-                <CustomRoute 
-                  path="/myCompany"
-                  requiredRoles={AdminOpportunities}
-                >
-                  <MyCompanyPage />
-                </CustomRoute>
-                <Route path="/reservation">
-                  <FLightReservationPage />
-                </Route>
-                <Route path="/">
-                  <FlightsPage />
-                </Route>
-              </Switch>
-            </Container>
-            <Notifications />
-          </div>
-        </main>
-        <Footer />
-      </Router>
-    </>
+    <Router>
+      <Header />
+      <main className={classes.main}>
+        <div className={classes.mainPage}>
+          {role === AdminApp ? <AdminPanel /> : <></>}
+          <Container>
+            <div className={classes.toolBar}></div>
+            <Switch>
+              <Route path="/SignIn">
+                <SignIn />
+              </Route>
+              <Route path="/SignUp">
+                <SignUp />
+              </Route>
+              <CustomRoute 
+                path="/admin/users"
+                requiredRoles={AdminAppOpportunities}
+              >
+                <AdminUsersPage />
+              </CustomRoute>
+              <CustomRoute 
+                path="/admin/companies"
+                requiredRoles={AdminAppOpportunities}
+              >
+                <AdminCompaniesPage />
+              </CustomRoute>
+              <CustomRoute 
+                path="/admin/airplanes/creation"
+                requiredRoles={AdminAppOpportunities}
+              >
+                <AirplaneCreationPage />
+              </CustomRoute>
+              <CustomRoute 
+                path="/admin/airplanes"
+                requiredRoles={AdminAppOpportunities}
+              >
+                <AdminAirplanesPage />
+              </CustomRoute>
+              <CustomRoute 
+                path="/admin/flights"
+                requiredRoles={AdminAppOpportunities}
+              >
+                <AdminFlightsPage />
+              </CustomRoute>
+              <CustomRoute 
+                path="/account"
+                requiredRoles={UserOportunities}
+              >
+                <AccountPage />
+              </CustomRoute>
+              <CustomRoute 
+                path="/myCompany"
+                requiredRoles={AdminOpportunities}
+              >
+                <MyCompanyPage />
+              </CustomRoute>
+              <Route path="/reservation">
+                <FLightReservationPage />
+              </Route>
+              <Route exact path="/">
+                <FlightsPage />
+              </Route>
+            </Switch>
+          </Container>
+          <Notifications />
+        </div>
+      </main>
+      <Footer />
+    </Router>
   );
 }
 

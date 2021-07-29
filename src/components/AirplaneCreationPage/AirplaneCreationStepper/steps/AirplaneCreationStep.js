@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { Grid } from '@material-ui/core';
@@ -11,6 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
 import { getAirplaneTypes, addAirplane } from 'api/airplaneRequests';
 import { getAllCompanies } from 'api/companyRequests';
 
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [airplaneTypeId, setAirplaneTypeId] = useState();
   const [companyId, setCompanyId] = useState();
@@ -116,6 +119,8 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
       if (error) {
         setServerError(error.response?.data?.message);
       } else {
+        dispatch(setIsSimpleSuccessNotificationActive(true));
+        dispatch(setSimpleSuccessNotificationText('The airplane was registered successfully!'));
         handleAirplaneCreation(createdAirplane);
         handleNext();
       }

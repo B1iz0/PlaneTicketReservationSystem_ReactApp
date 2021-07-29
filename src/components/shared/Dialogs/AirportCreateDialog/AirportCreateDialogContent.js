@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useDispatch } from 'react-redux';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Grid from '@material-ui/core/Grid';
@@ -8,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 
+import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
 import { getCities } from 'api/locationRequests';
 import { postAirport } from 'api/airportRequests';
 import { getCompanies } from 'api/companyRequests';
@@ -16,6 +18,7 @@ const useStyles = makeStyles(() => ({}));
 
 const AirportCreateDialogContent = ({ company, closeDialog }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [cities, setCities] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -73,6 +76,8 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
         setIsRequestError(true);
         setRequestErrorMessage(airportError.response?.data?.message);
       } else {
+        dispatch(setIsSimpleSuccessNotificationActive(true));
+        dispatch(setSimpleSuccessNotificationText('The airport was registered successfully!'));
         closeDialog();
       }
     }

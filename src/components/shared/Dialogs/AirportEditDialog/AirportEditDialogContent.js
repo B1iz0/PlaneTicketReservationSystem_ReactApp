@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Grid from '@material-ui/core/Grid';
@@ -7,11 +8,14 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
+import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
 import { getCities } from 'api/locationRequests';
 import { putAirport } from 'api/airportRequests';
 import { getCompanies } from 'api/companyRequests';
 
 const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
+  const dispatch = useDispatch();
+
   const [cities, setCities] = useState([]);
   const [companies, setCompanies] = useState([]);
 
@@ -77,6 +81,8 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
           setIsRequestError(true);
           setRequestErrorMessage(airportError.response?.data?.message);
         } else {
+          dispatch(setIsSimpleSuccessNotificationActive(true));
+          dispatch(setSimpleSuccessNotificationText('The airport was edited successfully!'));
           closeDialog();
         };
       };

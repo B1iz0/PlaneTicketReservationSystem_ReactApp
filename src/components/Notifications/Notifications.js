@@ -1,13 +1,13 @@
 import React from 'react';
 
+import SuccessNotification from './SuccessNotification';
 import BookingCreationNotification from './BookingCreationNotification';
-import CompanyCreationNotification from './CompanyCreationNotification';
 
 const Notifications = () => {
   return (
     <>
+      <SuccessNotification />
       <BookingCreationNotification />
-      <CompanyCreationNotification />
     </>
   );
 };

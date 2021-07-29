@@ -80,7 +80,7 @@ const FlightsList = () => {
   const onSearchClick = (values) => {
     setDepartureCity(values[0]);
     setArrivalCity(values[1]);
-    setPage(0);
+    setPage(1);
     setOffset(0);
   }
 

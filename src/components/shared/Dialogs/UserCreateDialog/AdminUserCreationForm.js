@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
+import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
 import { postUser } from 'api/userRequests';
 
 import FormTextField from '../../FormTextField';
 
 const AdminUserCreationForm = ({ onSubmit }) => {
   const [errorMessage, setErrorMessage] = useState('');
+  const dispatch = useDispatch();
 
   const onSubmitRegistration = async (values) => {
     const [token, errorRegistration] = await postUser(values);
@@ -18,6 +21,8 @@ const AdminUserCreationForm = ({ onSubmit }) => {
       setErrorMessage(errorRegistration.response.data.message);
     };
     if (token) {
+      dispatch(setIsSimpleSuccessNotificationActive(true));
+      dispatch(setSimpleSuccessNotificationText('The user was registered successfully!'));
       onSubmit();
     };
   }

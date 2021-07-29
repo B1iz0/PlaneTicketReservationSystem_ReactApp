@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
 import { getAirplanePlacePrices, putAirplanePrices } from 'api/priceRequests';
 import PlacesPriceEditableTable from 'components/shared/PlacesPriceEditableTable';
 
@@ -19,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PlacesPriceDialogContent = ({ airplane, closeDialog }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [initialPrices, setInitialPrices] = useState([]);
   const [prices, setPrices] = useState([]);
 
@@ -68,6 +71,8 @@ const PlacesPriceDialogContent = ({ airplane, closeDialog }) => {
       });
   
       await putAirplanePrices(pricesForUpdate);
+      dispatch(setIsSimpleSuccessNotificationActive(true));
+      dispatch(setSimpleSuccessNotificationText('The prices were edited successfully!'));
       closeDialog();
     };
   };

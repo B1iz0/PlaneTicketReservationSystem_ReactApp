@@ -1,2 +1,2 @@
-import FormTextField from "./FormTextField";
+import FormTextField from './FormTextField';
 export default FormTextField;

@@ -103,7 +103,7 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
             <Grid item lg={12}>
               <FormControl className={classes.formField}>
                 <InputLabel>Airplane</InputLabel>
-                <Select 
+                <Select
                   value={airplane}
                   onChange={(e) => setAirplane(e.target.value)}
                 >

@@ -1,2 +1,2 @@
-import PlacesPriceEditableTable from "./PlacesPriceEditableTable";
+import PlacesPriceEditableTable from './PlacesPriceEditableTable';
 export default PlacesPriceEditableTable;

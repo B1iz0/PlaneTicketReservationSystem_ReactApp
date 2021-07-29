@@ -12,7 +12,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import { getAirplaneTypes, addAirplane } from 'api/airplaneRequests';
 import { getAllCompanies } from 'api/companyRequests';
 
@@ -120,7 +123,11 @@ const AirplaneCreationStep = ({ handleNext, handleAirplaneCreation }) => {
         setServerError(error.response?.data?.message);
       } else {
         dispatch(setIsSimpleSuccessNotificationActive(true));
-        dispatch(setSimpleSuccessNotificationText('The airplane was registered successfully!'));
+        dispatch(
+          setSimpleSuccessNotificationText(
+            'The airplane was registered successfully!'
+          )
+        );
         handleAirplaneCreation(createdAirplane);
         handleNext();
       }

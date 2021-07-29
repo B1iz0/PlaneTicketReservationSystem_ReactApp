@@ -8,7 +8,10 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import { getCities } from 'api/locationRequests';
 import { putAirport } from 'api/airportRequests';
 import { getCompanies } from 'api/companyRequests';
@@ -37,7 +40,7 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
       if (!company) {
         const [companiesResponse] = await getCompanies();
         if (companiesResponse) setCompanies(companiesResponse);
-      };
+      }
     };
 
     fetchData();
@@ -48,7 +51,7 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
     setAirportCity(airport?.city);
     setAirportCompany(airport?.company);
     setIsAirportNameValid(true);
-    setIsAirportCityValid(true)
+    setIsAirportCityValid(true);
   };
 
   const handleSaveClick = async () => {
@@ -56,10 +59,11 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
     setIsRequestError(false);
     setRequestErrorMessage('');
 
-    if (airportName !== airport?.name
-      || airportCity?.id !== airport?.city?.id
-      || airportCompany?.id !== airport?.company?.id) 
-    {
+    if (
+      airportName !== airport?.name ||
+      airportCity?.id !== airport?.city?.id ||
+      airportCompany?.id !== airport?.company?.id
+    ) {
       if (!airportName) {
         setIsAirportNameValid(false);
         isValid = false;
@@ -68,7 +72,7 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
         setIsAirportCityValid(false);
         isValid = false;
       } else setIsAirportCityValid(true);
-  
+
       if (isValid) {
         const [updatedAirport, airportError] = await putAirport({
           id: airport.id,
@@ -76,16 +80,20 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
           cityId: airportCity.id,
           companyId: company?.id || airportCompany.id,
         });
-  
+
         if (airportError) {
           setIsRequestError(true);
           setRequestErrorMessage(airportError.response?.data?.message);
         } else {
           dispatch(setIsSimpleSuccessNotificationActive(true));
-          dispatch(setSimpleSuccessNotificationText('The airport was edited successfully!'));
+          dispatch(
+            setSimpleSuccessNotificationText(
+              'The airport was edited successfully!'
+            )
+          );
           closeDialog();
-        };
-      };
+        }
+      }
     } else closeDialog();
   };
 
@@ -105,53 +113,50 @@ const AirportEditDialogContent = ({ airport, company, closeDialog }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete 
+            <Autocomplete
               value={airportCity}
               onChange={(event, newValue) => setAirportCity(newValue)}
               options={cities}
               getOptionLabel={(option) => option.name}
               getOptionSelected={(option) => option.id === airportCity.id}
-              renderInput={(params) => 
-                <TextField 
+              renderInput={(params) => (
+                <TextField
                   {...params}
-                  label='City'
-                  variant='outlined'
+                  label="City"
+                  variant="outlined"
                   error={!isAirportCityValid}
                   helperText={!isAirportCityValid && 'This field is required'}
                 />
-              }
+              )}
             />
           </Grid>
           <Grid item xs={12}>
-            {company ?
-              <TextField 
-                fullWidth 
+            {company ? (
+              <TextField
+                fullWidth
                 value={company.name}
                 disabled
-                label='Company'
-                variant='outlined'
-              /> :
-              <Autocomplete 
+                label="Company"
+                variant="outlined"
+              />
+            ) : (
+              <Autocomplete
                 value={airportCompany}
                 onChange={(event, newValue) => setAirportCompany(newValue)}
                 options={companies}
                 getOptionLabel={(option) => option.name}
                 getOptionSelected={(option) => option.id === airportCompany.id}
-                renderInput={(params) => 
-                  <TextField 
-                    {...params}
-                    label='Company'
-                    variant='outlined'
-                  />
-                }
+                renderInput={(params) => (
+                  <TextField {...params} label="Company" variant="outlined" />
+                )}
               />
-            }
+            )}
           </Grid>
-          {isRequestError && 
+          {isRequestError && (
             <Grid item>
-              <Typography color='error'>{requestErrorMessage}</Typography>
+              <Typography color="error">{requestErrorMessage}</Typography>
             </Grid>
-          }
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>

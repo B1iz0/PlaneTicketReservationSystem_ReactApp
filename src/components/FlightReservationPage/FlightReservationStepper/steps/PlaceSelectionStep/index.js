@@ -1,2 +1,2 @@
-import PlaceSelectionStep from "./PlaceSelectionStep";
+import PlaceSelectionStep from './PlaceSelectionStep';
 export default PlaceSelectionStep;

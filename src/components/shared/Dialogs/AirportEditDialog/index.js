@@ -1,2 +1,2 @@
-import AirportEditDialog from "./AirportEditDialog";
+import AirportEditDialog from './AirportEditDialog';
 export default AirportEditDialog;

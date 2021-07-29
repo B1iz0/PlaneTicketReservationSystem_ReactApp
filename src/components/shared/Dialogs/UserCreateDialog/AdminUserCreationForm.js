@@ -6,7 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
-import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import { postUser } from 'api/userRequests';
 
 import FormTextField from '../../FormTextField';
@@ -19,13 +22,17 @@ const AdminUserCreationForm = ({ onSubmit }) => {
     const [token, errorRegistration] = await postUser(values);
     if (errorRegistration) {
       setErrorMessage(errorRegistration.response.data.message);
-    };
+    }
     if (token) {
       dispatch(setIsSimpleSuccessNotificationActive(true));
-      dispatch(setSimpleSuccessNotificationText('The user was registered successfully!'));
+      dispatch(
+        setSimpleSuccessNotificationText(
+          'The user was registered successfully!'
+        )
+      );
       onSubmit();
-    };
-  }
+    }
+  };
 
   return (
     <Formik
@@ -34,7 +41,7 @@ const AdminUserCreationForm = ({ onSubmit }) => {
         lastName: '',
         email: '',
         password: '',
-        passwordConfirm: ''
+        passwordConfirm: '',
       }}
       validationSchema={Yup.object({
         firstName: Yup.string()
@@ -52,67 +59,69 @@ const AdminUserCreationForm = ({ onSubmit }) => {
           .oneOf([Yup.ref('password'), null], 'Passwords must match')
           .required('Required'),
       })}
-      onSubmit={values => {
+      onSubmit={(values) => {
         onSubmitRegistration(values);
       }}
     >
       {({ handleSubmit, handleReset }) => (
         <Form>
-          <Grid container spacing={2} justify='flex-end'>
+          <Grid container spacing={2} justify="flex-end">
             <Grid item xs={12} lg={6}>
-              <FormTextField 
+              <FormTextField
                 required
                 fullWidth
-                label='First name'
-                name='firstName'
-                type='text'
+                label="First name"
+                name="firstName"
+                type="text"
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <FormTextField 
+              <FormTextField
                 required
                 fullWidth
-                label='Last name'
-                name='lastName'
-                type='text'
+                label="Last name"
+                name="lastName"
+                type="text"
               />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField 
+              <FormTextField
                 required
                 fullWidth
-                label='Email'
-                name='email'
-                type='email'
+                label="Email"
+                name="email"
+                type="email"
               />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField 
+              <FormTextField
                 required
                 fullWidth
-                label='Password'
-                name='password'
-                type='password'
+                label="Password"
+                name="password"
+                type="password"
               />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField 
+              <FormTextField
                 required
                 fullWidth
-                label='Repeat password'
-                name='passwordConfirm'
-                type='password'
+                label="Repeat password"
+                name="passwordConfirm"
+                type="password"
               />
             </Grid>
-            {errorMessage && 
+            {errorMessage && (
               <Grid item xs={12}>
-                <Typography color='error' variant='h6'>{errorMessage}</Typography>
+                <Typography color="error" variant="h6">
+                  {errorMessage}
+                </Typography>
               </Grid>
-            }
+            )}
             <Grid item>
               <Button
-                type='reset'
-                variant='outlined'
+                type="reset"
+                variant="outlined"
                 onClick={() => {
                   setErrorMessage('');
                   handleReset();
@@ -123,9 +132,9 @@ const AdminUserCreationForm = ({ onSubmit }) => {
             </Grid>
             <Grid item>
               <Button
-                type='submit'
-                variant='contained'
-                color='primary'
+                type="submit"
+                variant="contained"
+                color="primary"
                 onClick={(event) => {
                   event.preventDefault();
                   handleSubmit();
@@ -141,4 +150,4 @@ const AdminUserCreationForm = ({ onSubmit }) => {
   );
 };
 
-export default AdminUserCreationForm
+export default AdminUserCreationForm;

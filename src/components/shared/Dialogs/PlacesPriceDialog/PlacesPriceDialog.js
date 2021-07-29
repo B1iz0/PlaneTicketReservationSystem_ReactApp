@@ -9,7 +9,12 @@ const PlacesPriceDialog = ({ airplane, isOpened, closeDialog }) => {
       title="Places price"
       isOpened={isOpened}
       closeDialog={closeDialog}
-      DialogContent={<PlacesPriceDialogContent airplane={airplane} closeDialog={closeDialog}/>}
+      DialogContent={
+        <PlacesPriceDialogContent
+          airplane={airplane}
+          closeDialog={closeDialog}
+        />
+      }
     />
   );
 };

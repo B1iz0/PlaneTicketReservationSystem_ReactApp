@@ -20,11 +20,7 @@ import FLightReservationPage from 'components/FlightReservationPage';
 import Notifications from 'components/Notifications';
 import { getRole } from 'services/token-service';
 import AdminAirplanesPage from 'components/Admin/AdminPages/AdminAirplanesPage/AdminAirplanesPage';
-import {
-  AdminApp,
-  Admin, 
-  User
-} from 'constants/appRoles';
+import { AdminApp, Admin, User } from 'constants/appRoles';
 import CustomRoute from 'shared/CustomRoute';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminAppOpportunities = [AdminApp];
 const AdminOpportunities = [AdminApp, Admin];
-const UserOportunities = [AdminApp, Admin, User]
+const UserOportunities = [AdminApp, Admin, User];
 
 function App() {
   const token = useSelector((state) => state.token);
@@ -68,46 +64,40 @@ function App() {
               <Route path="/SignUp">
                 <SignUp />
               </Route>
-              <CustomRoute 
+              <CustomRoute
                 path="/admin/users"
                 requiredRoles={AdminAppOpportunities}
               >
                 <AdminUsersPage />
               </CustomRoute>
-              <CustomRoute 
+              <CustomRoute
                 path="/admin/companies"
                 requiredRoles={AdminAppOpportunities}
               >
                 <AdminCompaniesPage />
               </CustomRoute>
-              <CustomRoute 
+              <CustomRoute
                 path="/admin/airplanes/creation"
                 requiredRoles={AdminAppOpportunities}
               >
                 <AirplaneCreationPage />
               </CustomRoute>
-              <CustomRoute 
+              <CustomRoute
                 path="/admin/airplanes"
                 requiredRoles={AdminAppOpportunities}
               >
                 <AdminAirplanesPage />
               </CustomRoute>
-              <CustomRoute 
+              <CustomRoute
                 path="/admin/flights"
                 requiredRoles={AdminAppOpportunities}
               >
                 <AdminFlightsPage />
               </CustomRoute>
-              <CustomRoute 
-                path="/account"
-                requiredRoles={UserOportunities}
-              >
+              <CustomRoute path="/account" requiredRoles={UserOportunities}>
                 <AccountPage />
               </CustomRoute>
-              <CustomRoute 
-                path="/myCompany"
-                requiredRoles={AdminOpportunities}
-              >
+              <CustomRoute path="/myCompany" requiredRoles={AdminOpportunities}>
                 <MyCompanyPage />
               </CustomRoute>
               <Route path="/reservation">

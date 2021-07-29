@@ -46,9 +46,8 @@ const FlightInfoDialogContent = ({ flightId }) => {
 
   return (
     <DialogContent className={classes.infoDialog}>
-      <Paper variant='outlined' className={classes.infoPaper}>
-        {
-          flight ? 
+      <Paper variant="outlined" className={classes.infoPaper}>
+        {flight ? (
           <Grid container spacing={1}>
             <Grid item lg={12} className={classes.flightTitle}>
               <Typography component="h1" variant="h3" align="center">
@@ -105,9 +104,10 @@ const FlightInfoDialogContent = ({ flightId }) => {
                 </Typography>
               </Grid>
             </Grid>
-          </Grid> : 
-          <CircularProgress className={classes.loading}/>
-        }
+          </Grid>
+        ) : (
+          <CircularProgress className={classes.loading} />
+        )}
       </Paper>
     </DialogContent>
   );

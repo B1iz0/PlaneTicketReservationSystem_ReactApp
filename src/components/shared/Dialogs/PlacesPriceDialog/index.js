@@ -1,2 +1,2 @@
-import PlacesPriceDialog from "./PlacesPriceDialog";
+import PlacesPriceDialog from './PlacesPriceDialog';
 export default PlacesPriceDialog;

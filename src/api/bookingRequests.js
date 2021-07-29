@@ -1,9 +1,7 @@
 import API, { bearerAuthorization } from 'api';
 import store from 'reduxStore/store';
 
-import {
-  bookingsEndPoint,
-} from 'constants';
+import { bookingsEndPoint } from 'constants';
 
 const postBooking = async (booking) => {
   let token = store.getState().token;
@@ -17,6 +15,4 @@ const postBooking = async (booking) => {
     .catch((error) => [null, error]);
 };
 
-export {
-  postBooking,
-};
+export { postBooking };

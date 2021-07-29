@@ -1,2 +1,2 @@
-import CompanyManagersDialogContent from "./CompanyManagersDialogContent";
+import CompanyManagersDialogContent from './CompanyManagersDialogContent';
 export default CompanyManagersDialogContent;

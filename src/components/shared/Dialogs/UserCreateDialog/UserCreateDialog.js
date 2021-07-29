@@ -7,12 +7,11 @@ import UserCreateDialogContent from './UserCreateDialogContent';
 const UserCreateDialog = ({ isOpened, closeDialog }) => {
   return (
     <CustomDialog
-      title='User registration'
+      title="User registration"
       isOpened={isOpened}
       closeDialog={closeDialog}
-      DialogContent={<UserCreateDialogContent closeDialog={closeDialog}/>}
-    >
-    </CustomDialog>
+      DialogContent={<UserCreateDialogContent closeDialog={closeDialog} />}
+    ></CustomDialog>
   );
 };
 

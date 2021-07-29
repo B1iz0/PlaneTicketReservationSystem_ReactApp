@@ -11,7 +11,10 @@ import Typography from '@material-ui/core/Typography';
 
 import { getCountries } from 'api/locationRequests';
 import { postCompany } from 'api/companyRequests';
-import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 
 const useStyles = makeStyles((theme) => ({
   inputField: {
@@ -70,7 +73,11 @@ const CompanyCreateDialogContent = ({ closeDialog }) => {
       });
       if (createdCompany) {
         dispatch(setIsSimpleSuccessNotificationActive(true));
-      dispatch(setSimpleSuccessNotificationText('The company was created successfully!'));
+        dispatch(
+          setSimpleSuccessNotificationText(
+            'The company was created successfully!'
+          )
+        );
         closeDialog();
       }
       if (creationError) {

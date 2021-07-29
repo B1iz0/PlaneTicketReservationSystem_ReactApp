@@ -47,8 +47,8 @@ const getCompaniesCount = async (companyNameFilter, countryNameFilter) => {
 
 const getCompanies = async () => {
   return await API.get(`${companiesEndPoint}/all`)
-    .then(response => [response.data, null])
-    .catch(error => [null, error]);
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
 };
 
 const getCompany = async (companyId) => {

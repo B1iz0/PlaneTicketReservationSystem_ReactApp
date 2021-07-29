@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   deleteButton: {
     color: red[500],
@@ -129,15 +129,15 @@ const AdminCompaniesPage = () => {
 
     setCompanies(companies);
     setTotalCompaniesNumber(companiesCount);
-  }
+  };
 
   const fetchHints = async () => {
     const hints = await getCompanySearchHints({
       companyName: companyNameFilter,
       countryName: countryNameFilter,
     });
-    const companies = hints.map(value => value.companyName);
-    const countries = hints.map(value => value.countryName);
+    const companies = hints.map((value) => value.companyName);
+    const countries = hints.map((value) => value.countryName);
     setCompanyHints([...new Set(companies)]);
     setCountryHints([...new Set(countries)]);
   };
@@ -147,7 +147,7 @@ const AdminCompaniesPage = () => {
   }, [
     token,
     offset,
-    companyNameFilter, 
+    companyNameFilter,
     countryNameFilter,
     isEditDialogOpened,
     isCreateDialogOpened,
@@ -159,10 +159,10 @@ const AdminCompaniesPage = () => {
     if (!values[0] && !values[1]) {
       setCompanyHints([]);
       setCountryHints([]);
-    };
+    }
     if (values[0] || values[1]) {
       timer = setTimeout(() => fetchHints(), 500);
-    };
+    }
   };
 
   const onSearchClick = (values) => {

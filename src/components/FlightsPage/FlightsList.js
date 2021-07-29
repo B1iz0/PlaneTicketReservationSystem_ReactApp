@@ -51,8 +51,8 @@ const FlightsList = () => {
       departureCity: departureCity,
       arrivalCity: arrivalCity,
     });
-    const departureCities = hints.map(value => value.departureCity);
-    const arrivalCities = hints.map(value => value.arrivalCity);
+    const departureCities = hints.map((value) => value.departureCity);
+    const arrivalCities = hints.map((value) => value.arrivalCity);
     setDepartureCityHints([...new Set(departureCities)]);
     setArrivalCityHints([...new Set(arrivalCities)]);
   };
@@ -68,13 +68,13 @@ const FlightsList = () => {
 
   const onFilterChange = (values) => {
     clearTimeout(timer);
-    if (!values[0] && !values[1]){
+    if (!values[0] && !values[1]) {
       setDepartureCityHints([]);
       setArrivalCityHints([]);
-    };
+    }
     if (values[0] || values[1]) {
       timer = setTimeout(() => fetchHints(), 500);
-    };
+    }
   };
 
   const onSearchClick = (values) => {
@@ -82,42 +82,42 @@ const FlightsList = () => {
     setArrivalCity(values[1]);
     setPage(1);
     setOffset(0);
-  }
+  };
 
   return (
     <>
-      <Filter 
+      <Filter
         fields={['Departure city', 'Arrival city']}
         fieldsOptions={[departureCityHints, arrivalCityHints]}
         onFilterConfirmed={onFilterChange}
         onSearchClick={onSearchClick}
       />
-      {
-        flights.length ? (
-          <div className={classes.flightList}>
-            <Grid container spacing={3}>
-              {flights.map((flight) => {
-                return <FlightsItem flight={flight} id={flight.id} key={flight.id} />;
-              })}
-              <Grid item container lg={12}>
-                <Pagination
-                  count={amountOfPages}
-                  shape="rounded"
-                  className={classes.pagination}
-                  page={page}
-                  onChange={handlePageChange}
-                />
-              </Grid>
+      {flights.length ? (
+        <div className={classes.flightList}>
+          <Grid container spacing={3}>
+            {flights.map((flight) => {
+              return (
+                <FlightsItem flight={flight} id={flight.id} key={flight.id} />
+              );
+            })}
+            <Grid item container lg={12}>
+              <Pagination
+                count={amountOfPages}
+                shape="rounded"
+                className={classes.pagination}
+                page={page}
+                onChange={handlePageChange}
+              />
             </Grid>
-          </div>
-        ) : (
-          <div>
-            <h1>No flights</h1>
-          </div>
-        )
-      }
+          </Grid>
+        </div>
+      ) : (
+        <div>
+          <h1>No flights</h1>
+        </div>
+      )}
     </>
-  ) 
+  );
 };
 
 export default FlightsList;

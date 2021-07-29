@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -127,9 +127,9 @@ const AdminAirplanesPage = () => {
       companyName: companyFilter,
       model: modelFilter,
     });
-    const airplaneTypes = hints.map(value => value.airplaneType);
-    const companyNames = hints.map(value => value.companyName);
-    const models = hints.map(value => value.model);
+    const airplaneTypes = hints.map((value) => value.airplaneType);
+    const companyNames = hints.map((value) => value.companyName);
+    const models = hints.map((value) => value.model);
     setAirplaneTypeHints([...new Set(airplaneTypes)]);
     setCompanyNameHints([...new Set(companyNames)]);
     setModelHints([...new Set(models)]);
@@ -152,10 +152,10 @@ const AdminAirplanesPage = () => {
       setAirplaneTypeHints([]);
       setCompanyNameHints([]);
       setModelHints([]);
-    };
+    }
     if (values[0] || values[1] || values[2]) {
       timer = setTimeout(() => fetchHints(), 500);
-    };
+    }
   };
 
   const onSearchClick = (values) => {
@@ -222,7 +222,7 @@ const AdminAirplanesPage = () => {
         isOpened={isMoreInfoDialogOpened}
         closeDialog={closeMoreInfoDialog}
       />
-      <div className={classes.tableHeader}> 
+      <div className={classes.tableHeader}>
         <Typography variant="h3">Airplanes</Typography>
         <Filter
           fields={['Airplane type', 'Company name', 'Airplane model']}
@@ -231,7 +231,7 @@ const AdminAirplanesPage = () => {
           onSearchClick={onSearchClick}
         />
       </div>
-      <Table  
+      <Table
         page={page}
         rows={rows}
         columns={columns}

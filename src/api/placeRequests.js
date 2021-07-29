@@ -1,10 +1,7 @@
 import API, { bearerAuthorization } from 'api';
 import store from 'reduxStore/store';
 
-import {
-  placeTypesEndPoint,
-  placesEndPoint,
-} from 'constants';
+import { placeTypesEndPoint, placesEndPoint } from 'constants';
 
 const getPlaceTypes = async () => {
   return await API.get(`${placeTypesEndPoint}`)
@@ -34,9 +31,4 @@ const unblockPlace = async (placeId) => {
   await API.put(`${placesEndPoint}/${placeId}/unblock`);
 };
 
-export {
-  getPlaceTypes,
-  postPlacesList,
-  blockPlace,
-  unblockPlace,
-};
+export { getPlaceTypes, postPlacesList, blockPlace, unblockPlace };

@@ -24,11 +24,11 @@ export const notificationsSlice = createSlice({
   },
 });
 
-export const { 
+export const {
   setSimpleSuccessNotificationText,
   setIsSimpleSuccessNotificationActive,
-  setIsBookingCreationActive, 
-  setIsCompanyCreationActive 
+  setIsBookingCreationActive,
+  setIsCompanyCreationActive,
 } = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

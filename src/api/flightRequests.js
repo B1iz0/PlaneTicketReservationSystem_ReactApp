@@ -1,10 +1,7 @@
 import API, { bearerAuthorization } from 'api';
 import store from 'reduxStore/store';
 
-import {
-  flightsEndPoint,
-  flightsCountEndPoint,
-} from 'constants';
+import { flightsEndPoint, flightsCountEndPoint } from 'constants';
 
 const getFilteredFlights = async (
   offset,

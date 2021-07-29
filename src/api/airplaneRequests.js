@@ -6,7 +6,7 @@ import {
   allAirplaneTypesEndPoint,
   allAirplanesEndPoint,
   freeAirplanesEndPoint,
-  allAirplanesCountEndPoint
+  allAirplanesCountEndPoint,
 } from 'constants';
 
 const getAirplaneTypes = async () => {

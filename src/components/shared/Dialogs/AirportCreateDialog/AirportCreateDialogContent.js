@@ -9,7 +9,10 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 
-import { setIsSimpleSuccessNotificationActive, setSimpleSuccessNotificationText } from 'reduxStore/notificationsSlice';
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import { getCities } from 'api/locationRequests';
 import { postAirport } from 'api/airportRequests';
 import { getCompanies } from 'api/companyRequests';
@@ -59,11 +62,11 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
     if (!airportName) {
       setIsAirportNameValid(false);
       isValid = false;
-    } else setIsAirportNameValid(true)
+    } else setIsAirportNameValid(true);
     if (!airportCity) {
       setIsAirportCityValid(false);
       isValid = false;
-    } else setIsAirportCityValid(true)
+    } else setIsAirportCityValid(true);
 
     if (isValid) {
       const [createdAirport, airportError] = await postAirport({
@@ -77,7 +80,11 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
         setRequestErrorMessage(airportError.response?.data?.message);
       } else {
         dispatch(setIsSimpleSuccessNotificationActive(true));
-        dispatch(setSimpleSuccessNotificationText('The airport was registered successfully!'));
+        dispatch(
+          setSimpleSuccessNotificationText(
+            'The airport was registered successfully!'
+          )
+        );
         closeDialog();
       }
     }
@@ -99,51 +106,48 @@ const AirportCreateDialogContent = ({ company, closeDialog }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Autocomplete 
+            <Autocomplete
               value={airportCity}
               onChange={(event, newValue) => setAirportCity(newValue)}
               options={cities}
               getOptionLabel={(option) => option.name}
-              renderInput={(params) => 
-                <TextField 
+              renderInput={(params) => (
+                <TextField
                   {...params}
-                  label='City'
-                  variant='outlined'
+                  label="City"
+                  variant="outlined"
                   error={!isAirportCityValid}
                   helperText={!isAirportCityValid && 'This field is required'}
                 />
-              }
+              )}
             />
           </Grid>
           <Grid item xs={12}>
-            {company ?
-              <TextField 
-                fullWidth 
+            {company ? (
+              <TextField
+                fullWidth
                 value={company.name}
                 disabled
-                label='Company'
-                variant='outlined'
-              /> :
-              <Autocomplete 
+                label="Company"
+                variant="outlined"
+              />
+            ) : (
+              <Autocomplete
                 value={airportCompany}
                 onChange={(event, newValue) => setAirportCompany(newValue)}
                 options={companies}
                 getOptionLabel={(option) => option.name}
-                renderInput={(params) => 
-                  <TextField 
-                    {...params}
-                    label='Company'
-                    variant='outlined'
-                  />
-                }
+                renderInput={(params) => (
+                  <TextField {...params} label="Company" variant="outlined" />
+                )}
               />
-            }
+            )}
           </Grid>
-          {isRequestError && 
+          {isRequestError && (
             <Grid item>
-              <Typography color='error'>{requestErrorMessage}</Typography>
+              <Typography color="error">{requestErrorMessage}</Typography>
             </Grid>
-          }
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>

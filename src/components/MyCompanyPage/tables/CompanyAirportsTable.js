@@ -9,8 +9,8 @@ import Filter from 'shared/Filter';
 import AirportCreateDialog from 'components/shared/Dialogs/AirportCreateDialog';
 import AirportEditDialog from 'components/shared/Dialogs/AirportEditDialog';
 import { elementsOnAdminTable } from 'constants';
-import { 
-  getFilteredAirports, 
+import {
+  getFilteredAirports,
   getFilteredAirportsCount,
 } from 'api/airportRequests';
 import { getAirportSearchHints } from 'api/searchHintsRequests';
@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const CompanyAirportsTable = ({ company }) => {
   const classes = useStyles();
   let timer = null;
@@ -32,44 +31,46 @@ const CompanyAirportsTable = ({ company }) => {
   const [airportNameHints, setAirportNameHints] = useState([]);
   const [cityNameHints, setCityNameHints] = useState([]);
   const [countryNameHints, setCountryNameHints] = useState([]);
-  
+
   const [offset, setOffset] = useState(0);
   const [page, setPage] = useState(0);
   const [airportFilter, setAirportFilter] = useState('');
   const [cityFilter, setCityFilter] = useState('');
   const [countryFilter, setCountryFilter] = useState('');
-  
+
   const [airports, setAirports] = useState([]);
   const [airportsCount, setAirportsCount] = useState(0);
-  
-  const [isAirportCreateDialogOpened, setIsAirportCreateDialogOpened] = useState(false);
-  
+
+  const [isAirportCreateDialogOpened, setIsAirportCreateDialogOpened] =
+    useState(false);
+
   const [selectedAirport, setSelectedAirport] = useState(null);
-  const [isAirportEditDialogOpened, setIsAirportEditDialogOpened] = useState(false);
-  
+  const [isAirportEditDialogOpened, setIsAirportEditDialogOpened] =
+    useState(false);
+
   const columns = [
     { field: 'name', headerName: 'Airport name', width: 200 },
     { field: 'cityName', headerName: 'City', width: 200 },
     { field: 'country', headerName: 'Country', width: 200 },
     {
-      field: 'actions', 
-      headerName: 'Actions', 
+      field: 'actions',
+      headerName: 'Actions',
       width: 200,
       renderCell: (row) => {
         return (
           <>
-            <Tooltip title='Edit'>
-              <IconButton 
-                color='primary'
+            <Tooltip title="Edit">
+              <IconButton
+                color="primary"
                 onClick={() => handleEditClick(row.row)}
               >
                 <EditIcon />
               </IconButton>
             </Tooltip>
           </>
-        )
-      }
-    }
+        );
+      },
+    },
   ];
 
   const rows = airports.map((value) => ({
@@ -104,7 +105,7 @@ const CompanyAirportsTable = ({ company }) => {
       } else {
         setAirportsCount(airportsCountResponse);
       }
-    };
+    }
   };
 
   const fetchHints = async () => {
@@ -114,9 +115,9 @@ const CompanyAirportsTable = ({ company }) => {
       cityName: cityFilter,
       countryName: countryFilter,
     });
-    const airportNames = hints.map(value => value.airportName);
-    const cityNames = hints.map(value => value.cityName);
-    const countryNames = hints.map(value => value.countryName);
+    const airportNames = hints.map((value) => value.airportName);
+    const cityNames = hints.map((value) => value.cityName);
+    const countryNames = hints.map((value) => value.countryName);
     setAirportNameHints([...new Set(airportNames)]);
     setCityNameHints([...new Set(cityNames)]);
     setCountryNameHints([...new Set(countryNames)]);
@@ -124,7 +125,16 @@ const CompanyAirportsTable = ({ company }) => {
 
   useEffect(() => {
     fetchAirports();
-  }, [company, page, offset, airportFilter, cityFilter, countryFilter, isAirportCreateDialogOpened, isAirportEditDialogOpened]);
+  }, [
+    company,
+    page,
+    offset,
+    airportFilter,
+    cityFilter,
+    countryFilter,
+    isAirportCreateDialogOpened,
+    isAirportEditDialogOpened,
+  ]);
 
   const onFilterConfirmed = (values) => {
     clearTimeout(timer);
@@ -132,10 +142,10 @@ const CompanyAirportsTable = ({ company }) => {
       setAirportNameHints([]);
       setCityNameHints([]);
       setCountryNameHints([]);
-    };
+    }
     if (values[0] || values[1] || values[2]) {
       timer = setTimeout(() => fetchHints(), 500);
-    };
+    }
   };
 
   const onSearchClick = (values) => {
@@ -166,12 +176,12 @@ const CompanyAirportsTable = ({ company }) => {
           onSearchClick={onSearchClick}
         />
       </div>
-      <AirportCreateDialog 
+      <AirportCreateDialog
         company={company}
         isOpened={isAirportCreateDialogOpened}
         closeDialog={() => setIsAirportCreateDialogOpened(false)}
       />
-      <AirportEditDialog 
+      <AirportEditDialog
         airport={selectedAirport}
         company={company}
         isOpened={isAirportEditDialogOpened}

@@ -22,7 +22,7 @@ import { getFreeAirplanes } from 'api/airplaneRequests';
 
 const useStyles = makeStyles((theme) => ({
   dialogContent: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
 }));
 
@@ -132,19 +132,19 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
             <TextField
               fullWidth
               required
-              variant='outlined'
+              variant="outlined"
               label="Flight number"
               value={flightNumber}
               onChange={(event) => setFlightNumber(event.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControl fullWidth variant='outlined'>
+            <FormControl fullWidth variant="outlined">
               <InputLabel>Airplane</InputLabel>
               <Select
                 value={airplane}
                 onChange={onAirplaneChange}
-                input={<OutlinedInput label='Airplane'/>}
+                input={<OutlinedInput label="Airplane" />}
               >
                 <MenuItem value={flightForEditing?.airplaneModel}>
                   {flightForEditing?.airplaneModel}
@@ -162,12 +162,12 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <FormControl fullWidth variant='outlined'>
+            <FormControl fullWidth variant="outlined">
               <InputLabel>Departure airport</InputLabel>
               <Select
                 value={departureAirport}
                 onChange={onDepartureAirportChange}
-                input={<OutlinedInput label='Departure airport'/>}
+                input={<OutlinedInput label="Departure airport" />}
               >
                 <MenuItem value={flightForEditing?.fromAirportName}>
                   {flightForEditing?.fromAirportName}
@@ -185,12 +185,12 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <FormControl fullWidth variant='outlined'>
+            <FormControl fullWidth variant="outlined">
               <InputLabel>Arrival airport</InputLabel>
               <Select
                 value={arrivalAirport}
                 onChange={onArrivalAirportChange}
-                input={<OutlinedInput label='Arrival airport'/>}
+                input={<OutlinedInput label="Arrival airport" />}
               >
                 <MenuItem value={flightForEditing?.toAirportName}>
                   {flightForEditing?.toAirportName}
@@ -209,9 +209,9 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
           </Grid>
           <Grid item xs={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DateTimePicker 
-                label='Departure time'
-                inputVariant='outlined'
+              <DateTimePicker
+                label="Departure time"
+                inputVariant="outlined"
                 fullWidth
                 variant="inline"
                 value={departureDate}
@@ -222,8 +222,8 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
           <Grid item xs={6}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <DateTimePicker
-                label='Arrival time'
-                inputVariant='outlined'
+                label="Arrival time"
+                inputVariant="outlined"
                 fullWidth
                 variant="inline"
                 value={arrivalDate}

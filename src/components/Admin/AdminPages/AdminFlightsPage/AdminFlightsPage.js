@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -78,22 +78,22 @@ const AdminFlightsPage = () => {
       renderCell: (row) => {
         return (
           <>
-          <Tooltip title='Edit'>
-            <IconButton
-              onClick={() => openEditInfoDialog(row.row)}
-              color="primary"
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title='More info'>
-            <IconButton
-              color="primary"
-              onClick={() => openMoreInfoDialog(row.id)}
-            >
-              <InfoOutlinedIcon className={classes.moreInfoIcon} />
-            </IconButton>
-          </Tooltip>
+            <Tooltip title="Edit">
+              <IconButton
+                onClick={() => openEditInfoDialog(row.row)}
+                color="primary"
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="More info">
+              <IconButton
+                color="primary"
+                onClick={() => openMoreInfoDialog(row.id)}
+              >
+                <InfoOutlinedIcon className={classes.moreInfoIcon} />
+              </IconButton>
+            </Tooltip>
           </>
         );
       },
@@ -137,12 +137,12 @@ const AdminFlightsPage = () => {
       departureCity: departureCityFilter,
       arrivalCity: arrivalCityFilter,
     });
-    const departureCities = hints.map(value => value.departureCity);
-    const arrivalCities = hints.map(value => value.arrivalCity);
+    const departureCities = hints.map((value) => value.departureCity);
+    const arrivalCities = hints.map((value) => value.arrivalCity);
     setDepartureCityHints([...new Set(departureCities)]);
     setArrivalCityHints([...new Set(arrivalCities)]);
   };
-  
+
   useEffect(() => {
     fetchFlights();
   }, [
@@ -159,10 +159,10 @@ const AdminFlightsPage = () => {
     if (!values[0] && !values[1]) {
       setDepartureCityHints([]);
       setArrivalCityHints([]);
-    };
+    }
     if (values[0] || values[1]) {
       timer = setTimeout(() => fetchHints(), 500);
-    };
+    }
   };
 
   const onSearchClick = (values) => {

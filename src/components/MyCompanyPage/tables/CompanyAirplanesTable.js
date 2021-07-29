@@ -28,19 +28,20 @@ const CompanyAirplanesTable = ({ companyName }) => {
 
   const [airplaneTypeHints, setAirplaneTypeHints] = useState([]);
   const [modelHints, setModelHints] = useState([]);
-  
+
   const [page, setPage] = useState(0);
   const [offset, setOffset] = useState(0);
   const [modelFilter, setModelFilter] = useState('');
   const [airplaneTypeFilter, setAirplaneTypeFilter] = useState('');
-  
+
   const [airplanes, setAirplanes] = useState([]);
   const [airplanesCount, setAirplanesCount] = useState(0);
-  
+
   const [selectedAirplane, setSelectedAirplane] = useState(null);
-  
-  const [isPlacesPriceDialogOpened, setIsPlacesPriceDialogOpened] = useState(false);
-  
+
+  const [isPlacesPriceDialogOpened, setIsPlacesPriceDialogOpened] =
+    useState(false);
+
   const columns = [
     { field: 'type', headerName: 'Type', width: 200 },
     { field: 'model', headerName: 'Model', width: 200 },
@@ -65,8 +66,11 @@ const CompanyAirplanesTable = ({ companyName }) => {
       renderCell: (row) => {
         return (
           <>
-            <Tooltip title='Places price'>
-              <IconButton color='primary' onClick={() => openPlacesPriceDialog(row.row)}>
+            <Tooltip title="Places price">
+              <IconButton
+                color="primary"
+                onClick={() => openPlacesPriceDialog(row.row)}
+              >
                 <AttachMoneyIcon />
               </IconButton>
             </Tooltip>
@@ -113,8 +117,8 @@ const CompanyAirplanesTable = ({ companyName }) => {
       companyName: companyName,
       model: modelFilter,
     });
-    const airplaneTypes = hints.map(value => value.airplaneType);
-    const models = hints.map(value => value.model);
+    const airplaneTypes = hints.map((value) => value.airplaneType);
+    const models = hints.map((value) => value.model);
     setAirplaneTypeHints([...new Set(airplaneTypes)]);
     setModelHints([...new Set(models)]);
   };
@@ -128,10 +132,10 @@ const CompanyAirplanesTable = ({ companyName }) => {
     if (!values[0] && !values[1]) {
       setAirplaneTypeHints([]);
       setModelHints([]);
-    };
+    }
     if (values[0] || values[1]) {
       timer = setTimeout(() => fetchHints(), 500);
-    };
+    }
   };
 
   const onSearchClick = (values) => {
@@ -165,7 +169,7 @@ const CompanyAirplanesTable = ({ companyName }) => {
           onSearchClick={onSearchClick}
         />
       </div>
-      <PlacesPriceDialog 
+      <PlacesPriceDialog
         airplane={selectedAirplane}
         isOpened={isPlacesPriceDialogOpened}
         closeDialog={() => setIsPlacesPriceDialogOpened(false)}

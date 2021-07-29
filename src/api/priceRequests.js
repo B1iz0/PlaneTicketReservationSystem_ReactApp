@@ -1,9 +1,7 @@
 import API, { bearerAuthorization } from 'api';
 import store from 'reduxStore/store';
 
-import {
-  pricesEndPoint,
-} from 'constants';
+import { pricesEndPoint } from 'constants';
 
 const getAirplanePlacePrices = async (airplaneId) => {
   return await API.get(`${pricesEndPoint}/${airplaneId}`)
@@ -21,7 +19,4 @@ const putAirplanePrices = async (prices) => {
   ).catch((error) => console.log(error));
 };
 
-export {
-  getAirplanePlacePrices,
-  putAirplanePrices,
-};
+export { getAirplanePlacePrices, putAirplanePrices };

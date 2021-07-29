@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   tableHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -74,9 +74,9 @@ const AdminUsersPage = () => {
       firstName: firstNameFilter,
       lastName: lastNameFilter,
     });
-    const emails = hints.map(value => value.email);
-    const firstNames = hints.map(value => value.firstName);
-    const lastNames = hints.map(value => value.lastName);
+    const emails = hints.map((value) => value.email);
+    const firstNames = hints.map((value) => value.firstName);
+    const lastNames = hints.map((value) => value.lastName);
     setEmailHints([...new Set(emails)]);
     setFirstNameHints([...new Set(firstNames)]);
     setLastNameHints([...new Set(lastNames)]);
@@ -84,7 +84,14 @@ const AdminUsersPage = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [token, offset, emailFilter, firstNameFilter, lastNameFilter, isCreateDialogOpened]);
+  }, [
+    token,
+    offset,
+    emailFilter,
+    firstNameFilter,
+    lastNameFilter,
+    isCreateDialogOpened,
+  ]);
 
   const onFilterChange = (values) => {
     clearTimeout(timer);
@@ -92,10 +99,10 @@ const AdminUsersPage = () => {
       setEmailHints([]);
       setFirstNameHints([]);
       setLastNameHints([]);
-    };
+    }
     if (values[0] || values[1] || values[2]) {
       timer = setTimeout(() => fetchHints(), 500);
-    };
+    }
   };
 
   const onSearchClick = (values) => {
@@ -104,7 +111,7 @@ const AdminUsersPage = () => {
     setLastNameFilter(values[2]);
     setPage(0);
     setOffset(0);
-  }
+  };
 
   const onPageChange = (page) => {
     setPage(page);
@@ -121,7 +128,7 @@ const AdminUsersPage = () => {
 
   return (
     <>
-      <UserCreateDialog 
+      <UserCreateDialog
         isOpened={isCreateDialogOpened}
         closeDialog={closeCreateDialog}
       />

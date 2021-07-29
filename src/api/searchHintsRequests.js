@@ -17,8 +17,7 @@ const getUserSearchHints = async (filter) => {
       lastName: filter.lastName,
       limit: hintsAmount,
     },
-  })
-    .then(response => response.data);
+  }).then((response) => response.data);
 };
 
 const getFlightSearchHints = async (filter) => {
@@ -26,11 +25,10 @@ const getFlightSearchHints = async (filter) => {
     params: {
       departureCity: filter.departureCity,
       arrivalCity: filter.arrivalCity,
-      departureTime: null, 
+      departureTime: null,
       arrivalTime: null,
     },
-  })
-    .then(response => response.data);
+  }).then((response) => response.data);
 };
 
 const getCompanySearchHints = async (filter) => {
@@ -39,8 +37,7 @@ const getCompanySearchHints = async (filter) => {
       companyName: filter.companyName,
       countryName: filter.countryName,
     },
-  })
-    .then(response => response.data);
+  }).then((response) => response.data);
 };
 
 const getAirplaneSearchHints = async (filter) => {
@@ -50,8 +47,7 @@ const getAirplaneSearchHints = async (filter) => {
       companyName: filter.companyName,
       model: filter.model,
     },
-  })
-    .then(response => response.data);
+  }).then((response) => response.data);
 };
 
 const getAirportSearchHints = async (filter) => {
@@ -62,8 +58,7 @@ const getAirportSearchHints = async (filter) => {
       cityName: filter.cityName,
       countryName: filter.countryName,
     },
-  })
-    .then(response => response.data);
+  }).then((response) => response.data);
 };
 
 export {

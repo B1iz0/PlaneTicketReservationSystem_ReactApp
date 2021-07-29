@@ -55,8 +55,8 @@ const postAirport = async (airport) => {
     },
     bearerAuthorization(token.jwtToken)
   )
-    .then(response => [response.data, null])
-    .catch(error => [null, error]);
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
 };
 
 const putAirport = async (airport) => {
@@ -71,9 +71,9 @@ const putAirport = async (airport) => {
     },
     bearerAuthorization(token.jwtToken)
   )
-    .then(response => [response.data, null])
-    .catch(error => [null, error]);
-}
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
+};
 
 export {
   getAllAirports,

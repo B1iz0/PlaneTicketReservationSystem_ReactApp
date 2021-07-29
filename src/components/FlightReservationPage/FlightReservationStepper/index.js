@@ -1,2 +1,2 @@
-import FlightReservationStepper from "./FlightReservationStepper";
+import FlightReservationStepper from './FlightReservationStepper';
 export default FlightReservationStepper;

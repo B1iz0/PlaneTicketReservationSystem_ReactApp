@@ -9,7 +9,12 @@ const AirportCreateDialog = ({ company, isOpened, closeDialog }) => {
       title="Airport registration"
       isOpened={isOpened}
       closeDialog={closeDialog}
-      DialogContent={<AirportCreateDialogContent company={company} closeDialog={closeDialog}/>}
+      DialogContent={
+        <AirportCreateDialogContent
+          company={company}
+          closeDialog={closeDialog}
+        />
+      }
     />
   );
 };

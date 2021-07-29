@@ -8,17 +8,14 @@ import {
 } from 'constants';
 
 const postUser = async (user) => {
-  return await API.post(
-    `${usersEndPoint}/registration`,
-    {
-      email: user.email,
-      password: user.password,
-      firstName: user.firstName,
-      lastName: user.lastName
-    }
-  )
-    .then(response => [response.data, null])
-    .catch(error => [null, error]);
+  return await API.post(`${usersEndPoint}/registration`, {
+    email: user.email,
+    password: user.password,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  })
+    .then((response) => [response.data, null])
+    .catch((error) => [null, error]);
 };
 
 const getUserInfo = async () => {

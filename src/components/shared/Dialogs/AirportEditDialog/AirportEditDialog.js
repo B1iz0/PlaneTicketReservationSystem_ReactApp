@@ -9,7 +9,13 @@ const AirportEditDialog = ({ airport, company, isOpened, closeDialog }) => {
       title="Edit airport"
       isOpened={isOpened}
       closeDialog={closeDialog}
-      DialogContent={<AirportEditDialogContent airport={airport} company={company} closeDialog={closeDialog}/>}
+      DialogContent={
+        <AirportEditDialogContent
+          airport={airport}
+          company={company}
+          closeDialog={closeDialog}
+        />
+      }
     />
   );
 };

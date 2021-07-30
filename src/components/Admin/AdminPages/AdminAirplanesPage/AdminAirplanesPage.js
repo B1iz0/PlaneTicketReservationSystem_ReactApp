@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { IconButton, Typography } from '@material-ui/core';
@@ -6,6 +7,10 @@ import { useHistory } from 'react-router-dom';
 import red from '@material-ui/core/colors/red';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import {
   getAirplanes,
   deleteAirplane,
@@ -31,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminAirplanesPage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   let timer = null;
   let history = useHistory();
   const [airplanes, setAirplanes] = useState([]);
@@ -197,8 +203,13 @@ const AdminAirplanesPage = () => {
   };
 
   const handleDeleteConfirmation = async () => {
-    await deleteAirplane(airplaneIdToDelete);
-    setIsDeleteConfirmDialogOpened(false);
+    const [deleteResponse, deleteError] = await deleteAirplane(airplaneIdToDelete);
+     
+    if (!deleteError) {
+      dispatch(setIsSimpleSuccessNotificationActive(true));
+      dispatch(setSimpleSuccessNotificationText('The airplanes was deleted successfully!'));
+      setIsDeleteConfirmDialogOpened(false);
+    }
   };
 
   const openAddPage = () => {

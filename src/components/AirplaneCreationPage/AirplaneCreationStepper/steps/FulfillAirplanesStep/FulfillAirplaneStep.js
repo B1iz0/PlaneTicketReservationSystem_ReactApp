@@ -72,11 +72,12 @@ const FulfillAirplaneStep = ({
           placeAmount: parseInt(value.amount, 10),
         };
       });
-
+      console.log('he');
       await postPlacesList({
         airplaneId: id,
         places: requestPlaces,
       });
+      console.log('he');
 
       handleNext();
     }

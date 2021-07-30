@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import DialogContent from '@material-ui/core/DialogContent';
 
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import {
   getManagers,
   getFreeUsers,
@@ -11,6 +16,7 @@ import ManagersList from './ManagersList';
 import ManagerAdding from './ManagerAdding';
 
 const CompanyManagersDialogContent = ({ companyId }) => {
+  const dispatch = useDispatch();
   const [managers, setManagers] = useState([]);
   const [freeUsers, setFreeUsers] = useState([]);
 
@@ -32,32 +38,41 @@ const CompanyManagersDialogContent = ({ companyId }) => {
   }, [companyId]);
 
   const handleAddManager = async (newManager) => {
-    await assignCompanyToUser(newManager.id, companyId);
+    const [adminResponse, adminError] = await assignCompanyToUser(newManager.id, companyId);
 
-    setFreeUsers(() => {
-      let newFreeUsers = [];
-      freeUsers.forEach((user) => {
-        if (user.id !== newManager.id) {
-          newFreeUsers.push(user);
-        }
+    if (!adminError) {
+      dispatch(setIsSimpleSuccessNotificationActive(true));
+      dispatch(setSimpleSuccessNotificationText('The admin was assigned successfully!'));
+      setFreeUsers(() => {
+        let newFreeUsers = [];
+        freeUsers.forEach((user) => {
+          if (user.id !== newManager.id) {
+            newFreeUsers.push(user);
+          }
+        });
+        return newFreeUsers;
       });
-      return newFreeUsers;
-    });
-    setManagers([...managers, newManager]);
+      setManagers([...managers, newManager]);
+    };
   };
 
   const handleDeleteManager = async (manager) => {
-    await assignCompanyToUser(manager.id, '');
-    setFreeUsers([...freeUsers, manager]);
-    setManagers(() => {
-      let newManagers = [];
-      managers.forEach((user) => {
-        if (user.id !== manager.id) {
-          newManagers.push(user);
-        }
+    const [adminResponse, adminError] = await assignCompanyToUser(manager.id, '');
+    
+    if (!adminError) {
+      dispatch(setIsSimpleSuccessNotificationActive(true));
+      dispatch(setSimpleSuccessNotificationText('The admin was unassigned successfully!'));
+      setFreeUsers([...freeUsers, manager]);
+      setManagers(() => {
+        let newManagers = [];
+        managers.forEach((user) => {
+          if (user.id !== manager.id) {
+            newManagers.push(user);
+          }
+        });
+        return newManagers;
       });
-      return newManagers;
-    });
+    };
   };
 
   return (

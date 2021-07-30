@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { Grid } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -36,8 +37,8 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
   const [airplaneId, setAirplaneId] = useState();
   const [departureAirportId, setDepartureAirportId] = useState();
   const [arrivalAirportId, setArrivalAirportId] = useState();
-  const [departureDate, setDepartureDate] = useState();
-  const [arrivalDate, setArrivalDate] = useState();
+  const [departureTime, setDepartureTime] = useState(new Date());
+  const [arrivalTime, setArrivalTime] = useState(new Date());
   const [freeBaggageLimit, setFreeBaggageLimit] = useState();
   const [overweightPrice, setOverweightPrice] = useState();
 
@@ -58,25 +59,13 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
   }, [token]);
 
   const createFlight = async () => {
-    let departureTimeWithoutTZ = departureDate;
-    let hoursDiff =
-      departureTimeWithoutTZ.getHours() -
-      departureTimeWithoutTZ.getTimezoneOffset() / 60;
-    departureTimeWithoutTZ.setHours(hoursDiff);
-
-    let arrivalTimeWithoutTZ = arrivalDate;
-    hoursDiff =
-      arrivalTimeWithoutTZ.getHours() -
-      arrivalTimeWithoutTZ.getTimezoneOffset() / 60;
-    arrivalTimeWithoutTZ.setHours(hoursDiff);
-
     await postFlight(
       airplaneId,
       flightNumber,
       departureAirportId,
       arrivalAirportId,
-      departureTimeWithoutTZ,
-      arrivalTimeWithoutTZ,
+      departureTime,
+      arrivalTime,
       freeBaggageLimit,
       overweightPrice
     );
@@ -91,7 +80,7 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
     <>
       <DialogContent>
         <form>
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item lg={12}>
               <TextField
                 className={classes.formField}
@@ -101,13 +90,14 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
               />
             </Grid>
             <Grid item lg={12}>
-              <FormControl className={classes.formField}>
+              <FormControl fullWidth variant='outlined'>
                 <InputLabel>Airplane</InputLabel>
                 <Select
                   value={airplane}
                   onChange={(e) => setAirplane(e.target.value)}
+                  input={<OutlinedInput label='Airplane'/>}
                 >
-                  {freeAirplanes?.map((item) => (
+                  {freeAirplanes?.length !== 0 ? freeAirplanes?.map((item) => (
                     <MenuItem
                       key={item.id}
                       value={item.model}
@@ -115,17 +105,24 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
                     >
                       {item.model}
                     </MenuItem>
-                  ))}
+                  )) : (
+                    <MenuItem
+                      disabled
+                    >
+                      No free airplanes
+                    </MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item container spacing={1}>
+            <Grid item container spacing={2}>
               <Grid item lg={6}>
-                <FormControl className={classes.formField}>
+                <FormControl fullWidth variant='outlined'>
                   <InputLabel>Departure airport</InputLabel>
                   <Select
                     value={departureAirport}
                     onChange={(e) => setDepartureAirport(e.target.value)}
+                    input={<OutlinedInput label='Departure airport'/>}
                   >
                     {airports?.map((item) => (
                       <MenuItem
@@ -140,11 +137,12 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
                 </FormControl>
               </Grid>
               <Grid item lg={6}>
-                <FormControl className={classes.formField}>
+                <FormControl fullWidth variant='outlined'>
                   <InputLabel>Arrival airport</InputLabel>
                   <Select
                     value={arrivalAirport}
                     onChange={(e) => setArrivalAirport(e.target.value)}
+                    input={<OutlinedInput label='Arrival airport'/>}
                   >
                     {airports?.map((item) => (
                       <MenuItem
@@ -159,22 +157,25 @@ const FlightCreateDialogContent = ({ closeDialog }) => {
                 </FormControl>
               </Grid>
             </Grid>
-            <Grid item container spacing={1}>
+            <Grid item container spacing={2}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Grid item lg={6}>
                   <DateTimePicker
+                    inputVariant='outlined'
                     className={classes.formField}
-                    value={departureDate}
-                    onChange={(value) => setDepartureDate(value)}
+                    disablePast
+                    value={departureTime}
+                    onChange={(value) => setDepartureTime(value)}
                     variant="inline"
                     label="Departure date"
                   />
                 </Grid>
                 <Grid item lg={6}>
                   <DateTimePicker
+                    inputVariant='outlined'
                     className={classes.formField}
-                    value={arrivalDate}
-                    onChange={(value) => setArrivalDate(value)}
+                    value={arrivalTime}
+                    onChange={(value) => setArrivalTime(value)}
                     variant="inline"
                     label="Arrival date"
                   />

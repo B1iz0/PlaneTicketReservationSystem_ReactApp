@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +10,10 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import red from '@material-ui/core/colors/red';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import Filter from 'shared/Filter';
 import Table from 'components/shared/Table';
 import CustomDialog from 'components/shared/CustomDialog';
@@ -24,7 +29,6 @@ import { elementsOnAdminTable } from 'constants';
 import CompanyEditDialogContent from './CompanyEditDialogContent';
 import CompanyCreateDialogContent from './CompanyCreateDialogContent';
 import CompanyManagersDialogContent from './CompanyManagersDialogContent';
-import { filter } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   companiesGrid: {
@@ -43,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminCompaniesPage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   let timer = null;
 
@@ -205,8 +210,13 @@ const AdminCompaniesPage = () => {
   };
 
   const handleDeleteConfirmation = async () => {
-    await deleteCompany(companyId);
-    setIsDeleteConfirmDialogOpened(false);
+    const [deleteResponse, deleteError] = await deleteCompany(companyId);
+
+    if (!deleteError) {
+      dispatch(setIsSimpleSuccessNotificationActive(true));
+      dispatch(setSimpleSuccessNotificationText('The company was deleted successfully!'));
+      setIsDeleteConfirmDialogOpened(false);
+    };
   };
 
   return (

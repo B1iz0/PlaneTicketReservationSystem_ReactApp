@@ -30,9 +30,10 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
   const classes = useStyles();
   const token = useSelector((state) => state.token);
 
+  
   const [freeAirplanes, setFreeAirplanes] = useState([]);
   const [airports, setAirports] = useState([]);
-
+  
   const [flightNumber, setFlightNumber] = useState(
     flightForEditing?.flightNumber
   );
@@ -44,6 +45,10 @@ const FlightEditDialogContent = ({ flightForEditing, closeDialog }) => {
   const [departureDate, setDepartureDate] = useState(
     new Date(flightForEditing?.departureTime)
   );
+
+  console.log(flightForEditing?.departureTime);
+  console.log(departureDate);
+  
   const [arrivalDate, setArrivalDate] = useState(
     new Date(flightForEditing?.arrivalTime)
   );

@@ -5,6 +5,8 @@ export const notificationsSlice = createSlice({
   initialState: {
     simpleSuccessNotificationText: '',
     isSimpleSuccessNotificationActive: false,
+    failedNotificationText: '',
+    isFailedNotificationActive: false,
     isBookingCreationActive: false,
     isCompanyCreationActive: false,
   },
@@ -14,6 +16,12 @@ export const notificationsSlice = createSlice({
     },
     setIsSimpleSuccessNotificationActive: (state, action) => {
       state.isSimpleSuccessNotificationActive = action.payload;
+    },
+    setFailedNotificationText: (state, action) => {
+      state.failedNotificationText = action.payload;
+    },
+    setIsFailedNotificationActive: (state, action) => {
+      state.isFailedNotificationActive = action.payload;
     },
     setIsBookingCreationActive: (state, action) => {
       state.isBookingCreationActive = action.payload;
@@ -27,6 +35,8 @@ export const notificationsSlice = createSlice({
 export const {
   setSimpleSuccessNotificationText,
   setIsSimpleSuccessNotificationActive,
+  setFailedNotificationText,
+  setIsFailedNotificationActive,
   setIsBookingCreationActive,
   setIsCompanyCreationActive,
 } = notificationsSlice.actions;

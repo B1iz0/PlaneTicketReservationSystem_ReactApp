@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,6 +7,10 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 
+import {
+  setIsSimpleSuccessNotificationActive,
+  setSimpleSuccessNotificationText,
+} from 'reduxStore/notificationsSlice';
 import { getCountries } from 'api/locationRequests';
 import { putCompany } from 'api/companyRequests';
 
@@ -22,6 +27,7 @@ const CompanyEditDialogContent = ({
   closeDialog,
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [countries, setCountries] = useState([]);
 
   const [currentCompanyName, setCurrentCompanyName] = useState(name);
@@ -77,10 +83,9 @@ const CompanyEditDialogContent = ({
       const [updateResponse, updateError] = await putCompany(
         updateCompanyVersion
       );
-      if (updateResponse) {
-        // Handle response.
-      }
       if (!updateError) {
+        dispatch(setIsSimpleSuccessNotificationActive(true));
+        dispatch(setSimpleSuccessNotificationText('The company was edited successfully!'));
         closeDialog();
       }
     }

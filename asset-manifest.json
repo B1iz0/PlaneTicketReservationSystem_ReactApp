@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/PlaneTicketReservationSystem_ReactApp/static/css/main.6dea0f05.chunk.css",
+    "main.js": "/PlaneTicketReservationSystem_ReactApp/static/js/main.f4e072e4.chunk.js",
+    "main.js.map": "/PlaneTicketReservationSystem_ReactApp/static/js/main.f4e072e4.chunk.js.map",
+    "runtime-main.js": "/PlaneTicketReservationSystem_ReactApp/static/js/runtime-main.7f901222.js",
+    "runtime-main.js.map": "/PlaneTicketReservationSystem_ReactApp/static/js/runtime-main.7f901222.js.map",
+    "static/js/2.3667458c.chunk.js": "/PlaneTicketReservationSystem_ReactApp/static/js/2.3667458c.chunk.js",
+    "static/js/2.3667458c.chunk.js.map": "/PlaneTicketReservationSystem_ReactApp/static/js/2.3667458c.chunk.js.map",
+    "index.html": "/PlaneTicketReservationSystem_ReactApp/index.html",
+    "static/css/main.6dea0f05.chunk.css.map": "/PlaneTicketReservationSystem_ReactApp/static/css/main.6dea0f05.chunk.css.map",
+    "static/js/2.3667458c.chunk.js.LICENSE.txt": "/PlaneTicketReservationSystem_ReactApp/static/js/2.3667458c.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7f901222.js",
+    "static/js/2.3667458c.chunk.js",
+    "static/css/main.6dea0f05.chunk.css",
+    "static/js/main.f4e072e4.chunk.js"
+  ]
+}
